@@ -7,37 +7,43 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" style="-fx-background-color: #F3F3F3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLColaboradoresController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #F3F3F3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLColaboradoresController">
    <children>
-      <Label layoutX="32.0" layoutY="44.0" prefHeight="39.0" prefWidth="214.0" text="Colaboradores">
+      <Label layoutX="32.0" layoutY="26.0" prefHeight="39.0" prefWidth="214.0" text="Colaboradores">
          <font>
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
-      <TableView layoutX="32.0" layoutY="123.0" prefHeight="342.0" prefWidth="786.0">
+      <TableView layoutX="32.0" layoutY="142.0" prefHeight="560.0" prefWidth="1212.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Nombre" />
-          <TableColumn prefWidth="110.0" text="Apellido Paterno" />
-            <TableColumn prefWidth="121.0" text="Apellido Materno" />
-            <TableColumn prefWidth="77.0" text="CURP" />
-            <TableColumn prefWidth="111.0" text="Correo Electrónico" />
-            <TableColumn prefWidth="108.0" text="No. Personal" />
-            <TableColumn prefWidth="79.0" text="Rol" />
-            <TableColumn prefWidth="104.0" text="Sucursal" />
+            <TableColumn prefWidth="149.0" text="No. personal" />
+          <TableColumn prefWidth="187.0" text="Nombre" />
+          <TableColumn minWidth="0.0" prefWidth="177.0" text="Apellido paterno" />
+            <TableColumn prefWidth="159.0" text="Apellido materno" />
+            <TableColumn prefWidth="106.0" text="CURP" />
+            <TableColumn prefWidth="167.0" text="Correo electrónico" />
+            <TableColumn prefWidth="117.0" text="Rol" />
+            <TableColumn prefWidth="149.0" text="Sucursal" />
         </columns>
       </TableView>
-      <TextField layoutX="32.0" layoutY="83.0" prefHeight="25.0" prefWidth="256.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
-      <Button layoutX="300.0" layoutY="83.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
+      <TextField layoutX="211.0" layoutY="83.0" prefHeight="43.0" prefWidth="271.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
+      <Button layoutX="928.0" layoutY="85.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="105.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="412.0" layoutY="83.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
+      <Button layoutX="1043.0" layoutY="84.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="521.0" layoutY="83.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Eliminar">
+      <Button layoutX="1150.0" layoutY="85.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Eliminar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <ComboBox layoutX="32.0" layoutY="85.0" prefHeight="39.0" prefWidth="170.0" promptText="Buscar por:" />
+      <Button layoutX="492.0" layoutY="84.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Buscar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

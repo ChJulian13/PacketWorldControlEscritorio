@@ -7,15 +7,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" style="-fx-background-color: #F3F3F3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLUnidadesController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #F3F3F3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLUnidadesController">
    <children>
       <Label layoutX="40.0" layoutY="49.0" prefHeight="39.0" prefWidth="214.0" text="Unidades">
          <font>
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
-      <TableView layoutX="40.0" layoutY="128.0" prefHeight="342.0" prefWidth="786.0">
+      <TableView layoutX="40.0" layoutY="142.0" prefHeight="553.0" prefWidth="1208.0">
          <columns>
             <TableColumn prefWidth="75.0" text="Marca" />
             <TableColumn prefWidth="150.0" text="Modelo" />
@@ -26,7 +25,7 @@
          </columns>
       </TableView>
       <TextField layoutX="40.0" layoutY="88.0" prefHeight="25.0" prefWidth="256.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
-      <Button layoutX="308.0" layoutY="88.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
+      <Button layoutX="308.0" layoutY="88.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="102.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

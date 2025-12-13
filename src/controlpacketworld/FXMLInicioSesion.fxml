@@ -8,23 +8,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" style="-fx-background-color: #f3f3f3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXLMInicioSesionController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #f3f3f3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXLMInicioSesionController">
    <children>
-      <Pane layoutX="235.0" layoutY="60.0" prefHeight="380.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+      <Pane layoutX="450.0" layoutY="170.0" prefHeight="380.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
          <children>
-            <Label layoutX="127.0" layoutY="92.0" prefHeight="24.0" prefWidth="127.0" text="Inicia Sesión">
+            <Label layoutX="127.0" layoutY="92.0" prefHeight="24.0" prefWidth="127.0" text="Inicia sesión">
                <font>
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="82.0" layoutY="121.0" text="Ingresa tu número personal y contraseña" textFill="#757474" />
+            <Label layoutX="28.0" layoutY="122.0" text="Ingresa tu número personal y contraseña" textFill="#757474" />
             <TextField fx:id="tfNoPersonal" layoutX="60.0" layoutY="162.0" prefHeight="25.0" prefWidth="261.0" promptText="Número de personal" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
             <Button layoutX="60.0" layoutY="264.0" mnemonicParsing="false" onAction="#clicIniciarSesion" prefHeight="29.0" prefWidth="261.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Ingresar">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <ImageView fitHeight="62.0" fitWidth="64.0" layoutX="159.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="62.0" fitWidth="64.0" layoutX="160.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@imagenes/icon-delivery.png" />
                </image>

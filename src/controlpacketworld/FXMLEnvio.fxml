@@ -7,33 +7,45 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controlpacketworld.FXMLEnvioController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLEnvioController">
    <children>
-      <Button layoutX="412.0" layoutY="88.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
+      <Button layoutX="940.0" layoutY="68.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="125.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar envío">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="300.0" layoutY="88.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <TextField layoutX="32.0" layoutY="88.0" prefHeight="25.0" prefWidth="256.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
-      <TableView layoutX="32.0" layoutY="128.0" prefHeight="342.0" prefWidth="786.0">
+      <TextField layoutX="32.0" layoutY="67.0" prefHeight="43.0" prefWidth="283.0" promptText="Número de guía" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
+      <TableView layoutX="32.0" layoutY="128.0" prefHeight="579.0" prefWidth="1224.0">
          <columns>
-            <TableColumn prefWidth="75.0" text="Cliente" />
-            <TableColumn prefWidth="150.0" text="Origen" />
-            <TableColumn prefWidth="144.0" text="Destino" />
-            <TableColumn prefWidth="193.0" text="Estado" />
-            <TableColumn prefWidth="223.0" text="Conductor Asignado" />
+            <TableColumn prefWidth="82.0" text="No. guía" />
+            <TableColumn prefWidth="143.0" text="Estado" />
+            <TableColumn prefWidth="163.0" text="Sucursal" />
+            <TableColumn prefWidth="275.0" text="Dirección entrega" />
+            <TableColumn prefWidth="209.0" text="Recibe" />
+            <TableColumn prefWidth="198.0" text="Conductor asignado" />
+            <TableColumn prefWidth="86.0" text="Paquetes" />
+            <TableColumn prefWidth="67.0" text="Costo" />
          </columns>
       </TableView>
-      <Label layoutX="32.0" layoutY="49.0" prefHeight="39.0" prefWidth="214.0" text="Envíos">
+      <Label layoutX="32.0" layoutY="14.0" prefHeight="39.0" prefWidth="74.0" text="Envíos">
          <font>
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
+      <Button layoutX="1075.0" layoutY="68.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="181.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Gestionar paquetes">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="325.0" layoutY="68.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Buscar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="813.0" layoutY="68.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="117.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Crear envío">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </AnchorPane>
