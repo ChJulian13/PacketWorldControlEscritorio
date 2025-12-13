@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controlpacketworld.FXMLPaquetesController">
+   <children>
+      <Button layoutX="525.0" layoutY="89.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Eliminar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="416.0" layoutY="89.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="304.0" layoutY="89.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <TextField layoutX="36.0" layoutY="89.0" prefHeight="25.0" prefWidth="256.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
+      <TableView layoutX="36.0" layoutY="129.0" prefHeight="342.0" prefWidth="786.0">
+         <columns>
+            <TableColumn prefWidth="184.0" text="Descripción" />
+            <TableColumn prefWidth="98.0" text="Peso" />
+            <TableColumn prefWidth="126.0" text="Alto" />
+            <TableColumn prefWidth="119.0" text="Ancho" />
+            <TableColumn prefWidth="91.0" text="Profundidad" />
+            <TableColumn prefWidth="167.0" text="Envío asignado" />
+         </columns>
+      </TableView>
+      <Label layoutX="36.0" layoutY="50.0" prefHeight="39.0" prefWidth="214.0" text="Paquetes">
+         <font>
+            <Font name="Segoe UI" size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

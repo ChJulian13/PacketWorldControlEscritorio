@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controlpacketworld.FXMLSucursalRegistrarController">
+   <children>
+      <Pane layoutX="22.0" layoutY="23.0" prefHeight="221.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="172.0" text="Datos Generales">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="24.0" layoutY="55.0" text="Código:" textFill="#757474" />
+            <TextField layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField layoutX="24.0" layoutY="122.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <Label layoutX="24.0" layoutY="105.0" text="Nombre:" textFill="#757474" />
+            <Label layoutX="24.0" layoutY="155.0" text="Estatus" textFill="#757474" />
+            <ComboBox layoutX="24.0" layoutY="173.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+         </children>
+      </Pane>
+      <Pane layoutX="423.0" layoutY="24.0" prefHeight="386.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="172.0" text="Dirección">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="24.0" layoutY="55.0" text="Código Póstal:" textFill="#757474" />
+            <TextField layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <Label layoutX="24.0" layoutY="105.0" text="Estado:" textFill="#757474" />
+            <Label layoutX="24.0" layoutY="155.0" text="Ciudad:" textFill="#757474" />
+            <ComboBox layoutX="24.0" layoutY="173.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <ComboBox layoutX="24.0" layoutY="124.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <ComboBox layoutX="25.0" layoutY="229.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <Label layoutX="24.0" layoutY="208.0" prefHeight="17.0" prefWidth="54.0" text="Colonia" textFill="#757474" />
+            <TextField layoutX="25.0" layoutY="281.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <Label layoutX="25.0" layoutY="264.0" text="Calle:" textFill="#757474" />
+            <Label layoutX="27.0" layoutY="314.0" text="Número:" textFill="#757474" />
+            <TextField layoutX="27.0" layoutY="331.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+         </children>
+      </Pane>
+      <Button layoutX="729.0" layoutY="443.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Cancelar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="617.0" layoutY="443.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Guardar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </children>
+</AnchorPane>

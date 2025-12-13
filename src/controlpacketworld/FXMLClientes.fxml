@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" style="-fx-background-color: #F3F3F3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLClientesController">
+   <children>
+      <Button layoutX="531.0" layoutY="93.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Eliminar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="422.0" layoutY="93.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="310.0" layoutY="93.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <TextField layoutX="42.0" layoutY="93.0" prefHeight="25.0" prefWidth="256.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
+      <TableView layoutX="42.0" layoutY="133.0" prefHeight="342.0" prefWidth="786.0">
+         <columns>
+            <TableColumn prefWidth="75.0" text="Nombre" />
+            <TableColumn prefWidth="87.0" text="Apellido Paterno" />
+            <TableColumn prefWidth="100.0" text="Apellido Materno" />
+            <TableColumn prefWidth="100.0" text="Calle" />
+            <TableColumn prefWidth="52.0" text="Número" />
+            <TableColumn prefWidth="125.0" text="Colonia" />
+            <TableColumn prefWidth="92.0" text="Código Postal" />
+            <TableColumn minWidth="0.0" prefWidth="78.0" text="Correo" />
+            <TableColumn prefWidth="76.0" text="Teléfono" />
+         </columns>
+      </TableView>
+      <Label layoutX="42.0" layoutY="54.0" prefHeight="39.0" prefWidth="214.0" text="Clientes">
+         <font>
+            <Font name="Segoe UI" size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

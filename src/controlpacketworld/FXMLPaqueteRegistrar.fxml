@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controlpacketworld.FXMLPaqueteRegistrarController">
+   <children>
+      <Pane layoutX="235.0" layoutY="213.0" prefHeight="224.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="215.0" text="Datos del Paquete">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="24.0" layoutY="55.0" text="Descripción:" textFill="#757474" />
+            <TextField layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField layoutX="25.0" layoutY="122.0" prefHeight="27.0" prefWidth="159.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <Label layoutX="25.0" layoutY="105.0" text="Peso (kg):" textFill="#757474" />
+            <Label layoutX="197.0" layoutY="105.0" text="Alto (cm):" textFill="#757474" />
+            <TextField layoutX="197.0" layoutY="122.0" prefHeight="27.0" prefWidth="159.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField layoutX="197.0" layoutY="175.0" prefHeight="27.0" prefWidth="159.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <Label layoutX="197.0" layoutY="158.0" text="Profundidad (cm):" textFill="#757474" />
+            <Label layoutX="25.0" layoutY="158.0" text="Ancho (cm):" textFill="#757474" />
+            <TextField layoutX="25.0" layoutY="175.0" prefHeight="27.0" prefWidth="159.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+         </children>
+      </Pane>
+      <Pane layoutX="235.0" layoutY="26.0" prefHeight="171.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="215.0" text="Datos del Paquete">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="24.0" layoutY="55.0" text="Número de guía:" textFill="#757474" />
+            <TextField layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <Label layoutX="25.0" layoutY="105.0" text="Asignar envío:" textFill="#757474" />
+            <ComboBox layoutX="25.0" layoutY="125.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+         </children>
+      </Pane>
+      <Button layoutX="739.0" layoutY="455.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Cancelar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="627.0" layoutY="455.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Guardar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </children>
+</AnchorPane>
