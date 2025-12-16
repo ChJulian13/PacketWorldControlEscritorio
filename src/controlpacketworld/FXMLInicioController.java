@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -21,6 +22,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import pojo.Colaborador;
 
 /**
  * FXML Controller class
@@ -28,22 +30,26 @@ import javafx.stage.Stage;
  * @author julia
  */
 public class FXMLInicioController implements Initializable {
-
     @FXML
-    private Circle clContendorImagen;
-
-    
+    private Label lbNombreCompleto;
+    @FXML
+    private Label lbNoPersonal;
+    private Colaborador colaboradorSesion;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        clContendorImagen.setStroke(null);
-        Image im = new Image(getClass().getResource("imagenes/icon-7797704_640.png").toExternalForm());
-        clContendorImagen.setFill(new ImagePattern(im));
         
-    }    
+    }
+
+    public void cargarInformacion(Colaborador colaborador) {
+        colaboradorSesion = colaborador;
+        lbNombreCompleto.setText(colaborador.getNombre() + " " + colaborador.getApellidoPaterno() + " " + colaborador.getApellidoMaterno());
+        lbNoPersonal.setText("Num Personal: " + colaborador.getNoPersonal());
+                
+    }
 
     @FXML
     private void cliclColaboradores(ActionEvent event) {

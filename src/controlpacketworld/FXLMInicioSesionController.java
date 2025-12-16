@@ -4,6 +4,8 @@
  */
 package controlpacketworld;
 
+import dominio.InicioSesionImp;
+import dto.RSAutenticacionAdmin;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,6 +19,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import pojo.Colaborador;
+import utilidad.Utilidades;
 
 /**
  * FXML Controller class
@@ -44,29 +48,36 @@ public class FXLMInicioSesionController implements Initializable {
         String contrasenia = pfContrasenia.getText();
         
         if(!noPersonal.isEmpty() && !contrasenia.isEmpty()) {
-            irPantallaInicio();
+            //irPantallaInicio();
+            verificarCredenciales(noPersonal, contrasenia);
         } else {
-            Alert alerta = new Alert(Alert.AlertType.WARNING);
-            alerta.setTitle("Campos vacíos");
-            //alerta.setHeaderText("Falta información");
-            alerta.setContentText("Debes ingresar tu número de personal y tu contraseña para iniciar sesión");
-            alerta.show(); //show solo es para permitir cambiar el foco, showandwait solo hasta quee presiones aceptar se perderá el foco
+            Utilidades.mostrarAlertaSimple("Campos requeridos", "Ingrese todos los datos requeridos", Alert.AlertType.WARNING);
         }
     }
     
-    private void irPantallaInicio(){
+    private void verificarCredenciales(String noPersonal, String contrasenia) {
+        RSAutenticacionAdmin respuesta = InicioSesionImp.verificarCredenciales(noPersonal, contrasenia);
+        
+        if (!respuesta.isError()) {
+            Utilidades.mostrarAlertaSimple("Credenciales verificadas", "Bienvenida (a) administrador (a) " + respuesta.colaborador.getNombre() + "al sistems de PacketWorld.", Alert.AlertType.INFORMATION);
+            irPantallaInicio(respuesta.getColaborador()); 
+        } else {
+            Utilidades.mostrarAlertaSimple("Error de credenciales", respuesta.getMensaje(), Alert.AlertType.ERROR);
+        }
+    }
+    
+    private void irPantallaInicio(Colaborador colaborador){
         try {
-            //Crear la Scena - Escena
-            //Stage -> Scena -> Parent -> FXML
-            Parent vista = FXMLLoader.load(getClass().getResource("FXMLInicio.fxml"));
-            Scene escenaPrincipal = new Scene(vista);
+            FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLInicio.fxml"));
+            Parent vista = cargador.load();
+            FXMLInicioController controlador = cargador.getController();
+            controlador.cargarInformacion(colaborador);
+            Scene escenaInicio = new Scene(vista);
             
-            // Obtener escenario actual
-            Stage stPrincipal = (Stage) tfNoPersonal.getScene().getWindow();
-            // Cammbio de escena
-            stPrincipal.setScene(escenaPrincipal);
-            stPrincipal.setTitle("Inicio");
-            stPrincipal.show();
+            Stage stInicio = (Stage) tfNoPersonal.getScene().getWindow();
+            stInicio.setScene(escenaInicio);
+            stInicio.setTitle("Inicio");
+            stInicio.show();
             
         } catch (IOException ex) {
             ex.printStackTrace();

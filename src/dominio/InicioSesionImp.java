@@ -18,8 +18,8 @@ import utilidad.Constantes;
 public class InicioSesionImp {
     public static RSAutenticacionAdmin verificarCredenciales(String noPersonal, String password) {
         RSAutenticacionAdmin respuesta = new RSAutenticacionAdmin();
-        String parametros = "noPersonal" + noPersonal + "&password" + password; 
-        String URL = Constantes.URL_WS + "autenticacion/administracion";
+        String parametros = "noPersonal=" + noPersonal + "&password=" + password; 
+        String URL = Constantes.URL_WS + "autenticacion/escritorio";
         RespuestaHTTP respuestaApi = ConexionAPI.peticionBody(URL,"POST", parametros, "application/x-www-form-urlencoded");
         
         if(respuestaApi.getCodigo() == HttpURLConnection.HTTP_OK) {
