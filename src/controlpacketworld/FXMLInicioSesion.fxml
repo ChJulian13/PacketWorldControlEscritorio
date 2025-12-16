@@ -17,7 +17,7 @@
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="28.0" layoutY="122.0" text="Ingresa tu número personal y contraseña" textFill="#757474" />
+            <Label layoutX="82.0" layoutY="124.0" text="Ingresa tu número personal y contraseña" textFill="#757474" />
             <TextField fx:id="tfNoPersonal" layoutX="60.0" layoutY="162.0" prefHeight="25.0" prefWidth="261.0" promptText="Número de personal" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
             <Button layoutX="60.0" layoutY="264.0" mnemonicParsing="false" onAction="#clicIniciarSesion" prefHeight="29.0" prefWidth="261.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Ingresar">
                <cursor>
