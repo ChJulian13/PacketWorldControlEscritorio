@@ -1,15 +1,16 @@
-#netbeans 
-nbprojectprivate 
-build 
-dist 
-nbbuild 
-nbdist 
-.nb-gradle 
-# Java 
-.class 
-.log 
-hs_err_pid 
-# JavaFX (artefactos generados) 
-.jar 
-.jmod 
+# NetBeans
 /nbproject/private/
+/build/
+/dist/
+/nbbuild/
+/nbdist/
+/.nb-gradle/
+
+# Java
+*.class
+*.log
+hs_err_pid*
+
+# JavaFX / Java
+*.jar
+*.jmod
