@@ -30,10 +30,10 @@ public class ConexionAPI {
             }
             respuesta.setCodigo(codigo);
         } catch (MalformedURLException e) {
-            respuesta.setCodigo(Constantes.MALFORMED_URL);
+            respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
             respuesta.setContenido(e.getMessage());
         } catch (IOException e) {
-            respuesta.setCodigo(Constantes.ERROR_SOLICITUD);
+            respuesta.setCodigo(Constantes.ERROR_PETICION);
             respuesta.setContenido(e.getMessage());  
         }
         return respuesta;
@@ -57,10 +57,10 @@ public class ConexionAPI {
             }
             respuesta.setCodigo(codigo);
         } catch (MalformedURLException e) {
-            respuesta.setCodigo(Constantes.MALFORMED_URL);
+            respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
             respuesta.setContenido(e.getMessage());
         } catch (IOException e) {
-            respuesta.setCodigo(Constantes.ERROR_SOLICITUD);
+            respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
             respuesta.setContenido(e.getMessage());  
         }
         return respuesta;
@@ -78,10 +78,10 @@ public class ConexionAPI {
             }
             respuesta.setCodigo(codigo);
         } catch (MalformedURLException e) {
-            respuesta.setCodigo(Constantes.MALFORMED_URL);
+            respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
             respuesta.setContenido(e.getMessage());
         } catch (IOException e) {
-            respuesta.setCodigo(Constantes.ERROR_SOLICITUD);
+            respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
             respuesta.setContenido(e.getMessage());  
         }
         return respuesta;

@@ -7,18 +7,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLEnvioController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #fbfbfb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLEnvioController">
    <children>
-      <TextField layoutX="32.0" layoutY="67.0" prefHeight="43.0" prefWidth="283.0" promptText="Número de guía" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
-      <TableView layoutX="32.0" layoutY="128.0" prefHeight="579.0" prefWidth="1224.0">
+      <TextField fx:id="tfNoGuia" layoutX="32.0" layoutY="67.0" prefHeight="43.0" prefWidth="283.0" promptText="Número de guía" styleClass="textfield" stylesheets="@css/principal.css" />
+      <TableView fx:id="tbEnvios" layoutX="32.0" layoutY="128.0" prefHeight="579.0" prefWidth="1224.0" styleClass="table" stylesheets="@css/principal.css">
          <columns>
-            <TableColumn prefWidth="82.0" text="No. guía" />
-            <TableColumn prefWidth="143.0" text="Estado" />
-            <TableColumn prefWidth="163.0" text="Sucursal" />
-            <TableColumn prefWidth="275.0" text="Dirección entrega" />
-            <TableColumn prefWidth="209.0" text="Recibe" />
-            <TableColumn prefWidth="252.0" text="Conductor asignado" />
-            <TableColumn prefWidth="99.0" text="Costo" />
+            <TableColumn fx:id="colNoGuia" editable="false" prefWidth="82.0" text="No. guía" />
+            <TableColumn fx:id="colEstatus" editable="false" prefWidth="143.0" text="Estado" />
+            <TableColumn fx:id="colSucursal" editable="false" prefWidth="163.0" text="Sucursal" />
+            <TableColumn fx:id="colDestinatarioDireccion" editable="false" prefWidth="403.0" text="Dirección entrega" />
+            <TableColumn fx:id="colConductor" editable="false" prefWidth="227.0" text="Conductor asignado" />
+            <TableColumn fx:id="colCosto" editable="false" prefWidth="189.0" text="Costo" />
          </columns>
       </TableView>
       <Label layoutX="32.0" layoutY="14.0" prefHeight="39.0" prefWidth="74.0" text="Envíos">

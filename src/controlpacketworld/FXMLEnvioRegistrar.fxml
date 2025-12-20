@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLEnvioRegistrarController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #fbfbfb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLEnvioRegistrarController">
    <children>
       <Pane layoutX="24.0" layoutY="24.0" prefHeight="127.0" prefWidth="1237.0" styleClass="panel" stylesheets="@css/principal.css">
          <children>
@@ -45,7 +45,7 @@
             <TextField layoutX="18.0" layoutY="230.0" prefHeight="39.0" prefWidth="347.0" styleClass="textfield" stylesheets="@css/principal.css" />
          </children>
       </Pane>
-      <Pane layoutX="582.0" layoutY="474.0" prefHeight="138.0" prefWidth="681.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 10px;" styleClass="panel" stylesheets="@css/principal.css">
+      <Pane layoutX="582.0" layoutY="474.0" prefHeight="138.0" prefWidth="681.0" styleClass="panel" stylesheets="@css/principal.css">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="215.0" text="Conductor asignado">
                <font>
@@ -80,7 +80,7 @@
             <TextField layoutX="330.0" layoutY="227.0" prefHeight="39.0" prefWidth="111.0" styleClass="textfield" stylesheets="@css/principal.css" />
          </children>
       </Pane>
-      <Pane layoutX="24.0" layoutY="474.0" prefHeight="138.0" prefWidth="547.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 10px;" styleClass="panel" stylesheets="@css/principal.css">
+      <Pane layoutX="24.0" layoutY="474.0" prefHeight="138.0" prefWidth="547.0" styleClass="panel" stylesheets="@css/principal.css">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="215.0" text="Datos del envío">
                <font>
@@ -88,7 +88,7 @@
                </font>
             </Label>
             <Label layoutX="14.0" layoutY="47.0" text="Sucursal de origen:" textFill="#757474" />
-            <ComboBox fx:id="cbSucursal" layoutX="14.0" layoutY="74.0" prefHeight="39.0" prefWidth="275.0" promptText="Sucursal" styleClass="combo" stylesheets="@css/principal.css" />
+            <ComboBox fx:id="cbSucursal" layoutX="14.0" layoutY="74.0" prefHeight="39.0" prefWidth="333.0" promptText="Sucursal" styleClass="combo" stylesheets="@css/principal.css" />
          </children>
       </Pane>
       <Button layoutX="26.0" layoutY="635.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="111.0" styleClass="boton" stylesheets="@css/principal.css" text="Continuar">
@@ -96,7 +96,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="154.0" layoutY="635.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="121.0" styleClass="boton" stylesheets="@css/principal.css" text="Cancelar">
+      <Button layoutX="154.0" layoutY="635.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="121.0" styleClass="boton-cancelar" stylesheets="@css/principal.css" text="Cancelar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

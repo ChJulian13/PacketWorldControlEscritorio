@@ -36,7 +36,7 @@ public class InicioSesionImp {
                 case Constantes.ERROR_MALFORMED_URL:
                     respuesta.setMensaje(String.valueOf(Constantes.ERROR_MALFORMED_URL));
                     break;
-                case Constantes.ERROR_SOLICITUD:
+                case Constantes.ERROR_PETICION:
                     respuesta.setMensaje(String.valueOf(Constantes.MSJ_ERROR_PETICION));
                     break;
                 case HttpURLConnection.HTTP_BAD_REQUEST:
