@@ -9,16 +9,16 @@
 
 <AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLEnvioRegistrarController">
    <children>
-      <Pane layoutX="24.0" layoutY="24.0" prefHeight="127.0" prefWidth="1237.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+      <Pane layoutX="24.0" layoutY="24.0" prefHeight="127.0" prefWidth="1237.0" styleClass="panel" stylesheets="@css/principal.css">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="172.0" text="Cliente">
                <font>
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <ComboBox layoutX="14.0" layoutY="45.0" prefHeight="39.0" prefWidth="215.0" promptText="Buscar cliente por:" />
-            <TextField layoutX="238.0" layoutY="45.0" prefHeight="39.0" prefWidth="253.0" />
-            <Button layoutX="506.0" layoutY="45.0" mnemonicParsing="false" text="Buscar" />
+            <ComboBox fx:id="cbBuscarClientePor" layoutX="14.0" layoutY="45.0" prefHeight="39.0" prefWidth="215.0" promptText="Buscar cliente por:" styleClass="combo" stylesheets="@css/principal.css" />
+            <TextField layoutX="238.0" layoutY="45.0" prefHeight="39.0" prefWidth="253.0" styleClass="textfield" stylesheets="@css/principal.css" />
+            <Button layoutX="506.0" layoutY="45.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="76.0" styleClass="boton" stylesheets="@css/principal.css" text="Buscar" />
             <Label layoutX="612.0" layoutY="51.0" prefHeight="27.0" prefWidth="75.0" text="Correo:">
             </Label>
             <Label layoutX="612.0" layoutY="26.0" prefHeight="27.0" prefWidth="75.0" text="Nombre:">
@@ -30,17 +30,7 @@
             <Label layoutX="694.0" layoutY="76.0" prefHeight="27.0" prefWidth="242.0" text="\${telefono}" />
          </children>
       </Pane>
-      <Button layoutX="24.0" layoutY="627.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="123.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-font-size: 25px;" text="Guardar">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Button layoutX="162.0" layoutY="627.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="123.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC; -fx-font-size: 25px;" text="Cancelar">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Pane layoutX="24.0" layoutY="164.0" prefHeight="299.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+      <Pane layoutX="24.0" layoutY="164.0" prefHeight="299.0" prefWidth="380.0" styleClass="panel" stylesheets="@css/principal.css">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="215.0" text="Datos del destinatario">
                <font>
@@ -50,12 +40,12 @@
             <Label layoutX="17.0" layoutY="46.0" text="Nombre:" textFill="#757474" />
             <Label layoutX="18.0" layoutY="121.0" text="Apellido paterno:" textFill="#757474" />
             <Label layoutX="16.0" layoutY="203.0" text="Apellido materno:" textFill="#757474" />
-            <TextField layoutX="18.0" layoutY="150.0" prefHeight="39.0" prefWidth="347.0" />
-            <TextField layoutX="18.0" layoutY="73.0" prefHeight="39.0" prefWidth="347.0" />
-            <TextField layoutX="18.0" layoutY="230.0" prefHeight="39.0" prefWidth="347.0" />
+            <TextField layoutX="18.0" layoutY="150.0" prefHeight="39.0" prefWidth="347.0" styleClass="textfield" stylesheets="@css/principal.css" />
+            <TextField layoutX="18.0" layoutY="73.0" prefHeight="39.0" prefWidth="347.0" styleClass="textfield" stylesheets="@css/principal.css" />
+            <TextField layoutX="18.0" layoutY="230.0" prefHeight="39.0" prefWidth="347.0" styleClass="textfield" stylesheets="@css/principal.css" />
          </children>
       </Pane>
-      <Pane layoutX="744.0" layoutY="474.0" prefHeight="138.0" prefWidth="519.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+      <Pane layoutX="582.0" layoutY="474.0" prefHeight="138.0" prefWidth="681.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 10px;" styleClass="panel" stylesheets="@css/principal.css">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="215.0" text="Conductor asignado">
                <font>
@@ -63,10 +53,10 @@
                </font>
             </Label>
             <Label layoutX="14.0" layoutY="42.0" text="Coductor" textFill="#757474" />
-            <ComboBox layoutX="14.0" layoutY="69.0" prefHeight="39.0" prefWidth="291.0" promptText="Coductor" />
+            <ComboBox fx:id="cbConductor" layoutX="14.0" layoutY="69.0" prefHeight="39.0" prefWidth="291.0" promptText="Coductor" styleClass="combo" stylesheets="@css/principal.css" />
          </children>
       </Pane>
-      <Pane layoutX="418.0" layoutY="167.0" prefHeight="299.0" prefWidth="843.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+      <Pane layoutX="418.0" layoutY="167.0" prefHeight="299.0" prefWidth="843.0" styleClass="panel" stylesheets="@css/principal.css">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="215.0" text="Dirección destino">
                <font>
@@ -76,32 +66,40 @@
             <Label layoutX="14.0" layoutY="42.0" text="Código postal" textFill="#757474" />
             <Label layoutX="17.0" layoutY="120.0" text="Estado" textFill="#757474" />
             <Label layoutX="226.0" layoutY="120.0" text="Municipio" textFill="#757474" />
-            <Label layoutX="330.0" layoutY="206.0" text="Número" textFill="#757474" />
-            <Label layoutX="19.0" layoutY="206.0" text="Calle" textFill="#757474" />
+            <Label layoutX="330.0" layoutY="198.0" text="Número" textFill="#757474" />
+            <Label layoutX="22.0" layoutY="198.0" text="Calle" textFill="#757474" />
             <Label layoutX="430.0" layoutY="120.0" text="Ciudad" textFill="#757474" />
-            <Button layoutX="177.0" layoutY="73.0" mnemonicParsing="false" text="Buscar" />
-            <TextField layoutX="17.0" layoutY="73.0" prefHeight="39.0" prefWidth="151.0" />
-            <ComboBox layoutX="19.0" layoutY="147.0" prefHeight="39.0" prefWidth="190.0" promptText="Estado" />
-            <ComboBox layoutX="430.0" layoutY="147.0" prefHeight="39.0" prefWidth="190.0" promptText="Ciudad" />
-            <ComboBox layoutX="225.0" layoutY="147.0" prefHeight="39.0" prefWidth="190.0" promptText="Municipio" />
+            <Button layoutX="177.0" layoutY="73.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="76.0" styleClass="boton" stylesheets="@css/principal.css" text="Buscar" />
+            <TextField layoutX="17.0" layoutY="73.0" prefHeight="39.0" prefWidth="151.0" styleClass="textfield" stylesheets="@css/principal.css" />
+            <ComboBox fx:id="cbEstado" layoutX="19.0" layoutY="147.0" prefHeight="39.0" prefWidth="190.0" promptText="Estado" styleClass="combo" stylesheets="@css/principal.css" />
+            <ComboBox fx:id="cbCiudad" layoutX="430.0" layoutY="147.0" prefHeight="39.0" prefWidth="190.0" promptText="Ciudad" styleClass="combo" stylesheets="@css/principal.css" />
+            <ComboBox fx:id="cbMunicipio" layoutX="225.0" layoutY="147.0" prefHeight="39.0" prefWidth="190.0" promptText="Municipio" styleClass="combo" stylesheets="@css/principal.css" />
             <Label layoutX="633.0" layoutY="120.0" text="Colonia" textFill="#757474" />
-            <ComboBox layoutX="633.0" layoutY="147.0" prefHeight="39.0" prefWidth="190.0" promptText="Colonia" />
-            <TextField layoutX="19.0" layoutY="235.0" prefHeight="39.0" prefWidth="291.0" />
-            <TextField layoutX="330.0" layoutY="235.0" prefHeight="39.0" prefWidth="111.0" />
+            <ComboBox fx:id="cbColonia" layoutX="633.0" layoutY="147.0" prefHeight="39.0" prefWidth="190.0" promptText="Colonia" styleClass="combo" stylesheets="@css/principal.css" />
+            <TextField layoutX="21.0" layoutY="227.0" prefHeight="39.0" prefWidth="291.0" styleClass="textfield" stylesheets="@css/principal.css" />
+            <TextField layoutX="330.0" layoutY="227.0" prefHeight="39.0" prefWidth="111.0" styleClass="textfield" stylesheets="@css/principal.css" />
          </children>
       </Pane>
-      <Pane layoutX="24.0" layoutY="474.0" prefHeight="138.0" prefWidth="706.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+      <Pane layoutX="24.0" layoutY="474.0" prefHeight="138.0" prefWidth="547.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 10px;" styleClass="panel" stylesheets="@css/principal.css">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="215.0" text="Datos del envío">
                <font>
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="14.0" layoutY="46.0" text="Número de guía:" textFill="#757474" />
-            <Label layoutX="417.0" layoutY="46.0" text="Sucursal de origen:" textFill="#757474" />
-            <ComboBox layoutX="417.0" layoutY="73.0" prefHeight="39.0" prefWidth="275.0" promptText="Sucursal" />
-            <Label layoutX="14.0" layoutY="79.0" prefHeight="27.0" prefWidth="380.0" text="\${número de guía}" />
+            <Label layoutX="14.0" layoutY="47.0" text="Sucursal de origen:" textFill="#757474" />
+            <ComboBox fx:id="cbSucursal" layoutX="14.0" layoutY="74.0" prefHeight="39.0" prefWidth="275.0" promptText="Sucursal" styleClass="combo" stylesheets="@css/principal.css" />
          </children>
       </Pane>
+      <Button layoutX="26.0" layoutY="635.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="111.0" styleClass="boton" stylesheets="@css/principal.css" text="Continuar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="154.0" layoutY="635.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="121.0" styleClass="boton" stylesheets="@css/principal.css" text="Cancelar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </AnchorPane>

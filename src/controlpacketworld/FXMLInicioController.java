@@ -142,5 +142,20 @@ public class FXMLInicioController implements Initializable {
             ex.printStackTrace();
         }
     }
+
+    @FXML
+    private void clicEnvios(ActionEvent event) {
+        try {
+            Parent vista = FXMLLoader.load(getClass().getResource("FXMLEnvio.fxml"));
+            Scene scEnvio = new Scene(vista);
+            Stage stEnvio = new Stage();
+            stEnvio.setScene(scEnvio);
+            stEnvio.setTitle("Envios");
+            stEnvio.initModality(Modality.APPLICATION_MODAL);
+            stEnvio.showAndWait();
+        } catch (IOException ex) {
+           ex.printStackTrace();
+        }
+    }
     
 }
