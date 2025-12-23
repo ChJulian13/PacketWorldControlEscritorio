@@ -59,7 +59,7 @@ public class FXLMInicioSesionController implements Initializable {
         RSAutenticacionAdmin respuesta = InicioSesionImp.verificarCredenciales(noPersonal, contrasenia);
         
         if (!respuesta.isError()) {
-            Utilidades.mostrarAlertaSimple("Credenciales verificadas", "Bienvenida (a) administrador (a) " + respuesta.colaborador.getNombre() + "al sistems de PacketWorld.", Alert.AlertType.INFORMATION);
+            Utilidades.mostrarAlertaSimple("Credenciales verificadas", "Bienvenido (a) administrador (a) " + respuesta.colaborador.getNombre() + " al sistema de PacketWorld.", Alert.AlertType.INFORMATION);
             irPantallaInicio(respuesta.getColaborador()); 
         } else {
             Utilidades.mostrarAlertaSimple("Error de credenciales", respuesta.getMensaje(), Alert.AlertType.ERROR);
