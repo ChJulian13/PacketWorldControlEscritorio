@@ -60,7 +60,7 @@
             <ComboBox fx:id="cbRol" layoutX="24.0" layoutY="172.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
          </children>
       </Pane>
-      <Pane layoutX="428.0" layoutY="243.0" prefHeight="123.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+      <Pane fx:id="pDatosConductor" layoutX="428.0" layoutY="243.0" prefHeight="123.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
          <children>
             <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="311.0" text="Datos Específicos de Conductor">
                <font>
@@ -68,7 +68,7 @@
                </font>
             </Label>
             <Label layoutX="24.0" layoutY="55.0" text="Número de licencia:" textFill="#757474" />
-            <TextField layoutX="24.0" layoutY="73.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField fx:id="tfNumLicencia" layoutX="24.0" layoutY="73.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
          </children>
       </Pane>
       <Button layoutX="714.0" layoutY="455.0" mnemonicParsing="false" onAction="#clicCancelar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Cancelar">
