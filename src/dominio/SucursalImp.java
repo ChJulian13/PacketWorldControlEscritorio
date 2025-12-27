@@ -21,14 +21,14 @@ import utilidad.Constantes;
  *
  * @author julia
  */
-public class CatalogoImp {
-    public static HashMap<String, Object> obtenerRolesSistema() {
+public class SucursalImp {
+    public static HashMap<String, Object> obtenerSucursalesActivasSistema() {
         HashMap<String, Object> respuesta = new LinkedHashMap<>();
-        String URL = Constantes.URL_WS + "catalogo/obtener-roles";
+        String URL = Constantes.URL_WS + "sucursal/obtener-activas";
         RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
         if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
             Gson gson = new Gson();
-            Type tipoLista = new TypeToken<List<Rol>>(){}.getType();
+            Type tipoLista = new TypeToken<List<Sucursal>>(){}.getType();
             List<Rol> roles = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
             respuesta.put(Constantes.KEY_ERROR, false);
             respuesta.put(Constantes.KEY_LISTA, roles);
