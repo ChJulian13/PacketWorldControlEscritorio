@@ -14,16 +14,16 @@
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
-      <TableView layoutX="32.0" layoutY="142.0" prefHeight="560.0" prefWidth="1212.0">
+      <TableView fx:id="tvColaboradores" layoutX="32.0" layoutY="142.0" prefHeight="560.0" prefWidth="1212.0">
         <columns>
-            <TableColumn prefWidth="149.0" text="No. personal" />
-          <TableColumn prefWidth="187.0" text="Nombre" />
-          <TableColumn minWidth="0.0" prefWidth="177.0" text="Apellido paterno" />
-            <TableColumn prefWidth="159.0" text="Apellido materno" />
-            <TableColumn prefWidth="106.0" text="CURP" />
-            <TableColumn prefWidth="167.0" text="Correo electrónico" />
-            <TableColumn prefWidth="117.0" text="Rol" />
-            <TableColumn prefWidth="149.0" text="Sucursal" />
+            <TableColumn fx:id="colNumPersonal" prefWidth="149.0" text="No. personal" />
+          <TableColumn fx:id="colNombre" prefWidth="187.0" text="Nombre" />
+          <TableColumn fx:id="colApellidoPaterno" minWidth="0.0" prefWidth="177.0" text="Apellido paterno" />
+            <TableColumn fx:id="colApellidoMaterno" prefWidth="159.0" text="Apellido materno" />
+            <TableColumn fx:id="colCurp" prefWidth="106.0" text="CURP" />
+            <TableColumn fx:id="colCorreo" prefWidth="167.0" text="Correo electrónico" />
+            <TableColumn fx:id="colRol" prefWidth="117.0" text="Rol" />
+            <TableColumn fx:id="colSucursal" prefWidth="149.0" text="Sucursal" />
         </columns>
       </TableView>
       <TextField layoutX="146.0" layoutY="85.0" onAction="#tfBuscador" prefHeight="31.0" prefWidth="271.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
