@@ -34,7 +34,7 @@ import utilidad.Utilidades;
  *
  * @author julia
  */
-public class FXMLColaboradorRegistrarController implements Initializable {
+public class FXMLColaboradorFormularioController implements Initializable {
 
     @FXML
     private TextField tfNombre;
@@ -64,6 +64,8 @@ public class FXMLColaboradorRegistrarController implements Initializable {
     private TextField tfNumLicencia;
     @FXML
     private Pane pDatosConductor;
+    
+    private Colaborador colaboradorEdicion;
 
     /**
      * Initializes the controller class.
@@ -95,6 +97,45 @@ public class FXMLColaboradorRegistrarController implements Initializable {
                 }
             }
         });
+    }
+    
+    public void inicializarDatos(Colaborador colaboradorEdicion, INotificador observador){
+        this.colaboradorEdicion = colaboradorEdicion;
+        this.observador = observador;
+        if (colaboradorEdicion != null) {
+            tfNombre.setText(colaboradorEdicion.getNombre());
+            tfApellidoPaterno.setText(colaboradorEdicion.getApellidoPaterno());
+            tfApellidoMaterno.setText(colaboradorEdicion.getApellidoMaterno());
+            tfCurp.setText(colaboradorEdicion.getCurp());
+            tfCorreo.setText(colaboradorEdicion.getCorreo());
+            tfPassword.setText(colaboradorEdicion.getContrasenia());
+            tfNumLicencia.setText(colaboradorEdicion.getNumeroLicencia());
+            int posicionSucursal = obtenerPosicionSucursal(colaboradorEdicion.getIdSucursal());
+            cbSurcusal.getSelectionModel().select(posicionSucursal);
+            tfNumPersonal.setText(colaboradorEdicion.getNoPersonal());
+            int posicionRol = obtenerPosicionRol(colaboradorEdicion.getIdSucursal());
+            cbRol.getSelectionModel().select(posicionRol);
+            cbRol.setDisable(true);
+            tfNumPersonal.setEditable(false);
+        }
+    }
+    
+    private int obtenerPosicionSucursal(int idSucursal) {
+        for (int i = 0; i < sucursales.size(); i++) {
+            if (sucursales.get(i).getIdSucursal() == idSucursal)
+                return i;
+        }
+        
+        return -1;
+    }
+    
+    private int obtenerPosicionRol(int idRol) {
+        for (int i = 0; i < roles.size(); i++) {
+            if (roles.get(i).getIdRol() == idRol)
+                return i;
+        }
+        
+        return -1;
     }
     
     private void cerrarVentana() {
@@ -160,7 +201,21 @@ public class FXMLColaboradorRegistrarController implements Initializable {
             colaborador.setIdRol(rolSeleccionado.getIdRol());
             Sucursal sucursalSeleccionada = cbSurcusal.getSelectionModel().getSelectedItem();
             colaborador.setIdSucursal(sucursalSeleccionada.getIdSucursal()); 
-            registrarColaborador(colaborador);
+            if (colaboradorEdicion == null) {
+                registrarColaborador(colaborador);
+            } else {
+                editarColaborador(colaborador);
+            }
+        }
+    }
+    
+    private void editarColaborador(Colaborador colaborador) {
+        colaborador.setIdColaborador(colaboradorEdicion.getIdColaborador());
+        Respuesta respuesta = ColaboradorImp.editar(colaborador);
+        if (!respuesta.isError()) {
+            Utilidades.mostrarAlertaSimple("Colaborador registrado", respuesta.getMensaje(), Alert.AlertType.INFORMATION);
+        } else {
+            Utilidades.mostrarAlertaSimple("Error al registrar", respuesta.getMensaje(), Alert.AlertType.ERROR);
         }
     }
     
