@@ -76,4 +76,54 @@ public class ColaboradorImp {
         
         return respuesta;
     }
+    
+    public static Respuesta editar (Colaborador colaborador) {
+        Respuesta respuesta = new Respuesta();
+        String URL = Constantes.URL_WS + "colaborador/editar";
+        Gson gson = new Gson();
+        String parametrosJSON = gson.toJson(colaborador);
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(URL, "PUT", parametrosJSON, Constantes.APPLICATION_JSON);
+        
+        if(respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            respuesta = gson.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+        } else {
+            respuesta.setError(true);
+            switch(respuestaAPI.getCodigo()) {
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.setMensaje(String.valueOf(Constantes.MSJ_ERROR_PETICION));
+                    break;
+                case Constantes.ERROR_PETICION:
+                    respuesta.setMensaje((String.valueOf(Constantes.MSJ_ERROR_PETICION)));
+                    break;
+                default:
+                    respuesta.setMensaje("Lo sentimos, hay problemas para editar la información en este momento, por favor intentelo más tarde");
+            }
+        }
+        
+        return respuesta;
+    }
+    
+    public static Respuesta eliminar(int idColaborador) {
+        Respuesta respuesta = new Respuesta();
+        Gson gson = new Gson();
+        String URL = Constantes.URL_WS + "colaborador/eliminar/" + idColaborador;
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionSinBody(URL, Constantes.PETICION_DELETE);
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            respuesta = gson.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+        } else {
+            respuesta.setError(true);
+            switch(respuestaAPI.getCodigo()) {
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.setMensaje(String.valueOf(Constantes.MSJ_ERROR_PETICION));
+                    break;
+                case Constantes.ERROR_PETICION:
+                    respuesta.setMensaje((String.valueOf(Constantes.MSJ_ERROR_PETICION)));
+                    break;
+                default:
+                    respuesta.setMensaje("Lo sentimos, hay problemas para eliminar la información en este momento, por favor intentelo más tarde");
+            }
+        }
+        
+        return respuesta;
+    }
 }

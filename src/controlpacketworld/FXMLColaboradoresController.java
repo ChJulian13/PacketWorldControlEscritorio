@@ -4,7 +4,9 @@
  */
 package controlpacketworld;
 
+import controlpacketworld.interfaz.INotificador;
 import dominio.ColaboradorImp;
+import dto.Respuesta;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ import utilidad.Utilidades;
  *
  * @author julia
  */
-public class FXMLColaboradoresController implements Initializable {
+public class FXMLColaboradoresController implements Initializable, INotificador {
 
     @FXML
     private TableView<Colaborador> tvColaboradores;
@@ -87,6 +89,33 @@ public class FXMLColaboradoresController implements Initializable {
             Utilidades.mostrarAlertaSimple("Error al cargar", "" + respuesta.get("mensaje"), Alert.AlertType.NONE);
         }
     }
+    
+    private void irFormulario(Colaborador colaborador) {
+        FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLColaboradorFormulario.fxml"));
+        try {
+            Parent vista = cargador.load();
+            FXMLColaboradorFormularioController controlador = cargador.getController();
+            controlador.inicializarDatos(colaborador, this);
+            Scene escena = new Scene(vista);
+            Stage escenario = new Stage();
+            escenario.setScene(escena);
+            escenario.setTitle("Formulario colaborador");
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void eliminarColaborador(int idColaborador) {
+        Respuesta respuesta = ColaboradorImp.eliminar(idColaborador);
+        if (!respuesta.isError()) {
+            Utilidades.mostrarAlertaSimple("Registro eliminado", "El registro del colaborador (a) fue eliminado correctamente", Alert.AlertType.INFORMATION);
+            cargarInformacionColaboradores();
+        } else {
+            Utilidades.mostrarAlertaSimple("Error al eliminar", respuesta.getMensaje(), Alert.AlertType.ERROR);
+        }
+    }
  
     @FXML
     private void tfBuscador(ActionEvent event) {
@@ -95,7 +124,7 @@ public class FXMLColaboradoresController implements Initializable {
     @FXML
     private void clicRegistrar(ActionEvent event) {
         try {
-            Parent vista = FXMLLoader.load(getClass().getResource("FXMLColaboradorRegistrar.fxml"));
+            Parent vista = FXMLLoader.load(getClass().getResource("FXMLColaboradorFormulario.fxml"));
             Scene scRegistrarColaborador = new Scene(vista);
             Stage stRegistrar = new Stage();
             stRegistrar.setScene(scRegistrarColaborador);
@@ -109,14 +138,35 @@ public class FXMLColaboradoresController implements Initializable {
 
     @FXML
     private void clicEditar(ActionEvent event) {
+        Colaborador colaborador = tvColaboradores.getSelectionModel().getSelectedItem();
+        if (colaborador != null) {
+            irFormulario(colaborador);
+        } else {
+            Utilidades.mostrarAlertaSimple("Selecciona un colaborador", "Para editar la información de un colaborador, debe seleccionarlo.", Alert.AlertType.WARNING);
+        }
     }
 
     @FXML
     private void clicEliminar(ActionEvent event) {
+        Colaborador colaborador = tvColaboradores.getSelectionModel().getSelectedItem();
+        if (colaborador != null) {
+            boolean confirmarOperacion = Utilidades.mostrarAlertaConfirmacion("Eliminar colaborador", "¿Estas seguro de eliminar al colaborador (a) " + colaborador.getNombre() + " " + colaborador.getApellidoPaterno() + " " + colaborador.getApellidoMaterno() + "?");
+            if (confirmarOperacion) {
+                eliminarColaborador(colaborador.getIdColaborador());
+            } 
+        } else {
+            Utilidades.mostrarAlertaSimple("Selecciona un colaborador", "Para eliminar la información de un colaborador, debes seleccionarlo", Alert.AlertType.WARNING);
+        }
     }
 
     @FXML
     private void clicBuscar(ActionEvent event) {
+    }
+
+    @Override
+    public void notificarOperacionExitosa(String operacion, String nombre) {
+        System.out.print("Operación: " + operacion + "nombre colaborador: " + nombre);
+        cargarInformacionColaboradores();
     }
     
 }
