@@ -55,9 +55,10 @@
             <Label layoutX="24.0" layoutY="55.0" text="Correo electrónico:" textFill="#757474" />
             <TextField fx:id="tfCorreo" layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
             <TextField fx:id="tfPassword" layoutX="24.0" layoutY="122.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
-            <Label layoutX="24.0" layoutY="105.0" text="Contraseña:" textFill="#757474" />
+            <Label fx:id="lbPassword" layoutX="24.0" layoutY="105.0" text="Contraseña:" textFill="#757474" />
             <Label layoutX="24.0" layoutY="155.0" text="Rol:" textFill="#757474" />
             <ComboBox fx:id="cbRol" layoutX="24.0" layoutY="172.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <CheckBox fx:id="cbCambiarPassword" layoutX="24.0" layoutY="103.0" mnemonicParsing="false" text="¿Cambiar contraseña?" />
          </children>
       </Pane>
       <Pane fx:id="pDatosConductor" layoutX="428.0" layoutY="243.0" prefHeight="123.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">

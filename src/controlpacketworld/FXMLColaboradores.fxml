@@ -26,7 +26,7 @@
             <TableColumn fx:id="colSucursal" prefWidth="149.0" text="Sucursal" />
         </columns>
       </TableView>
-      <TextField layoutX="146.0" layoutY="85.0" onAction="#tfBuscador" prefHeight="31.0" prefWidth="271.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
+      <TextField fx:id="tfBarraBusqueda" layoutX="146.0" layoutY="85.0" onAction="#tfBuscador" prefHeight="31.0" prefWidth="271.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
       <Button layoutX="928.0" layoutY="85.0" mnemonicParsing="false" onAction="#clicRegistrar" prefHeight="29.0" prefWidth="105.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -42,11 +42,17 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <ComboBox layoutX="32.0" layoutY="85.0" prefHeight="31.0" prefWidth="105.0" promptText="Buscar por:" />
-      <Button layoutX="426.0" layoutY="84.0" mnemonicParsing="false" onAction="#clicBuscar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Buscar">
+      <ComboBox fx:id="cbBuscar" layoutX="32.0" layoutY="85.0" prefHeight="31.0" prefWidth="105.0" promptText="Buscar por:" />
+      <Button fx:id="btnBuscar" layoutX="426.0" layoutY="84.0" mnemonicParsing="false" onAction="#clicBuscar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Buscar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      <Button fx:id="btnMostrarTodos" layoutX="787.0" layoutY="85.0" mnemonicParsing="false" onAction="#clicMostrarTodos" prefHeight="31.0" prefWidth="124.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Mostrar todos">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <ComboBox fx:id="cbBusquedaRol" layoutX="146.0" layoutY="85.0" prefHeight="31.0" prefWidth="149.0" promptText="Selecciona un rol:" />
    </children>
 </AnchorPane>

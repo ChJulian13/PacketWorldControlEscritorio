@@ -19,7 +19,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -66,6 +68,10 @@ public class FXMLColaboradorFormularioController implements Initializable {
     private Pane pDatosConductor;
     
     private Colaborador colaboradorEdicion;
+    @FXML
+    private Label lbPassword;
+    @FXML
+    private CheckBox cbCambiarPassword;
 
     /**
      * Initializes the controller class.
@@ -75,11 +81,16 @@ public class FXMLColaboradorFormularioController implements Initializable {
         cargarRolesColaborador();
         cargarSucursalesActivas();
         
-        // 1. Estado inicial: Oculto y limpio
         pDatosConductor.setVisible(false);
         tfNumLicencia.setText("");
+        
+        cbCambiarPassword.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            tfPassword.setDisable(!newVal);
+            if (!newVal) {
+                tfPassword.setText("");
+            }
+        });
 
-        // 2. Listener Inteligente
         cbRol.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 // Obtenemos el nombre del rol y quitamos espacios en blanco por si acaso
@@ -93,7 +104,7 @@ public class FXMLColaboradorFormularioController implements Initializable {
                 } else {
                     // CASO B: Es cualquier otro rol (Admin, Ejecutivo, etc.) -> OCULTAR
                     pDatosConductor.setVisible(false);
-                    tfNumLicencia.setText(""); // IMPORTANTE: Borrar lo que haya escrito
+                    tfNumLicencia.setText(""); // Borrar lo que haya escrito
                 }
             }
         });
@@ -108,15 +119,36 @@ public class FXMLColaboradorFormularioController implements Initializable {
             tfApellidoMaterno.setText(colaboradorEdicion.getApellidoMaterno());
             tfCurp.setText(colaboradorEdicion.getCurp());
             tfCorreo.setText(colaboradorEdicion.getCorreo());
-            tfPassword.setText(colaboradorEdicion.getContrasenia());
             tfNumLicencia.setText(colaboradorEdicion.getNumeroLicencia());
             int posicionSucursal = obtenerPosicionSucursal(colaboradorEdicion.getIdSucursal());
             cbSurcusal.getSelectionModel().select(posicionSucursal);
             tfNumPersonal.setText(colaboradorEdicion.getNoPersonal());
-            int posicionRol = obtenerPosicionRol(colaboradorEdicion.getIdSucursal());
+            int posicionRol = obtenerPosicionRol(colaboradorEdicion.getIdRol());
             cbRol.getSelectionModel().select(posicionRol);
             cbRol.setDisable(true);
             tfNumPersonal.setEditable(false);
+            tfNumPersonal.setDisable(true);
+            tfPassword.setText("");
+            lbPassword.setVisible(false);
+            lbPassword.setManaged(false); // Libera el espacio visual
+            cbCambiarPassword.setVisible(true);
+            cbCambiarPassword.setManaged(true);
+            cbCambiarPassword.setSelected(false); // Desmarcado por defecto
+
+            // 3. Preparar campo de texto
+            tfPassword.setText("");
+            tfPassword.setDisable(true); // Bloqueado hasta que marque el check
+        } else {
+            lbPassword.setVisible(true);
+            lbPassword.setManaged(true);
+
+            // 2. Ocultar el CheckBox
+            cbCambiarPassword.setVisible(false);
+            cbCambiarPassword.setManaged(false);
+
+            // 3. Campo habilitado siempre
+            tfPassword.setDisable(false);
+            tfPassword.setText("");
         }
     }
     
@@ -178,6 +210,38 @@ public class FXMLColaboradorFormularioController implements Initializable {
     }
     
     private boolean sonCamposValidos() {
+        if (tfNombre.getText().trim().isEmpty() || 
+            tfApellidoPaterno.getText().trim().isEmpty() ||
+            tfCurp.getText().trim().isEmpty() ||
+            tfCorreo.getText().trim().isEmpty() ||
+            tfNumPersonal.getText().trim().isEmpty()) {
+
+            Utilidades.mostrarAlertaSimple("Campos vacíos", "Por favor llena todos los campos de texto obligatorios.", Alert.AlertType.WARNING);
+            return false;
+        }
+        
+        if (colaboradorEdicion == null && tfPassword.getText().trim().isEmpty()) {
+            Utilidades.mostrarAlertaSimple("Contraseña requerida", "Para registrar un nuevo colaborador, la contraseña es obligatoria.", Alert.AlertType.WARNING);
+            return false;
+        }
+        
+        // CASO B: Edición (colaboradorEdicion no es null)
+        // Solo validamos si el CheckBox está MARCADO.
+        if (colaboradorEdicion != null && cbCambiarPassword.isSelected() && tfPassword.getText().trim().isEmpty()) {
+            Utilidades.mostrarAlertaSimple("Contraseña requerida", "Si activaste 'Cambiar contraseña', debes escribir la nueva clave.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (cbSurcusal.getSelectionModel().getSelectedItem() == null) {
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Debes seleccionar una Sucursal.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (pDatosConductor.isVisible() && tfNumLicencia.getText().trim().isEmpty()) {
+            Utilidades.mostrarAlertaSimple("Dato requerido", "Para los conductores, el N° de Licencia es obligatorio.", Alert.AlertType.WARNING);
+            return false;
+        }
+
         return true;
     }
 
@@ -201,6 +265,13 @@ public class FXMLColaboradorFormularioController implements Initializable {
             colaborador.setIdRol(rolSeleccionado.getIdRol());
             Sucursal sucursalSeleccionada = cbSurcusal.getSelectionModel().getSelectedItem();
             colaborador.setIdSucursal(sucursalSeleccionada.getIdSucursal()); 
+            
+            if (pDatosConductor.isVisible()) {
+                colaborador.setNumeroLicencia(tfNumLicencia.getText());
+            } else {
+                colaborador.setNumeroLicencia(null);
+            }
+            
             if (colaboradorEdicion == null) {
                 registrarColaborador(colaborador);
             } else {
@@ -213,9 +284,11 @@ public class FXMLColaboradorFormularioController implements Initializable {
         colaborador.setIdColaborador(colaboradorEdicion.getIdColaborador());
         Respuesta respuesta = ColaboradorImp.editar(colaborador);
         if (!respuesta.isError()) {
-            Utilidades.mostrarAlertaSimple("Colaborador registrado", respuesta.getMensaje(), Alert.AlertType.INFORMATION);
+            Utilidades.mostrarAlertaSimple("Colaborador editado", respuesta.getMensaje(), Alert.AlertType.INFORMATION);
+            observador.notificarOperacionExitosa("editar", colaborador.getNombre());
+            cerrarVentana();
         } else {
-            Utilidades.mostrarAlertaSimple("Error al registrar", respuesta.getMensaje(), Alert.AlertType.ERROR);
+            Utilidades.mostrarAlertaSimple("Error al editar", respuesta.getMensaje(), Alert.AlertType.ERROR);
         }
     }
     
