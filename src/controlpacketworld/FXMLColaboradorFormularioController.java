@@ -93,18 +93,13 @@ public class FXMLColaboradorFormularioController implements Initializable {
 
         cbRol.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                // Obtenemos el nombre del rol y quitamos espacios en blanco por si acaso
                 String nombreRol = newValue.getRol().trim(); 
 
                 if ("Conductor".equalsIgnoreCase(nombreRol)) {
-                    // CASO A: Es Conductor -> MOSTRAR
                     pDatosConductor.setVisible(true);
-                    // Opcional: Solicitar foco en el campo de licencia para agilizar
-                    // tfNumLicencia.requestFocus(); 
                 } else {
-                    // CASO B: Es cualquier otro rol (Admin, Ejecutivo, etc.) -> OCULTAR
                     pDatosConductor.setVisible(false);
-                    tfNumLicencia.setText(""); // Borrar lo que haya escrito
+                    tfNumLicencia.setText(""); 
                 }
             }
         });
@@ -130,23 +125,20 @@ public class FXMLColaboradorFormularioController implements Initializable {
             tfNumPersonal.setDisable(true);
             tfPassword.setText("");
             lbPassword.setVisible(false);
-            lbPassword.setManaged(false); // Libera el espacio visual
+            lbPassword.setManaged(false); 
             cbCambiarPassword.setVisible(true);
             cbCambiarPassword.setManaged(true);
-            cbCambiarPassword.setSelected(false); // Desmarcado por defecto
+            cbCambiarPassword.setSelected(false); 
 
-            // 3. Preparar campo de texto
             tfPassword.setText("");
-            tfPassword.setDisable(true); // Bloqueado hasta que marque el check
+            tfPassword.setDisable(true); 
         } else {
             lbPassword.setVisible(true);
             lbPassword.setManaged(true);
 
-            // 2. Ocultar el CheckBox
             cbCambiarPassword.setVisible(false);
             cbCambiarPassword.setManaged(false);
 
-            // 3. Campo habilitado siempre
             tfPassword.setDisable(false);
             tfPassword.setText("");
         }
@@ -225,8 +217,6 @@ public class FXMLColaboradorFormularioController implements Initializable {
             return false;
         }
         
-        // CASO B: Edición (colaboradorEdicion no es null)
-        // Solo validamos si el CheckBox está MARCADO.
         if (colaboradorEdicion != null && cbCambiarPassword.isSelected() && tfPassword.getText().trim().isEmpty()) {
             Utilidades.mostrarAlertaSimple("Contraseña requerida", "Si activaste 'Cambiar contraseña', debes escribir la nueva clave.", Alert.AlertType.WARNING);
             return false;
@@ -291,6 +281,7 @@ public class FXMLColaboradorFormularioController implements Initializable {
             Utilidades.mostrarAlertaSimple("Error al editar", respuesta.getMensaje(), Alert.AlertType.ERROR);
         }
     }
+
     
 }
  

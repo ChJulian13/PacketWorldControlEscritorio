@@ -24,7 +24,7 @@ public class ConexionAPI {
         try {
             URL urlWS = new URL(URL);
             HttpURLConnection conexionHTTP = (HttpURLConnection) urlWS.openConnection();
-            int codigo = conexionHTTP.getResponseCode(); // Envia la solicitud y recibe un código de respuesta
+            int codigo = conexionHTTP.getResponseCode();
             if (codigo == HttpURLConnection.HTTP_OK) {
                 respuesta.setContenido(Utilidades.streamToString(conexionHTTP.getInputStream()));
             }
@@ -51,7 +51,7 @@ public class ConexionAPI {
             os.write(parametros.getBytes());
             os.flush();
             os.close();
-            int codigo = conexionHTTP.getResponseCode(); // Envia la solicitud y recibe un código de respuesta
+            int codigo = conexionHTTP.getResponseCode(); 
             if (codigo == HttpURLConnection.HTTP_OK) {
                 respuesta.setContenido(Utilidades.streamToString(conexionHTTP.getInputStream()));
             }
@@ -60,7 +60,7 @@ public class ConexionAPI {
             respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
             respuesta.setContenido(e.getMessage());
         } catch (IOException e) {
-            respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
+            respuesta.setCodigo(Constantes.ERROR_PETICION);
             respuesta.setContenido(e.getMessage());  
         }
         return respuesta;
@@ -72,7 +72,7 @@ public class ConexionAPI {
             URL urlWS = new URL(URL);
             HttpURLConnection conexionHTTP = (HttpURLConnection) urlWS.openConnection();
             conexionHTTP.setRequestMethod(metodoHTTP);
-            int codigo = conexionHTTP.getResponseCode(); // Envia la solicitud y recibe un código de respuesta
+            int codigo = conexionHTTP.getResponseCode();
             if (codigo == HttpURLConnection.HTTP_OK) {
                 respuesta.setContenido(Utilidades.streamToString(conexionHTTP.getInputStream()));
             }
@@ -81,8 +81,39 @@ public class ConexionAPI {
             respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
             respuesta.setContenido(e.getMessage());
         } catch (IOException e) {
-            respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
+            respuesta.setCodigo(Constantes.ERROR_PETICION);
             respuesta.setContenido(e.getMessage());  
+        }
+        return respuesta;
+    }
+    
+    public static RespuestaHTTP peticionPUTImagen(String URL, byte[] datosImagen) {
+        RespuestaHTTP respuesta = new RespuestaHTTP();
+        try {
+            URL urlWS = new URL(URL);
+            HttpURLConnection conexionHTTP = (HttpURLConnection) urlWS.openConnection();
+            conexionHTTP.setRequestMethod("PUT");
+            
+            conexionHTTP.setRequestProperty("Content-Type", "application/octet-stream");
+            conexionHTTP.setDoOutput(true);
+            
+            OutputStream os = conexionHTTP.getOutputStream();
+            os.write(datosImagen);
+            os.flush();
+            os.close();
+            
+            int codigo = conexionHTTP.getResponseCode();
+            if (codigo == HttpURLConnection.HTTP_OK) {
+                respuesta.setContenido(Utilidades.streamToString(conexionHTTP.getInputStream()));
+            }
+            respuesta.setCodigo(codigo);
+            
+        } catch (MalformedURLException e) {
+            respuesta.setCodigo(Constantes.ERROR_MALFORMED_URL);
+            respuesta.setContenido(e.getMessage());
+        } catch (IOException e) {
+            respuesta.setCodigo(Constantes.ERROR_PETICION);
+            respuesta.setContenido(e.getMessage());
         }
         return respuesta;
     }

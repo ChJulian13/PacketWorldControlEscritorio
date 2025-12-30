@@ -8,10 +8,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import conexion.ConexionAPI;
 import dto.Respuesta;
+import java.io.File;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -208,6 +210,30 @@ public class ColaboradorImp {
                         respuesta.put("mensaje",("Lo sentimos, hay problemas para verificar sus credenciales en este momento, por favor intentelo más tarde."));
                 } 
         }
+        return respuesta;
+    }
+    
+    public static Respuesta subirFoto(int idColaborador, File fotoFile) {
+        Respuesta respuesta = new Respuesta();
+        String URL = Constantes.URL_WS + "colaborador/subir-fotografia/" + idColaborador;
+
+        try {
+            byte[] fotoBytes = Files.readAllBytes(fotoFile.toPath());
+
+            RespuestaHTTP respuestaAPI = ConexionAPI.peticionPUTImagen(URL, fotoBytes); 
+
+            if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+                Gson gson = new Gson();
+                respuesta = gson.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+            } else {
+                respuesta.setError(true);
+                respuesta.setMensaje("Error al subir la imagen.");
+            }
+        } catch (Exception e) {
+            respuesta.setError(true);
+            respuesta.setMensaje("Error al procesar el archivo: " + e.getMessage());
+        }
+
         return respuesta;
     }
     

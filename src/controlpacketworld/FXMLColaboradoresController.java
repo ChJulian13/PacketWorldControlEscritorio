@@ -76,6 +76,8 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
     @FXML
     private ComboBox<Rol> cbBusquedaRol;
     private ObservableList<Rol> listaRolesBusqueda;
+    @FXML
+    private Button btnMostrarTodos1;
 
     /**
      * Initializes the controller class.
@@ -277,6 +279,33 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
         tfBarraBusqueda.setText(""); 
         cargarInformacionColaboradores();
         btnMostrarTodos.setVisible(false);
+    }
+    
+    private void irSeleccionarFoto(Colaborador colaborador) {
+        FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLColaboradorFoto.fxml"));
+        try {
+            Parent vista = cargador.load();
+            FXMLColaboradorFotoController controlador = cargador.getController();
+            controlador.inicializarValores(colaborador.getIdColaborador());
+            Scene escena = new Scene(vista);
+            Stage escenario = new Stage();
+            escenario.setScene(escena);
+            escenario.setTitle("Selección de foto colaborador");
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.showAndWait();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void clicFoto(ActionEvent event) {
+        Colaborador colaborador = tvColaboradores.getSelectionModel().getSelectedItem();
+        if (colaborador != null) {
+            irSeleccionarFoto(colaborador);
+        } else {
+            Utilidades.mostrarAlertaSimple("Selecciona colaborador", "Para seleccionar la foto de un colaborador, debes seleccionarlo.", Alert.AlertType.WARNING);
+        }
     }
     
 }
