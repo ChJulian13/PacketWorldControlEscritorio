@@ -148,7 +148,10 @@ public class FXMLInicioController implements Initializable {
     @FXML
     private void clicEnvios(ActionEvent event) {
         try {
-            Parent vista = FXMLLoader.load(getClass().getResource("FXMLEnvio.fxml"));
+            FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLEnvio.fxml"));
+            Parent vista = cargador.load();
+            FXMLEnvioController controlador = cargador.getController();
+            controlador.cargarInformacionSucursal(colaboradorSesion.getIdSucursal());
             Scene scEnvio = new Scene(vista);
             Stage stEnvio = new Stage();
             stEnvio.setScene(scEnvio);
