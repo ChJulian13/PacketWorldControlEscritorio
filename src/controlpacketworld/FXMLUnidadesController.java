@@ -4,7 +4,10 @@
  */
 package controlpacketworld;
 
+import controlpacketworld.interfaz.INotificador;
 import dominio.UnidadImp;
+import dto.Respuesta;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +16,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import pojo.Colaborador;
 import pojo.Unidad;
+import pojo.UnidadBaja;
 import utilidad.Utilidades;
 
 /**
@@ -26,7 +36,7 @@ import utilidad.Utilidades;
  *
  * @author julia
  */
-public class FXMLUnidadesController implements Initializable {
+public class FXMLUnidadesController implements Initializable, INotificador{
 
     @FXML
     private TableView<Unidad> tvUnidades;
@@ -46,6 +56,8 @@ public class FXMLUnidadesController implements Initializable {
     private TableColumn colEstatus;
     
     private ObservableList<Unidad> unidades;
+    
+    private Colaborador colaboradorSesion;
 
     /**
      * Initializes the controller class.
@@ -56,6 +68,10 @@ public class FXMLUnidadesController implements Initializable {
         configurarTabla();
         cargarInformacionUnidades();
     } 
+    
+    public void inicializarColaborador(Colaborador colaborador) {
+        this.colaboradorSesion = colaborador;
+    }
     
     private void configurarTabla(){
         colMarca.setCellValueFactory(new PropertyValueFactory("marca"));
@@ -82,14 +98,79 @@ public class FXMLUnidadesController implements Initializable {
 
     @FXML
     private void clicRegistrar(ActionEvent event) {
+        irFormulario(null);
     }
 
     @FXML
     private void clicEditar(ActionEvent event) {
+        Unidad unidad = tvUnidades.getSelectionModel().getSelectedItem();
+        if (unidad != null) {
+            irFormulario(unidad);
+        } else {
+            Utilidades.mostrarAlertaSimple("Selecciona un colaborador", "Para editar la información de un colaborador, debe seleccionarlo.", Alert.AlertType.WARNING);
+        }
     }
 
     @FXML
     private void clicDarBaja(ActionEvent event) {
+        Unidad unidadSeleccionada = tvUnidades.getSelectionModel().getSelectedItem();
+        
+        if (unidadSeleccionada != null) {
+            javafx.scene.control.TextInputDialog dialogo = new javafx.scene.control.TextInputDialog();
+            dialogo.setTitle("Dar de baja unidad");
+            dialogo.setHeaderText("Baja de unidad: " + unidadSeleccionada.getMarca() + " " + unidadSeleccionada.getModelo());
+            dialogo.setContentText("Motivo de la baja:");
+
+            java.util.Optional<String> resultado = dialogo.showAndWait();
+            
+            // 3. Si el usuario escribió algo y dio Aceptar
+            if (resultado.isPresent() && !resultado.get().trim().isEmpty()) {
+                String motivo = resultado.get();
+                
+                int idColaboradorLogueado = (colaboradorSesion != null) ? colaboradorSesion.getIdColaborador() : 1;
+                
+                UnidadBaja baja = new pojo.UnidadBaja();
+                baja.setIdUnidad(unidadSeleccionada.getIdUnidad());
+                baja.setMotivoBaja(motivo);
+                baja.setIdColaborador(idColaboradorLogueado);
+                
+                Respuesta respuesta = UnidadImp.darBaja(baja);
+                
+                if (!respuesta.isError()) {
+                    Utilidades.mostrarAlertaSimple("Éxito", "La unidad ha sido dada de baja correctamente.", Alert.AlertType.INFORMATION);
+                    cargarInformacionUnidades(); 
+                } else {
+                    Utilidades.mostrarAlertaSimple("Error", respuesta.getMensaje(), Alert.AlertType.ERROR);
+                }
+                
+            } else if (resultado.isPresent() && resultado.get().trim().isEmpty()){
+                Utilidades.mostrarAlertaSimple("Motivo requerido", "Debes ingresar un motivo para dar de baja la unidad.", Alert.AlertType.WARNING);
+            }
+        } else {
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona una unidad de la lista para dar de baja.", Alert.AlertType.WARNING);
+        }
     }
     
+    private void irFormulario(Unidad unidad) {
+        FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLUnidadRegistrar.fxml"));
+        try {
+            Parent vista = cargador.load();
+            FXMLUnidadRegistrarController controlador = cargador.getController();
+            controlador.inicializarDatos(unidad, this);
+            Scene escena = new Scene(vista);
+            Stage escenario = new Stage();
+            escenario.setScene(escena);
+            escenario.setTitle("Formulario unidad");
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
+    public void notificarOperacionExitosa(String operacion, String nombre) {
+        System.out.print("Operación: " + operacion + "nombre unidad: " + nombre);
+        cargarInformacionUnidades();
+    }
 }

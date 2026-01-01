@@ -15,6 +15,7 @@ import java.util.List;
 import pojo.RespuestaHTTP;
 import pojo.Rol;
 import pojo.Sucursal;
+import pojo.TipoUnidad;
 import utilidad.Constantes;
 
 /**
@@ -30,6 +31,33 @@ public class CatalogoImp {
             Gson gson = new Gson();
             Type tipoLista = new TypeToken<List<Rol>>(){}.getType();
             List<Rol> roles = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
+            respuesta.put(Constantes.KEY_ERROR, false);
+            respuesta.put(Constantes.KEY_LISTA, roles);
+        } else {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            switch (respuestaAPI.getCodigo()) {
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.put(Constantes.KEY_MENSAJE, (String.valueOf(Constantes.ERROR_MALFORMED_URL)));
+                    break;
+                case Constantes.ERROR_PETICION:
+                    respuesta.put(Constantes.KEY_MENSAJE, (String.valueOf(Constantes.MSJ_ERROR_PETICION)));
+                    break;
+                default:
+                    respuesta.put(Constantes.KEY_MENSAJE, ("Lo sentimos, hay problemas para la conexión a la base de datos"));
+            }  
+        }
+        
+        return respuesta;
+    }
+    
+    public static HashMap<String, Object> obtenerTipoUnidades() {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+        String URL = Constantes.URL_WS + "catalogo/obtener-tipo-unidades";
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Gson gson = new Gson();
+            Type tipoLista = new TypeToken<List<TipoUnidad>>(){}.getType();
+            List<TipoUnidad> roles = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
             respuesta.put(Constantes.KEY_ERROR, false);
             respuesta.put(Constantes.KEY_LISTA, roles);
         } else {

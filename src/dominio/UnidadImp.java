@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import pojo.RespuestaHTTP;
 import pojo.Unidad;
+import pojo.UnidadBaja;
 import utilidad.Constantes;
 
 /**
@@ -49,7 +50,7 @@ public class UnidadImp {
         return respuesta;
     }
     
-   /* public static Respuesta registrar(Unidad unidad) {
+    public static Respuesta registrar(Unidad unidad) {
         Respuesta respuesta = new Respuesta();
         String URL = Constantes.URL_WS + "unidades/registrar";
         Gson gson = new Gson();
@@ -102,11 +103,11 @@ public class UnidadImp {
         return respuesta;
     }
     
-    public static Respuesta darBaja (Unidad unidad) {
+    public static Respuesta darBaja (UnidadBaja unidadBaja) {
         Respuesta respuesta = new Respuesta();
         String URL = Constantes.URL_WS + "unidades/dar-baja";
         Gson gson = new Gson();
-        String parametrosJSON = gson.toJson(unidad);
+        String parametrosJSON = gson.toJson(unidadBaja);
         RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(URL, "PUT", parametrosJSON, Constantes.APPLICATION_JSON);
         
         if(respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
@@ -126,5 +127,5 @@ public class UnidadImp {
         }
         
         return respuesta;
-    }*/
+    }
 }

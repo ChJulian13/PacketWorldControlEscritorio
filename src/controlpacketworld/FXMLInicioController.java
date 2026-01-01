@@ -71,17 +71,19 @@ public class FXMLInicioController implements Initializable {
     @FXML
     private void clicUnidades(ActionEvent event) {
         try {
-            Parent vista = FXMLLoader.load(getClass().getResource("FXMLUnidades.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLUnidades.fxml"));
+            Parent vista = loader.load();
+            FXMLUnidadesController controlador = loader.getController();
+            controlador.inicializarColaborador(this.colaboradorSesion);
+
             Scene scAdminUsuarios = new Scene(vista);
-            
-            //generar un nuevo stage
             Stage stAdmin = new Stage();
             stAdmin.setScene(scAdminUsuarios);
             stAdmin.setTitle("Unidades");
             stAdmin.initModality(Modality.APPLICATION_MODAL);
             stAdmin.showAndWait();
         } catch (IOException ex) {
-           ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
 
