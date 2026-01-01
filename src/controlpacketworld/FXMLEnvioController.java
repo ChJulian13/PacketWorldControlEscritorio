@@ -29,6 +29,7 @@ import utilidad.Utilidades;
 
 public class FXMLEnvioController implements Initializable {
 
+    private Integer idSucursal;
     @FXML
     private TableView<Envio> tbEnvios;
     @FXML
@@ -57,6 +58,9 @@ public class FXMLEnvioController implements Initializable {
     @FXML
     private void clicBuscarEnvio(ActionEvent event) {
         cargarInformacionEnvios(tfNoGuia.getText());
+    }
+    public void cargarInformacionSucursal(Integer idSucursal){
+        this.idSucursal = idSucursal;
     }
 
     @FXML
