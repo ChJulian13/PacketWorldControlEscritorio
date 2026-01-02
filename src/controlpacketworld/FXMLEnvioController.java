@@ -53,20 +53,24 @@ public class FXMLEnvioController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
-    }    
-
-    @FXML
-    private void clicBuscarEnvio(ActionEvent event) {
-        cargarInformacionEnvios(tfNoGuia.getText());
     }
     public void cargarInformacionSucursal(Integer idSucursal){
         this.idSucursal = idSucursal;
     }
 
     @FXML
+    private void clicBuscarEnvio(ActionEvent event) {
+        cargarInformacionEnvios(tfNoGuia.getText());
+    }
+
+    @FXML
     private void clicCrearEnvio(ActionEvent event) {
         try {
-            Parent vista = FXMLLoader.load(getClass().getResource("FXMLEnvioRegistrar.fxml"));
+            FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLEnvioRegistrar.fxml"));
+            Parent vista = cargador.load();
+            FXMLEnvioRegistrarController controlador = cargador.getController();
+            controlador.cargarInformacion(idSucursal);
+
             Scene scEnvio = new Scene(vista);
             Stage stEnvio = new Stage();
             stEnvio.setScene(scEnvio);
