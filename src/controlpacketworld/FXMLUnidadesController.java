@@ -23,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -58,6 +59,8 @@ public class FXMLUnidadesController implements Initializable, INotificador{
     private ObservableList<Unidad> unidades;
     
     private Colaborador colaboradorSesion;
+    @FXML
+    private TextField tfBarraBusqueda;
 
     /**
      * Initializes the controller class.
@@ -152,10 +155,10 @@ public class FXMLUnidadesController implements Initializable, INotificador{
     }
     
     private void irFormulario(Unidad unidad) {
-        FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLUnidadRegistrar.fxml"));
+        FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLUnidadFormulario.fxml"));
         try {
             Parent vista = cargador.load();
-            FXMLUnidadRegistrarController controlador = cargador.getController();
+            FXMLUnidadFormularioController controlador = cargador.getController();
             controlador.inicializarDatos(unidad, this);
             Scene escena = new Scene(vista);
             Stage escenario = new Stage();
@@ -168,9 +171,34 @@ public class FXMLUnidadesController implements Initializable, INotificador{
         }
     }
     
+    private void buscarUnidades(String textoBusqueda) {
+        HashMap<String, Object> respuesta = UnidadImp.buscar(textoBusqueda);
+        
+        boolean esError = (boolean) respuesta.get("error");
+        if (!esError) {
+            List<Unidad> unidadAPI = (List<Unidad>) respuesta.get("unidades");
+            unidades.clear(); 
+            unidades.addAll(unidadAPI);
+            tvUnidades.setItems(unidades);
+        } else {
+            Utilidades.mostrarAlertaSimple("Error al buscar", "" + respuesta.get("mensaje"), Alert.AlertType.NONE);
+        }
+    }
+    
     @Override
     public void notificarOperacionExitosa(String operacion, String nombre) {
         System.out.print("Operación: " + operacion + "nombre unidad: " + nombre);
         cargarInformacionUnidades();
+    }
+
+    @FXML
+    private void clicBuscar(ActionEvent event) {
+        String busqueda = tfBarraBusqueda.getText();
+    
+        if (busqueda != null && !busqueda.trim().isEmpty()) {
+            buscarUnidades(busqueda);
+        } else {
+            cargarInformacionUnidades();
+        }
     }
 }

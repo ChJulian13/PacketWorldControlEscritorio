@@ -8,8 +8,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import conexion.ConexionAPI;
 import dto.Respuesta;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -124,6 +127,35 @@ public class UnidadImp {
                 default:
                     respuesta.setMensaje("Lo sentimos, hay problemas para editar la información en este momento, por favor intentelo más tarde");
             }
+        }
+        
+        return respuesta;
+    }
+    
+   public static HashMap<String, Object> buscar(String textoBusqueda) {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("error", true); // Asumimos error por defecto
+        
+        try {
+            String busquedaCodificada = URLEncoder.encode(textoBusqueda, StandardCharsets.UTF_8.toString());
+            
+            String URL = Constantes.URL_WS + "unidades/buscar?texto=" + busquedaCodificada;
+            
+            RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+            
+            if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+                Gson gson = new Gson();
+                Type tipoLista = new TypeToken<List<Unidad>>(){}.getType();
+                List<Unidad> unidades = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
+                
+                respuesta.put("error", false);
+                respuesta.put("unidades", unidades);
+            } else {
+                respuesta.put("mensaje", "Error en la petición: " + respuestaAPI.getCodigo());
+            }
+        } catch (UnsupportedEncodingException e) {
+            respuesta.put("mensaje", "Error al codificar el texto de búsqueda.");
+            e.printStackTrace();
         }
         
         return respuesta;

@@ -32,7 +32,7 @@ import utilidad.Utilidades;
  *
  * @author julia
  */
-public class FXMLUnidadRegistrarController implements Initializable {
+public class FXMLUnidadFormularioController implements Initializable {
 
     @FXML
     private TextField tfMarca;
@@ -58,6 +58,26 @@ public class FXMLUnidadRegistrarController implements Initializable {
     }   
     
     private boolean sonCamposValidos() {
+        if (tfMarca.getText().trim().isEmpty() || 
+            tfModelo.getText().trim().isEmpty() || 
+            tfAnio.getText().trim().isEmpty() || 
+            tfVin.getText().trim().isEmpty()) {
+            
+            Utilidades.mostrarAlertaSimple("Campos vacíos", "Por favor llena todos los campos.", Alert.AlertType.WARNING);
+            return false;
+        }
+        
+        if (cbTipo.getSelectionModel().getSelectedItem() == null) {
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Debes seleccionar un Tipo de Unidad.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        String anioTexto = tfAnio.getText().trim();
+        if (!anioTexto.matches("\\d{4}")) {
+            Utilidades.mostrarAlertaSimple("Año inválido", "El año debe ser un número de 4 dígitos.", Alert.AlertType.WARNING);
+            return false;
+        }
+
         return true;
     }
     
@@ -132,7 +152,7 @@ public class FXMLUnidadRegistrarController implements Initializable {
     }
     
     private void editarUnidad(Unidad unidad) {
-        unidad.setIdUnidad(unidadEdicion.getIdTipoUnidad());
+        unidad.setIdUnidad(unidadEdicion.getIdUnidad());
         Respuesta respuesta = UnidadImp.editar(unidad);
         if (!respuesta.isError()) {
             Utilidades.mostrarAlertaSimple("Unidad editada", respuesta.getMensaje(), Alert.AlertType.INFORMATION);
