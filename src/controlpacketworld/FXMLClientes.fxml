@@ -14,7 +14,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="1035.0" layoutY="60.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
+      <Button layoutX="1035.0" layoutY="60.0" mnemonicParsing="false" onAction="#clicEditar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -25,17 +25,17 @@
          </cursor>
       </Button>
       <TextField layoutX="213.0" layoutY="71.0" prefHeight="43.0" prefWidth="317.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
-      <TableView layoutX="42.0" layoutY="122.0" prefHeight="580.0" prefWidth="1200.0">
+      <TableView fx:id="tvClientes" layoutX="42.0" layoutY="122.0" prefHeight="580.0" prefWidth="1200.0">
          <columns>
-            <TableColumn prefWidth="75.0" text="Nombre" />
-            <TableColumn prefWidth="87.0" text="Apellido Paterno" />
-            <TableColumn prefWidth="100.0" text="Apellido Materno" />
+            <TableColumn fx:id="colNombre" prefWidth="75.0" text="Nombre" />
+            <TableColumn fx:id="colApellidoPaterno" prefWidth="87.0" text="Apellido Paterno" />
+            <TableColumn fx:id="colApellidoMaterno" prefWidth="100.0" text="Apellido Materno" />
             <TableColumn prefWidth="100.0" text="Calle" />
             <TableColumn prefWidth="52.0" text="Número" />
             <TableColumn prefWidth="125.0" text="Colonia" />
             <TableColumn prefWidth="92.0" text="Código Postal" />
-            <TableColumn minWidth="0.0" prefWidth="78.0" text="Correo" />
-            <TableColumn prefWidth="76.0" text="Teléfono" />
+            <TableColumn fx:id="colCorreo" minWidth="0.0" prefWidth="78.0" text="Correo" />
+            <TableColumn fx:id="colTelefono" prefWidth="76.0" text="Teléfono" />
          </columns>
       </TableView>
       <Label layoutX="42.0" layoutY="24.0" prefHeight="39.0" prefWidth="214.0" text="Clientes">

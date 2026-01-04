@@ -4,6 +4,7 @@
  */
 package controlpacketworld;
 
+import controlpacketworld.interfaz.INotificador;
 import dominio.ClienteImp;
 import dominio.DireccionImp;
 import java.net.URL;
@@ -63,7 +64,12 @@ public class FXMLClienteRegistrarController implements Initializable {
     private Button btnRegistrar;
     @FXML
     private Button btnCancelar;
-/**
+    
+    private boolean esEdicion = false;
+    private Cliente clienteEdicion;
+    private INotificador notificador;
+    
+    /**
      * Initializes the controller class.
      */
     @Override
@@ -75,6 +81,140 @@ public class FXMLClienteRegistrarController implements Initializable {
        configurarListenerCodigoPostal();
     }
     
+    public void inicializarValores(INotificador notificador, Cliente cliente) {
+        this.notificador = notificador;
+        this.clienteEdicion = cliente;
+        
+        if (cliente != null) {
+            this.esEdicion = true;
+            cargarDatosEdicion();
+            btnRegistrar.setText("Actualizar"); 
+        }
+    }
+
+    private void cargarDatosEdicion() {
+        // Cargar datos personales
+        tfNombre.setText(clienteEdicion.getNombre());
+        tfApellidoPaterno.setText(clienteEdicion.getApellidoPaterno());
+        tfApellidoMaterno.setText(clienteEdicion.getApellidoMaterno());
+        tfTelefono.setText(clienteEdicion.getTelefono());
+        tfCorreo.setText(clienteEdicion.getCorreo());
+
+        // Cargar datos de dirección (Directamente del cliente, sin getDireccion())
+        tfCalle.setText(clienteEdicion.getCalle());
+        tfNumero.setText(clienteEdicion.getNumero());
+        
+        String cp = clienteEdicion.getCodigoPostal();
+        tfCodigoPostal.setText(cp);
+        
+        // 1. Cargar las colonias disponibles para ese CP
+        cargarInformacionCodigoPostal(cp);
+        
+        // 2. Seleccionar la colonia correcta en el combo
+        // Usamos el idColonia almacenado directamente en Cliente
+        Integer idColoniaCliente = clienteEdicion.getIdColonia();
+        
+        if(idColoniaCliente != null) {
+            for(Direccion d : cbColonia.getItems()){
+                // Comparamos los IDs
+                if(d.getIdColonia() == idColoniaCliente.intValue()){ 
+                    cbColonia.getSelectionModel().select(d);
+                    break;
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void clicRegistrar(ActionEvent event) {
+        if (!validarCampos()) {
+             return; 
+        }
+
+        // Creación del objeto Cliente y llenado de datos
+        Cliente cliente = new Cliente();
+        cliente.setNombre(tfNombre.getText());
+        cliente.setApellidoPaterno(tfApellidoPaterno.getText());
+        cliente.setApellidoMaterno(tfApellidoMaterno.getText());
+        cliente.setTelefono(tfTelefono.getText());
+        cliente.setCorreo(tfCorreo.getText());
+        
+        // Llenamos los datos de dirección en el Cliente (para la lógica plana)
+        cliente.setCalle(tfCalle.getText());
+        cliente.setNumero(tfNumero.getText());
+        cliente.setCodigoPostal(tfCodigoPostal.getText());
+
+        // Objeto Dirección auxiliar para usar los endpoints de Dirección
+        Direccion direccionAux = new Direccion();
+        direccionAux.setCalle(tfCalle.getText());
+        direccionAux.setNumero(tfNumero.getText());
+        direccionAux.setCodigoPostal(tfCodigoPostal.getText());
+        
+        Direccion coloniaSeleccionada = cbColonia.getValue();
+        if(coloniaSeleccionada != null){
+            // Seteamos IDs en Cliente
+            cliente.setIdColonia(coloniaSeleccionada.getIdColonia());
+            // Para visualización o lógica extra si hiciera falta
+            cliente.setNombreColonia(coloniaSeleccionada.getColonia());
+            
+            // Seteamos en el auxiliar
+            direccionAux.setIdColonia(coloniaSeleccionada.getIdColonia());
+            direccionAux.setColonia(coloniaSeleccionada.getColonia());
+        }
+
+        if (esEdicion) {
+            // --- LÓGICA DE EDICIÓN ---
+            // Recuperamos IDs críticos
+            cliente.setIdCliente(clienteEdicion.getIdCliente());
+            cliente.setIdDireccion(clienteEdicion.getIdDireccion()); // ID FK en cliente
+            
+            // ID Primario de la dirección para editarla
+            direccionAux.setIdDireccion(clienteEdicion.getIdDireccion());
+            
+            actualizarCliente(cliente, direccionAux);
+        } else {
+            // --- LÓGICA DE REGISTRO ---
+            // En el registro, normalmente se envía el objeto Cliente y el backend maneja la creación de la dirección
+            // O se usa el objeto direccionAux si tu backend lo requiere separado, 
+            // pero basándome en tu código anterior, el registro usa solo 'cliente'.
+            
+            // Pasamos la dirección auxiliar dentro del cliente si tu backend espera un objeto anidado en el registro,
+            // pero como tu POJO es plano, enviamos el cliente tal cual.
+            registrarCliente(cliente);
+        }
+    }
+
+    private void registrarCliente(Cliente cliente) {
+        Mensaje msj = ClienteImp.registrarCliente(cliente);
+        if (!msj.isError()) {
+            Utilidades.mostrarAlertaSimple("Registro exitoso", "El cliente se registró correctamente", Alert.AlertType.INFORMATION);
+            cerrarVentana();
+            notificador.notificarOperacion("Se registró un nuevo cliente", true);
+        } else {
+            Utilidades.mostrarAlertaSimple("Error", msj.getMensaje(), Alert.AlertType.ERROR);
+        }
+    }
+
+    private void actualizarCliente(Cliente cliente, Direccion direccion) {
+        // 1. Actualizar la dirección primero (Endpoint específico de Dirección)
+        Mensaje msjDireccion = DireccionImp.editarDireccion(direccion);
+        
+        if(!msjDireccion.isError()){
+            // 2. Si la dirección se actualizó bien, actualizamos los datos personales del cliente
+            Mensaje msjCliente = ClienteImp.editarCliente(cliente);
+            
+            if (!msjCliente.isError()) {
+                Utilidades.mostrarAlertaSimple("Éxito", "La información del cliente se actualizó correctamente", Alert.AlertType.INFORMATION);
+                cerrarVentana();
+                notificador.notificarOperacion("Cliente actualizado: " + cliente.getNombre(), true);
+            } else {
+                Utilidades.mostrarAlertaSimple("Error al actualizar cliente", msjCliente.getMensaje(), Alert.AlertType.ERROR);
+            }
+        } else {
+             Utilidades.mostrarAlertaSimple("Error al actualizar dirección", msjDireccion.getMensaje(), Alert.AlertType.ERROR);
+        }
+    }
+
     private void configurarComboBoxColonia() {
         cbColonia.setConverter(new StringConverter<Direccion>() {
             @Override
@@ -130,50 +270,10 @@ public class FXMLClienteRegistrarController implements Initializable {
             Utilidades.mostrarAlertaSimple("Error", "Error al cargar las colonias: " + respuesta.get(Constantes.KEY_MENSAJE), Alert.AlertType.ERROR);
         }
     }
-
-    @FXML
-    private void clicRegistrar(ActionEvent event) {
-        if (validarCampos()) {
-            registrarCliente();
-        }
-    }
-
+    
     @FXML
     private void clicCancelar(ActionEvent event) {
         cerrarVentana();
-    }
-
-    private void registrarCliente() {
-        Cliente cliente = new Cliente();
-        cliente.setNombre(tfNombre.getText());
-        cliente.setApellidoPaterno(tfApellidoPaterno.getText());
-        cliente.setApellidoMaterno(tfApellidoMaterno.getText());
-        cliente.setTelefono(tfTelefono.getText());
-        cliente.setCorreo(tfCorreo.getText());
-        cliente.setCalle(tfCalle.getText());
-        cliente.setNumero(tfNumero.getText());
-        
-        Direccion direccionSeleccionada = cbColonia.getSelectionModel().getSelectedItem();
-        
-        if (direccionSeleccionada != null) {
-            cliente.setIdColonia(direccionSeleccionada.getIdColonia());
-        }
-
-        HashMap<String, Object> respuesta = ClienteImp.registrarCliente(cliente);
-        
-        boolean error = (boolean) respuesta.get(Constantes.KEY_ERROR);
-        String mensaje = (String) respuesta.get(Constantes.KEY_MENSAJE);
-
-        if (!error) {
-            Utilidades.mostrarAlertaSimple("Registro Exitoso", 
-                    "El cliente se ha guardado correctamente.", 
-                    Alert.AlertType.INFORMATION);
-            cerrarVentana();
-        } else {
-            Utilidades.mostrarAlertaSimple("Error al registrar", 
-                    mensaje, 
-                    Alert.AlertType.ERROR);
-        }
     }
 
     private boolean validarCampos() {
@@ -201,7 +301,6 @@ public class FXMLClienteRegistrarController implements Initializable {
             return false;
         }
         
-        // 4. Validar teléfono (10 dígitos)
         if (!Validaciones.esNumericoConLongitud(tfTelefono.getText(), 10)) {
             Utilidades.mostrarAlertaSimple("Teléfono inválido", 
                     "El teléfono debe contener exactamente 10 números.", 
@@ -217,5 +316,3 @@ public class FXMLClienteRegistrarController implements Initializable {
         stage.close();
     }
 }
-
-
