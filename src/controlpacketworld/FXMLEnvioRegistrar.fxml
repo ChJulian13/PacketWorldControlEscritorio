@@ -91,7 +91,7 @@
             <ComboBox fx:id="cbSucursal" layoutX="14.0" layoutY="74.0" prefHeight="39.0" prefWidth="333.0" promptText="Sucursal" styleClass="combo" stylesheets="@css/principal.css" />
          </children>
       </Pane>
-      <Button layoutX="26.0" layoutY="635.0" mnemonicParsing="false" onAction="#clicContinuar" prefHeight="41.0" prefWidth="111.0" styleClass="boton" stylesheets="@css/principal.css" text="Continuar">
+      <Button fx:id="btContinuar" layoutX="26.0" layoutY="635.0" mnemonicParsing="false" onAction="#clicContinuar" prefHeight="41.0" prefWidth="111.0" styleClass="boton" stylesheets="@css/principal.css" text="Continuar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

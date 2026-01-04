@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import pojo.Envio;
 import utilidad.Constantes;
 import utilidad.Utilidades;
+import utilidad.Validaciones;
 
 
 public class FXMLEnvioController implements Initializable {
@@ -53,6 +54,7 @@ public class FXMLEnvioController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
+        cargarInformacionEnvios(null);
     }
     public void cargarInformacionSucursal(Integer idSucursal){
         this.idSucursal = idSucursal;
@@ -60,7 +62,12 @@ public class FXMLEnvioController implements Initializable {
 
     @FXML
     private void clicBuscarEnvio(ActionEvent event) {
-        cargarInformacionEnvios(tfNoGuia.getText());
+        if ( !Validaciones.esVacio(tfNoGuia.getText())){
+            cargarInformacionEnvios(tfNoGuia.getText());
+        } else {
+            tfNoGuia.setText("");
+            Utilidades.mostrarAlertaSimple("Envio", "Introduzca un número de guía.", Alert.AlertType.INFORMATION);
+        }
     }
 
     @FXML
@@ -84,16 +91,24 @@ public class FXMLEnvioController implements Initializable {
 
     @FXML
     private void clicEditarEnvio(ActionEvent event) {
-        try {
-            Parent vista = FXMLLoader.load(getClass().getResource("FXMLEnvioRegistrar.fxml"));
-            Scene scEnvio = new Scene(vista);
-            Stage stEnvio = new Stage();
-            stEnvio.setScene(scEnvio);
-            stEnvio.setTitle("Editar envío");
-            stEnvio.initModality(Modality.APPLICATION_MODAL);
-            stEnvio.showAndWait();
-        } catch (IOException ex) {
-           ex.printStackTrace();
+        if (tbEnvios.getSelectionModel().getSelectedItem() != null){
+            try {
+                FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLEnvioRegistrar.fxml"));
+                Parent vista = cargador.load();
+                FXMLEnvioRegistrarController controlador = cargador.getController();
+                controlador.cargarInformacion(tbEnvios.getSelectionModel().getSelectedItem());
+
+                Scene scEnvio = new Scene(vista);
+                Stage stEnvio = new Stage();
+                stEnvio.setScene(scEnvio);
+                stEnvio.setTitle("Registrar envío");
+                stEnvio.initModality(Modality.APPLICATION_MODAL);
+                stEnvio.showAndWait();
+            } catch (IOException ex) {
+               ex.printStackTrace();
+            }
+        } else {
+            Utilidades.mostrarAlertaSimple("Envio", "Debe de seleccionar un envío para poder modificarlo.", Alert.AlertType.INFORMATION);
         }
     }
 
@@ -123,13 +138,19 @@ public class FXMLEnvioController implements Initializable {
     }
     
     public void cargarInformacionEnvios(String noGuia) {
-        HashMap<String, Object> respuesta = EnvioImp.obtenerEnvio(noGuia);
+        HashMap<String, Object> respuesta;
+        if ( noGuia == null ){
+            respuesta = EnvioImp.obtenerEnvio(null);
+        } else {
+             respuesta = EnvioImp.obtenerEnvio(noGuia);
+        }
+
         boolean esError = (boolean) respuesta.get("error");
         if( !esError ){
             List<Envio> enviosAPI = (List<Envio>) respuesta.get(Constantes.KEY_LISTA);
             
             if (enviosAPI.isEmpty()) {
-            Utilidades.mostrarAlertaSimple("Sin coincidencias", "No se encontró información para el número de guía: " + noGuia, Alert.AlertType.INFORMATION);
+                Utilidades.mostrarAlertaSimple("Sin coincidencias", "No se encontró información para el número de guía: " + noGuia, Alert.AlertType.INFORMATION);
             }
             
             envios = FXCollections.observableArrayList();
