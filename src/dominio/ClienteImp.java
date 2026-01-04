@@ -30,7 +30,6 @@ public class ClienteImp {
                 URL = Constantes.URL_WS + "cliente/buscar/telefono/" + cadena;
                 break;
             default:
-                // Es necesario codificar la URL debido a los espacios
                 String cadenaEncoded = URLEncoder.encode(cadena, StandardCharsets.UTF_8.toString()) .replace("+", "%20");
                 URL = Constantes.URL_WS + "cliente/buscar/nombre/" + cadenaEncoded;
         }
@@ -57,6 +56,21 @@ public class ClienteImp {
         return respuesta;
     }
     
+   
+    
+  public static List<Cliente> obtenerClientes() {
+        List<Cliente> lista = null;
+        String url = Constantes.URL_WS + "cliente/obtener-todos";
+        RespuestaHTTP respuesta = ConexionAPI.peticionGET(url);
+        
+        if (respuesta.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Type tipoLista = new TypeToken<List<Cliente>>(){}.getType();
+            lista = GsonUtil.GSON.fromJson(respuesta.getContenido(), tipoLista);
+        }
+        return lista;
+    }
+  
+    // Método POST para registrar
     public static HashMap<String, Object> registrarCliente(Cliente cliente) {
         HashMap<String, Object> respuesta = new LinkedHashMap<>();
         respuesta.put(Constantes.KEY_ERROR, true);
@@ -64,17 +78,34 @@ public class ClienteImp {
         String url = Constantes.URL_WS + "cliente/registrar";
         String json = GsonUtil.GSON.toJson(cliente);
         
-        // Usamos peticionBody porque es un POST con datos JSON
         RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(url, "POST", json, "application/json");
         
         if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
-            // Deserializamos la respuesta genérica del servidor
             Respuesta respuestaServidor = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
-            
             respuesta.put(Constantes.KEY_ERROR, respuestaServidor.isError());
             respuesta.put(Constantes.KEY_MENSAJE, respuestaServidor.getMensaje());
         } else {
-            respuesta.put(Constantes.KEY_MENSAJE, "Error de conexión o validación: Código " + respuestaAPI.getCodigo());
+            respuesta.put(Constantes.KEY_MENSAJE, "Error de conexión: " + respuestaAPI.getCodigo());
+        }
+        
+        return respuesta;
+    }
+    
+    public static HashMap<String, Object> editarCliente(Cliente cliente) {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put(Constantes.KEY_ERROR, true);
+        
+        String url = Constantes.URL_WS + "cliente/editar";
+        String json = GsonUtil.GSON.toJson(cliente);
+        
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(url, "PUT", json, "application/json");
+        
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Respuesta respuestaServidor = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+            respuesta.put(Constantes.KEY_ERROR, respuestaServidor.isError());
+            respuesta.put(Constantes.KEY_MENSAJE, respuestaServidor.getMensaje());
+        } else {
+            respuesta.put(Constantes.KEY_MENSAJE, "Error de conexión: " + respuestaAPI.getCodigo());
         }
         
         return respuesta;

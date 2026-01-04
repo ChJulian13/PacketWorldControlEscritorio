@@ -4,11 +4,13 @@
  */
 package controlpacketworld;
 
+import controlpacketworld.interfaz.INotificador;
 import dominio.ClienteImp;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,7 +33,7 @@ import utilidad.Utilidades;
  *
  * @author julia
  */
-public class FXMLClientesController implements Initializable {
+public class FXMLClientesController implements Initializable, INotificador {
 
     @FXML
     private TableView<Cliente> tvClientes;
@@ -47,6 +49,14 @@ public class FXMLClientesController implements Initializable {
     private TableColumn<Cliente, String> colTelefono;
     
     private ObservableList<Cliente> listaClientes;
+    @FXML
+    private TableColumn<Cliente, String> colCalle;
+    @FXML
+    private TableColumn<Cliente, String> colNumero;
+    @FXML
+    private TableColumn<Cliente, String> colColonia;
+    @FXML
+    private TableColumn<Cliente, String> colCP;
     /**
      * Initializes the controller class.
      */
@@ -58,11 +68,19 @@ public class FXMLClientesController implements Initializable {
     }
 
     private void configurarTabla() {
+        // Datos Personales
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colApellidoPaterno.setCellValueFactory(new PropertyValueFactory<>("apellidoPaterno"));
         colApellidoMaterno.setCellValueFactory(new PropertyValueFactory<>("apellidoMaterno"));
         colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
+
+        // Datos de Dirección (Directos de Cliente, sin objeto anidado)
+        // Esto coincide con tu Mapper SQL que devuelve "calle", "numero", etc. como columnas.
+        colCalle.setCellValueFactory(new PropertyValueFactory<>("calle"));
+        colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
+        colColonia.setCellValueFactory(new PropertyValueFactory<>("nombreColonia"));
+        colCP.setCellValueFactory(new PropertyValueFactory<>("codigoPostal"));
     }
 
     private void cargarDatosTabla() {
@@ -72,7 +90,9 @@ public class FXMLClientesController implements Initializable {
             listaClientes.addAll(clientesWS);
             tvClientes.setItems(listaClientes);
         } else {
-            Utilidades.mostrarAlertaSimple("Error de conexión", "No se pudo cargar la lista de clientes.", Alert.AlertType.ERROR);
+            Utilidades.mostrarAlertaSimple("Error de conexión", 
+                "No se pudo cargar la lista de clientes. Por favor intente más tarde.", 
+                Alert.AlertType.ERROR);
         }
     }
 
@@ -80,14 +100,16 @@ public class FXMLClientesController implements Initializable {
     private void clicRegistrar(ActionEvent event) {
         irFormulario(false, null);
     }
-    
+
     @FXML
     private void clicEditar(ActionEvent event) {
         Cliente clienteSeleccionado = tvClientes.getSelectionModel().getSelectedItem();
         if(clienteSeleccionado != null){
             irFormulario(true, clienteSeleccionado);
         } else {
-            Utilidades.mostrarAlertaSimple("Selección requerida", "Debes seleccionar un cliente de la tabla para editarlo.", Alert.AlertType.WARNING);
+            Utilidades.mostrarAlertaSimple("Selección requerida", 
+                "Debes seleccionar un cliente de la tabla para editarlo.", 
+                Alert.AlertType.WARNING);
         }
     }
 
@@ -97,7 +119,6 @@ public class FXMLClientesController implements Initializable {
             Parent root = loader.load();
             
             FXMLClienteRegistrarController controlador = loader.getController();
-            // Ahora 'this' es válido porque la clase implementa INotificador
             controlador.inicializarValores(this, cliente); 
             
             Stage stage = new Stage();
@@ -107,15 +128,30 @@ public class FXMLClientesController implements Initializable {
             stage.showAndWait();
         } catch (IOException ex) {
             ex.printStackTrace();
-            Utilidades.mostrarAlertaSimple("Error", "No se pudo cargar la ventana del formulario.", Alert.AlertType.ERROR);
+            Utilidades.mostrarAlertaSimple("Error", 
+                "No se pudo cargar la ventana del formulario.", 
+                Alert.AlertType.ERROR);
         }
+    }
+    public void notificarOperacion(String mensaje, boolean exito) {
+        if(exito){
+             Utilidades.mostrarAlertaSimple("Operación exitosa", mensaje, Alert.AlertType.INFORMATION);
+             cargarDatosTabla(); 
+        }
+    }
+    
+    // Métodos no usados de la interfaz pero requeridos por contrato
+    @Override
+    public void notificarOperacionExitosa(String operacion, String nombre) {
+        // Implementación opcional si se requiere en el futuro
     }
 
     @Override
-    public void notificarOperacion(String mensaje, boolean exito) {
-        cargarDatosTabla();
-        if(exito){
-             Utilidades.mostrarAlertaSimple("Operación exitosa", mensaje, Alert.AlertType.INFORMATION);
-        }
+    public void enviarObjeto(Object object) {
+        // Implementación opcional
+    }
+
+    @FXML
+    private void clicEliminar(ActionEvent event) {
     }
 }

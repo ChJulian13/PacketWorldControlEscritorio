@@ -1,30 +1,32 @@
-
 package pojo;
 
 public class Cliente {
-    private Integer idCliente;
+private Integer idCliente;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String telefono;
     private String correo;
     
+    // IDs de relación
     private Integer idDireccion;
     private Integer idColonia;
 
-    // Atributos de visualización
-    private String direccionCompleta;
+    // Atributos "aplanados" para coincidir con la consulta SQL del Mapper
+    // y evitar el uso de resultMap.
     private String calle;
     private String numero;
     private String nombreColonia;
     private String codigoPostal;
     private String ciudad;
     private String estado;
+    private String direccionCompleta;
 
     public Cliente() {
     }
 
-    public Cliente(Integer idCliente, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, Integer idDireccion, Integer idColonia, String direccionCompleta, String calle, String numero, String nombreColonia, String codigoPostal, String ciudad, String estado) {
+    // Constructor completo
+    public Cliente(Integer idCliente, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, Integer idDireccion, Integer idColonia, String calle, String numero, String nombreColonia, String codigoPostal, String ciudad, String estado, String direccionCompleta) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -33,13 +35,13 @@ public class Cliente {
         this.correo = correo;
         this.idDireccion = idDireccion;
         this.idColonia = idColonia;
-        this.direccionCompleta = direccionCompleta;
         this.calle = calle;
         this.numero = numero;
         this.nombreColonia = nombreColonia;
         this.codigoPostal = codigoPostal;
         this.ciudad = ciudad;
         this.estado = estado;
+        this.direccionCompleta = direccionCompleta;
     }
 
     public Integer getIdCliente() {
@@ -106,14 +108,6 @@ public class Cliente {
         this.idColonia = idColonia;
     }
 
-    public String getDireccionCompleta() {
-        return direccionCompleta;
-    }
-
-    public void setDireccionCompleta(String direccionCompleta) {
-        this.direccionCompleta = direccionCompleta;
-    }
-
     public String getCalle() {
         return calle;
     }
@@ -161,4 +155,15 @@ public class Cliente {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public String getDireccionCompleta() {
+        return direccionCompleta;
+    }
+
+    public void setDireccionCompleta(String direccionCompleta) {
+        this.direccionCompleta = direccionCompleta;
+    }
+    
+   
 }
+
