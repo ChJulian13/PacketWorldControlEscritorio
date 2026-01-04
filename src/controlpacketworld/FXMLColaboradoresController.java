@@ -307,5 +307,10 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
             Utilidades.mostrarAlertaSimple("Selecciona colaborador", "Para seleccionar la foto de un colaborador, debes seleccionarlo.", Alert.AlertType.WARNING);
         }
     }
+
+    @Override
+    public void enviarObjeto(Object object) {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
     
 }

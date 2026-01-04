@@ -201,4 +201,9 @@ public class FXMLUnidadesController implements Initializable, INotificador{
             cargarInformacionUnidades();
         }
     }
+
+    @Override
+    public void enviarObjeto(Object object) {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
 }
