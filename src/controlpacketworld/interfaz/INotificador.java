@@ -10,4 +10,5 @@ package controlpacketworld.interfaz;
  */
 public interface INotificador {
     public void notificarOperacionExitosa(String operacion, String nombre);
+    public void enviarObjeto(Object object);
 }
