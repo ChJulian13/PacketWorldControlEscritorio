@@ -7,8 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" style="-fx-background-color: #F3F3F3;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controlpacketworld.FXMLClienteRegistrarController">
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="850.0" style="-fx-background-color: #F3F3F3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLClienteRegistrarController">
    <children>
       <Pane layoutX="38.0" layoutY="22.0" prefHeight="221.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
          <children>
@@ -18,11 +17,11 @@
                </font>
             </Label>
             <Label layoutX="24.0" layoutY="55.0" text="Nombre:" textFill="#757474" />
-            <TextField layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
-            <TextField layoutX="24.0" layoutY="122.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField fx:id="tfNombre" layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField fx:id="tfApellidoPaterno" layoutX="24.0" layoutY="122.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
             <Label layoutX="24.0" layoutY="105.0" text="Apellido Paterno:" textFill="#757474" />
             <Label layoutX="24.0" layoutY="155.0" text="Apellido Materno:" textFill="#757474" />
-            <TextField layoutX="24.0" layoutY="172.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField fx:id="tfApellidoMaterno" layoutX="24.0" layoutY="172.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
          </children>
       </Pane>
       <Pane layoutX="434.0" layoutY="22.0" prefHeight="274.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
@@ -33,13 +32,12 @@
                </font>
             </Label>
             <Label layoutX="24.0" layoutY="55.0" text="Código Postal:" textFill="#757474" />
-            <TextField layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
-            <TextField layoutX="24.0" layoutY="122.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
-            <Label layoutX="24.0" layoutY="105.0" text="Colonia:" textFill="#757474" />
+            <TextField fx:id="tfCodigoPostal" layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
             <Label layoutX="24.0" layoutY="155.0" text="Calle:" textFill="#757474" />
-            <TextField layoutX="24.0" layoutY="172.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
-            <TextField layoutX="25.0" layoutY="219.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField fx:id="tfCalle" layoutX="24.0" layoutY="172.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField fx:id="tfNumero" layoutX="25.0" layoutY="219.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
             <Label layoutX="24.0" layoutY="202.0" text="Número:" textFill="#757474" />
+            <ComboBox fx:id="cbColonia" layoutX="25.0" layoutY="122.0" prefHeight="31.0" prefWidth="331.0" />
          </children>
       </Pane>
       <Pane layoutX="38.0" layoutY="259.0" prefHeight="169.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
@@ -50,17 +48,17 @@
                </font>
             </Label>
             <Label layoutX="24.0" layoutY="55.0" text="Número:" textFill="#757474" />
-            <TextField layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
-            <TextField layoutX="24.0" layoutY="122.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField fx:id="tfTelefono" layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField fx:id="tfCorreo" layoutX="24.0" layoutY="122.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
             <Label layoutX="24.0" layoutY="105.0" text="Correo electrónico:" textFill="#757474" />
          </children>
       </Pane>
-      <Button layoutX="605.0" layoutY="428.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Guardar">
+      <Button fx:id="btnRegistrar" layoutX="605.0" layoutY="428.0" mnemonicParsing="false" onAction="#clicRegistrar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Guardar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="717.0" layoutY="428.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Cancelar">
+      <Button fx:id="btnCancelar" layoutX="717.0" layoutY="428.0" mnemonicParsing="false" onAction="#clicCancelar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Cancelar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

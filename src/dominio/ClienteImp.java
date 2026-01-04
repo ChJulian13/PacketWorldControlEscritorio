@@ -3,6 +3,7 @@ package dominio;
 
 import com.google.gson.reflect.TypeToken;
 import conexion.ConexionAPI;
+import dto.Respuesta;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
@@ -55,4 +56,28 @@ public class ClienteImp {
         }
         return respuesta;
     }
+    
+    public static HashMap<String, Object> registrarCliente(Cliente cliente) {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put(Constantes.KEY_ERROR, true);
+        
+        String url = Constantes.URL_WS + "cliente/registrar";
+        String json = GsonUtil.GSON.toJson(cliente);
+        
+        // Usamos peticionBody porque es un POST con datos JSON
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(url, "POST", json, "application/json");
+        
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            // Deserializamos la respuesta genérica del servidor
+            Respuesta respuestaServidor = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+            
+            respuesta.put(Constantes.KEY_ERROR, respuestaServidor.isError());
+            respuesta.put(Constantes.KEY_MENSAJE, respuestaServidor.getMensaje());
+        } else {
+            respuesta.put(Constantes.KEY_MENSAJE, "Error de conexión o validación: Código " + respuestaAPI.getCodigo());
+        }
+        
+        return respuesta;
+    }
+    
 }

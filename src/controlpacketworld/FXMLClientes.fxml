@@ -19,7 +19,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="924.0" layoutY="61.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="101.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
+      <Button layoutX="924.0" layoutY="61.0" mnemonicParsing="false" onAction="#clicRegistrar" prefHeight="39.0" prefWidth="101.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
