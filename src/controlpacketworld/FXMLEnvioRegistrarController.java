@@ -1,14 +1,16 @@
 
 package controlpacketworld;
 
-import dominio.ClienteImp;
+import controlpacketworld.interfaz.INotificador;
 import dominio.ColaboradorImp;
 import dominio.DireccionImp;
 import dominio.EnvioImp;
+import dto.Respuesta;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +24,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
@@ -30,6 +33,8 @@ import pojo.Cliente;
 import pojo.Colaborador;
 import pojo.Direccion;
 import pojo.Envio;
+import pojo.EnvioHistorialEstatus;
+import pojo.EstatusEnvio;
 import pojo.Sucursal;
 import utilidad.Constantes;
 import utilidad.Utilidades;
@@ -41,11 +46,16 @@ public class FXMLEnvioRegistrarController implements Initializable {
     private Cliente cliente;
     private boolean esModoEdicion;
     private Integer idSucursal;
+    private Integer idColaboradorSesion;
     private Envio envio;
     private Direccion direccion;
+    private Direccion direccionEdicion;
+    private Integer idEstatusEnvioEdicion;
+    private ObservableList<EstatusEnvio> catalogoEstatus;
     private ObservableList<Colaborador> conductores;
     private ObservableList<Sucursal> sucursales;
     private ObservableList<Direccion> direcciones;
+    private INotificador observadorEnvio;
     @FXML
     private ComboBox<String> cbBuscarClientePor;
     @FXML
@@ -82,12 +92,21 @@ public class FXMLEnvioRegistrarController implements Initializable {
     private Label lbClienteTelefono;
     @FXML
     private Button btContinuar;
+    @FXML
+    private ComboBox<EstatusEnvio> cbEstatus;
+    @FXML
+    private Label lbEstatusEnvio;
+    @FXML
+    private TextArea taComentario;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         envio = new Envio();
         direccion = new Direccion();
         cbBuscarClientePor.getItems().addAll("Nombre", "Teléfono", "Correo");
+        lbEstatusEnvio.setVisible(false);
+        cbEstatus.setVisible(false);
+        taComentario.setVisible(false);
         // Seleccionar un valor por defecto
         cbBuscarClientePor.getSelectionModel().selectFirst();
         
@@ -96,14 +115,20 @@ public class FXMLEnvioRegistrarController implements Initializable {
         inicializarTextFieldConTextFormatter();
     }
     
-    public void cargarInformacion(Integer idSucursal){
+    public void cargarInformacion(Integer idSucursal, INotificador observador){
+        this.observadorEnvio = observador;
         this.idSucursal = idSucursal;
         this.esModoEdicion = false;
         cargarInformaciónSucursales();
     }
-    public void cargarInformacion(Envio envio){
+    public void cargarInformacionModoEdicion(Integer idColaboradorSesion, Envio envio, INotificador observador){
+        this.idColaboradorSesion = idColaboradorSesion;
+        this.observadorEnvio = observador;
         this.esModoEdicion = true;
         btContinuar.setText("Guardar");
+        lbEstatusEnvio.setVisible(true);
+        cbEstatus.setVisible(true);
+        taComentario.setVisible(true);
         this.idSucursal = envio.getIdSucursalOrigen();
         obtenerInfoClienteId(envio.getIdCliente());
         cargarInformacionCliente();
@@ -114,6 +139,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
         cargarInformaciónSucursales();
         seleccionarConductorEnvio(envio.getIdConductor());
         this.envio = envio;
+        cargarInformacionEstatusEnvio();
     }
     
     public void configurarComboBoxColoniaSucursalConductor(){
@@ -146,6 +172,16 @@ public class FXMLEnvioRegistrarController implements Initializable {
             }
             @Override
             public Colaborador fromString(String string) {
+                return null;
+            }
+        });
+        cbEstatus.setConverter(new StringConverter<EstatusEnvio>(){
+            @Override
+            public String toString(EstatusEnvio estatus) {
+                return estatus == null ? "" : estatus.getNombre();
+            }
+            @Override
+            public EstatusEnvio fromString(String string) {
                 return null;
             }
         });
@@ -238,8 +274,9 @@ public class FXMLEnvioRegistrarController implements Initializable {
 
     public void cargarDireccionEnvio(Integer idDireccion) {
         Direccion direccionAPI = obtenerDireccionPorId(idDireccion);
-
+        
         if (direccionAPI != null) {
+            this.direccion = direccionAPI;
             tfCodigoPostal.setText(direccionAPI.getCodigoPostal().toString());
             cargarInformacionCodigoPostal(direccionAPI.getCodigoPostal().toString());
             cbColonia.setValue(direccionAPI);
@@ -302,10 +339,10 @@ public class FXMLEnvioRegistrarController implements Initializable {
             cbColonia.setItems(direcciones);
             
             // Estado, municipio y ciudad se repite, solo varia la colonia
-            Direccion direccion = direcciones.get(0);
-            tfEstado.setText(direccion.getEstado());
-            tfMunicipio.setText(direccion.getMunicipio());
-            tfCiudad.setText(direccion.getCiudad());
+            Direccion d = direcciones.get(0);
+            tfEstado.setText(d.getEstado());
+            tfMunicipio.setText(d.getMunicipio());
+            tfCiudad.setText(d.getCiudad());
         }
     }
 
@@ -318,7 +355,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
         if ( !esBusquedaClienteValida(buscarPor) ) return;
         
         try {
-            respuesta = ClienteImp.buscarCliente(tfBuscarCliente.getText(), buscarPor);
+            respuesta = EnvioImp.buscarCliente(tfBuscarCliente.getText(), buscarPor);
         } catch (UnsupportedEncodingException e) {
             Utilidades.mostrarAlertaSimple("Busqueda cliente", "Introduzca información de busqueda valida", Alert.AlertType.WARNING);
         }
@@ -371,15 +408,18 @@ public class FXMLEnvioRegistrarController implements Initializable {
             }
         }
     }
+    
 
     @FXML
     private void clicContinuar(ActionEvent event) {
         if( esInformacionEnvioValida() ){
-            // Objeto Direccion
-            direccion.setCalle(tfCalle.getText());
-            direccion.setNumero(tfNumero.getText());
-            direccion.setIdColonia(cbColonia.getSelectionModel().getSelectedItem().getIdColonia());
-            System.out.println("Dirección Envío:\n" + "Calle: " + direccion.getCalle() + "\n" + "Número: " + direccion.getNumero() + "\n" + "IdColonia: " + direccion.getIdColonia() );
+            // Objeto Direccion modificada
+            direccionEdicion = new Direccion();
+            direccionEdicion.setIdDireccion(direccion.getIdDireccion());
+            direccionEdicion.setCalle(tfCalle.getText());
+            direccionEdicion.setNumero(tfNumero.getText());
+            direccionEdicion.setIdColonia(cbColonia.getSelectionModel().getSelectedItem().getIdColonia());
+            
             // Objeto envio
             envio.setIdCliente(this.cliente.getIdCliente());
             envio.setIdSucursalOrigen(cbSucursal.getSelectionModel().getSelectedItem().getIdSucursal());
@@ -387,15 +427,27 @@ public class FXMLEnvioRegistrarController implements Initializable {
             envio.setDestinatarioNombre(tfDestinatarioNombre.getText());
             envio.setDestinatarioApellidoPaterno(tfDestinatarioApellidoPaterno.getText());
             envio.setDestinatarioApellidoMaterno(tfDestinatarioApellidoMaterno.getText());
-            
+
             if ( !esModoEdicion ){
                 // Mandar a loader de paquetes
                 envio.setIdEstatusEnvio(1);
                 Integer cpSucursal = obtenerCodipoPostalIdDireccion(cbSucursal.getSelectionModel().getSelectedItem().getIdDireccion());
-                Utilidades.mostrarAlertaSimple("Exito", "Exito", Alert.AlertType.INFORMATION);
                 irPantallaPaquetes(envio, direccion, cpSucursal, Integer.valueOf(tfCodigoPostal.getText()));
-            } else{
-                //TODO: enviar a modificar envío
+            } else {
+                // Para saber si modifico estatus de envio
+                idEstatusEnvioEdicion = (cbEstatus.getSelectionModel().getSelectedItem().getIdEstatusEnvio());
+                
+                // Si se modifico estatus validacion de comentario
+                if ( !Objects.equals(envio.getIdEstatusEnvio(), idEstatusEnvioEdicion) ){
+                    if( idEstatusEnvioEdicion == 4 || idEstatusEnvioEdicion == 6 ){
+                        if ( Validaciones.esVacio(taComentario.getText()) ){
+                            Utilidades.mostrarAlertaSimple("Comentario", "Debe de introducir un comentario.", Alert.AlertType.INFORMATION);
+                            return;
+                        }
+                    }
+                }
+                // Registrar cambios
+                editarEnvio();
             }
             
         }
@@ -445,6 +497,9 @@ public class FXMLEnvioRegistrarController implements Initializable {
     
     @FXML
     private void clicCancelar(ActionEvent event) {
+        cerrarVentana();
+    }
+    private void cerrarVentana(){
         Stage escenario = (Stage) cbBuscarClientePor.getScene().getWindow();
         escenario.close();
     }
@@ -454,7 +509,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
             FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLPaquetes.fxml"));
             Parent vista = cargador.load();
             FXMLPaquetesController controlador = cargador.getController();
-            controlador.cargarInformacion(envio, direccion, cpSucursal, cpEnvio);
+            controlador.cargarInformacion(this.observadorEnvio, envio, direccion, cpSucursal, cpEnvio);
             
             Scene scPaquetes = new Scene(vista);
             Stage stPaquetes = (Stage) tfCodigoPostal.getScene().getWindow();
@@ -467,5 +522,94 @@ public class FXMLEnvioRegistrarController implements Initializable {
         }
 
     }
+
+    private boolean seEditoDireccion(){
+        if ( !Objects.equals(direccion.getIdColonia(), direccionEdicion.getIdColonia()) ){
+            return true;
+        }
+        if ( !direccion.getCalle().equals(direccionEdicion.getCalle()) ){
+            return true;
+        }
+        if ( !direccion.getNumero().equals(direccionEdicion.getNumero()) ){
+            return true;
+        }
+        return false;
+    }
+    private boolean editarEnvioDireccion(){
+        if ( seEditoDireccion() ){
+            Respuesta respuesta = DireccionImp.editar(direccion);
+            return !respuesta.isError(); 
+        }
+        Utilidades.mostrarAlertaSimple("Edicion", "No se modifico direccion.", Alert.AlertType.INFORMATION);
+        return true;
+    }
+    private boolean seEditoEstatus(){
+        return !Objects.equals(envio.getIdEstatusEnvio(), idEstatusEnvioEdicion);
+    }
+    private boolean actualizarEstatusEnvio(){
+        // Verificar si realizo un cambio de estatus del envio
+        if ( seEditoEstatus() ){
+            EnvioHistorialEstatus historial = new EnvioHistorialEstatus();
+            historial.setIdEstatusEnvio(idEstatusEnvioEdicion);
+            historial.setIdEnvio(this.envio.getIdEnvio());
+            if ( !Validaciones.esVacio(taComentario.getText()) ){
+                historial.setComentario(taComentario.getText());
+            } else {
+                historial.setComentario(" ");
+            }
+            historial.setIdColaborador(this.idColaboradorSesion);
+            Respuesta respuesta = EnvioImp.actualizarEstatus(historial);
+            return !respuesta.isError();
+        }
+        Utilidades.mostrarAlertaSimple("Edicion", "No se modifico estatus.", Alert.AlertType.INFORMATION);
+        return true;
+    }
     
+    private void editarEnvio(){
+        if ( !actualizarEstatusEnvio() ){
+            Utilidades.mostrarAlertaSimple("Estatus", "Verifique que la información estatus sea correcta.", Alert.AlertType.WARNING);
+            return;
+        }
+        if ( !editarEnvioDireccion() ){
+            Utilidades.mostrarAlertaSimple("Direccion", "Verifique que la información de la dirección sea correcta.", Alert.AlertType.WARNING);
+            return;
+        }
+        
+        Respuesta respuesta = EnvioImp.editar(envio);
+        if ( !respuesta.isError() ) {
+            Utilidades.mostrarAlertaSimple("Edicion", "Información de envío actualizada.", Alert.AlertType.INFORMATION);
+            observadorEnvio.notificarOperacionExitosa("editar", "exitoso");
+            cerrarVentana();
+        } else {
+            Utilidades.mostrarAlertaSimple("Error al actualizar", "Verifique la informacion. "+respuesta.getMensaje(), Alert.AlertType.ERROR);
+        }
+    }
+    
+    private void cargarInformacionEstatusEnvio(){
+        HashMap<String, Object> respuesta = EnvioImp.obtenerCatalogoEstatusEnvio();
+        boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
+        if ( !esError ) {
+            List<EstatusEnvio> catalogoEstatusAPI = (List<EstatusEnvio>) respuesta.get(Constantes.KEY_LISTA);
+            if ( catalogoEstatusAPI.isEmpty() ){
+                Utilidades.mostrarAlertaSimple("Error", "No hay información en el catalogo de estatus.", Alert.AlertType.ERROR);
+                return;
+            }
+            catalogoEstatus = FXCollections.observableArrayList();
+            catalogoEstatus.addAll(catalogoEstatusAPI);
+            cbEstatus.setItems(catalogoEstatus);
+            EstatusEnvio estatusActual = buscarEstatusEnvioActual(envio.getIdEstatusEnvio());
+            if ( estatusActual != null ){
+                cbEstatus.setValue(estatusActual);
+            }
+        }
+    }
+    private EstatusEnvio buscarEstatusEnvioActual(Integer idEstatusActual){
+        for ( EstatusEnvio e: catalogoEstatus) {
+            if ( e.getIdEstatusEnvio().equals(idEstatusActual) ){
+                return e;
+            }
+        }
+        return null;
+    }
+
 }

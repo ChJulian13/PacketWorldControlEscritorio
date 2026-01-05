@@ -1,6 +1,7 @@
 
 package controlpacketworld;
 
+import controlpacketworld.interfaz.INotificador;
 import dominio.EnvioImp;
 import java.io.IOException;
 import java.net.URL;
@@ -28,11 +29,12 @@ import utilidad.Utilidades;
 import utilidad.Validaciones;
 
 
-public class FXMLEnvioController implements Initializable {
+public class FXMLEnvioController implements Initializable, INotificador{
 
     private Integer idSucursal;
+    private Integer idColaboradorSesion;
     @FXML
-    private TableView<Envio> tbEnvios;
+    private TableView<Envio> tvEnvios;
     @FXML
     private TableColumn<?, ?> colNoGuia;
     @FXML
@@ -54,10 +56,21 @@ public class FXMLEnvioController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
+        envios = FXCollections.observableArrayList();
+        tvEnvios.setItems(envios);
+    }
+    @Override
+    public void notificarOperacionExitosa(String operacion, String nombre) {
         cargarInformacionEnvios(null);
     }
-    public void cargarInformacionSucursal(Integer idSucursal){
+    @Override
+    public void enviarObjeto(Object object) {
+    }
+    
+    public void cargarInformacion(Integer idSucursal, Integer idColaboradorSesion){
         this.idSucursal = idSucursal;
+        this.idColaboradorSesion = idColaboradorSesion;
+        cargarInformacionEnvios(null);
     }
 
     @FXML
@@ -76,7 +89,7 @@ public class FXMLEnvioController implements Initializable {
             FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLEnvioRegistrar.fxml"));
             Parent vista = cargador.load();
             FXMLEnvioRegistrarController controlador = cargador.getController();
-            controlador.cargarInformacion(idSucursal);
+            controlador.cargarInformacion(idSucursal, this);
 
             Scene scEnvio = new Scene(vista);
             Stage stEnvio = new Stage();
@@ -91,12 +104,12 @@ public class FXMLEnvioController implements Initializable {
 
     @FXML
     private void clicEditarEnvio(ActionEvent event) {
-        if (tbEnvios.getSelectionModel().getSelectedItem() != null){
+        if (tvEnvios.getSelectionModel().getSelectedItem() != null){
             try {
                 FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLEnvioRegistrar.fxml"));
                 Parent vista = cargador.load();
                 FXMLEnvioRegistrarController controlador = cargador.getController();
-                controlador.cargarInformacion(tbEnvios.getSelectionModel().getSelectedItem());
+                controlador.cargarInformacionModoEdicion(idColaboradorSesion, tvEnvios.getSelectionModel().getSelectedItem(), this);
 
                 Scene scEnvio = new Scene(vista);
                 Stage stEnvio = new Stage();
@@ -114,16 +127,24 @@ public class FXMLEnvioController implements Initializable {
 
     @FXML
     private void clicGestionarPaquetes(ActionEvent event) {
-        try {
-            Parent vista = FXMLLoader.load(getClass().getResource("FXMLPaquetes.fxml"));
-            Scene scEnvio = new Scene(vista);
-            Stage stEnvio = new Stage();
-            stEnvio.setScene(scEnvio);
-            stEnvio.setTitle("Gestionar paquetes");
-            stEnvio.initModality(Modality.APPLICATION_MODAL);
-            stEnvio.showAndWait();
-        } catch (IOException ex) {
-           ex.printStackTrace();
+        if (tvEnvios.getSelectionModel().getSelectedItem() != null){
+            try {
+                FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLPaquetes.fxml"));
+                Parent vista = cargador.load();
+                FXMLPaquetesController controlador = cargador.getController();
+                controlador.cargarInformacion(this, tvEnvios.getSelectionModel().getSelectedItem());
+
+                Scene scEnvio = new Scene(vista);
+                Stage stEnvio = new Stage();
+                stEnvio.setScene(scEnvio);
+                stEnvio.setTitle("Gestionar paquetes");
+                stEnvio.initModality(Modality.APPLICATION_MODAL);
+                stEnvio.showAndWait();
+            } catch (IOException ex) {
+               ex.printStackTrace();
+            }
+        } else {
+            Utilidades.mostrarAlertaSimple("Envio", "Debe de seleccionar un envío para poder modificar los paquetes.", Alert.AlertType.INFORMATION);
         }
     }
     
@@ -153,9 +174,9 @@ public class FXMLEnvioController implements Initializable {
                 Utilidades.mostrarAlertaSimple("Sin coincidencias", "No se encontró información para el número de guía: " + noGuia, Alert.AlertType.INFORMATION);
             }
             
-            envios = FXCollections.observableArrayList();
+            envios.clear();
             envios.addAll(enviosAPI);
-            tbEnvios.setItems(envios);
+            tvEnvios.refresh();
         } else {
             Utilidades.mostrarAlertaSimple("Error al cargar", respuesta.get(Constantes.KEY_MENSAJE).toString(), Alert.AlertType.ERROR);
         }
