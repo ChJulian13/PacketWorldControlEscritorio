@@ -3,6 +3,7 @@ package dominio;
 
 import com.google.gson.reflect.TypeToken;
 import conexion.ConexionAPI;
+import dto.Respuesta;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
@@ -60,6 +61,51 @@ public class DireccionImp {
                     break;
                 default:
                     respuesta.put(Constantes.KEY_MENSAJE, Constantes.MSJ_DEFAULT);
+            }
+        }
+        return respuesta;
+    }
+    
+    public static Respuesta obtenerCodigoPostalSucursal(Integer idSucursal){
+        Respuesta respuesta = new Respuesta();
+        respuesta.setError(true);
+        String URL = Constantes.URL_WS + "direccion/obtener-cp-sucursal/" + idSucursal;
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+        
+        if ( respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK){
+            respuesta = GsonUtil.GSON.fromJson( respuestaAPI.getContenido(), Respuesta.class);
+        }else {
+            switch ( respuestaAPI.getCodigo() ){
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_URL);
+                    break;
+                case Constantes.ERROR_PETICION:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_PETICION);
+                    break;
+                default:
+                    respuesta.setMensaje(Constantes.MSJ_DEFAULT);
+            }
+        }
+        return respuesta;
+    }
+    public static Respuesta editar(Direccion direccion){
+        Respuesta respuesta = new Respuesta();
+        respuesta.setError(true);
+        String URL = Constantes.URL_WS + "direccion/editar";
+        String parametrosJSON = GsonUtil.GSON.toJson(direccion);
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(URL, Constantes.PETICION_PUT, parametrosJSON, Constantes.APPLICATION_JSON);
+        if ( respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK ){
+            respuesta = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+        } else {
+            switch (respuestaAPI.getCodigo()){
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_URL);
+                    break;
+                case Constantes.ERROR_PETICION:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_PETICION);
+                    break;
+                default:
+                    respuesta.setMensaje(Constantes.MSJ_DEFAULT);
             }
         }
         return respuesta;

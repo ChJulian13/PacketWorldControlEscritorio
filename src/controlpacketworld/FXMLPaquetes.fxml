@@ -23,14 +23,12 @@
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
-      <Label layoutX="18.0" layoutY="76.0" style="-fx-font-size: 20;" text="Número de guía:" />
       <Button layoutX="981.0" layoutY="91.0" mnemonicParsing="false" onAction="#clicAgregar" styleClass="boton" stylesheets="@css/principal.css" text="Agregar" />
       <Button layoutX="1074.0" layoutY="91.0" mnemonicParsing="false" onAction="#clicModificar" styleClass="boton" stylesheets="@css/principal.css" text="Modificar" />
       <Button layoutX="1178.0" layoutY="91.0" mnemonicParsing="false" onAction="#clicEliminar" styleClass="boton-cancelar" stylesheets="@css/principal.css" text="Eliminar" />
-      <Button fx:id="clicConfirmar" layoutX="1121.0" layoutY="659.0" mnemonicParsing="false" onAction="#clicConfirmar" styleClass="boton" stylesheets="@css/principal.css" text="Confirmar envío" />
-      <Button layoutX="987.0" layoutY="659.0" mnemonicParsing="false" onAction="#clicCancelar" styleClass="boton-cancelar" stylesheets="@css/principal.css" text="Cancelar envío" />
-      <Label layoutX="582.0" layoutY="76.0" style="-fx-font-size: 20;" text="Costo:" />
-      <Label fx:id="lbCosto" layoutX="642.0" layoutY="76.0" prefHeight="30.0" prefWidth="136.0" style="-fx-font-size: 20;" text="0.0" />
-      <Label fx:id="lbNoGuia" layoutX="175.0" layoutY="76.0" prefHeight="30.0" prefWidth="370.0" style="-fx-font-size: 20;" text="PW-00000000-000000-00000000" />
+      <Button fx:id="btConfirmar" layoutX="1121.0" layoutY="659.0" mnemonicParsing="false" onAction="#clicConfirmar" styleClass="boton" stylesheets="@css/principal.css" text="Confirmar envío" />
+      <Button fx:id="btCancelar" layoutX="987.0" layoutY="659.0" mnemonicParsing="false" onAction="#clicCancelar" styleClass="boton-cancelar" stylesheets="@css/principal.css" text="Cancelar envío" />
+      <Label layoutX="24.0" layoutY="78.0" style="-fx-font-size: 18;" text="Costo:" />
+      <Label fx:id="lbCosto" layoutX="82.0" layoutY="77.0" prefHeight="30.0" prefWidth="136.0" style="-fx-font-size: 18;" text="0.0" />
    </children>
 </AnchorPane>

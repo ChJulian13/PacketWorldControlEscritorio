@@ -9,25 +9,25 @@
 
 <AnchorPane id="AnchorPane" prefHeight="417.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLPaqueteRegistrarController">
    <children>
-      <Pane layoutX="14.0" layoutY="14.0" prefHeight="389.0" prefWidth="664.0" styleClass="panel-card" stylesheets="@css/principal.css">
+      <Pane layoutX="14.0" layoutY="14.0" prefHeight="389.0" prefWidth="664.0" stylesheets="@css/principal.css">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="215.0" text="Datos del paquete">
                <font>
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="15.0" layoutY="47.0" text="Descripción:" textFill="#757474" />
-            <Label layoutX="35.0" layoutY="210.0" text="Peso (kg):" textFill="#757474" />
-            <Label layoutX="191.0" layoutY="210.0" text="Alto (cm):" textFill="#757474" />
-            <Label layoutX="481.0" layoutY="210.0" text="Profundidad (cm):" textFill="#757474" />
-            <Label layoutX="333.0" layoutY="210.0" text="Ancho (cm):" textFill="#757474" />
-            <TextField fx:id="tfPeso" layoutX="14.0" layoutY="237.0" prefHeight="41.0" prefWidth="118.0" promptText="00.00" styleClass="textfield" stylesheets="@css/principal.css" />
-            <TextArea fx:id="taDescripcion" layoutX="15.0" layoutY="74.0" prefHeight="113.0" prefWidth="635.0" promptText="Descripción del paquete" stylesheets="@css/principal.css" wrapText="true" />
-            <TextField fx:id="tfAncho" layoutX="321.0" layoutY="237.0" prefHeight="41.0" prefWidth="118.0" promptText="00.00" styleClass="textfield" stylesheets="@css/principal.css" />
-            <TextField fx:id="tfProfundidad" layoutX="481.0" layoutY="237.0" prefHeight="41.0" prefWidth="142.0" promptText="00.00" styleClass="textfield" stylesheets="@css/principal.css" />
-            <TextField fx:id="tfAlto" layoutX="170.0" layoutY="237.0" prefHeight="41.0" prefWidth="118.0" promptText="00.00" styleClass="textfield" stylesheets="@css/principal.css" />
-            <Button layoutX="23.0" layoutY="325.0" mnemonicParsing="false" onAction="#clicAgregar" style="-fx-font-size: 20px;" styleClass="boton" stylesheets="@css/principal.css" text="Agregar" />
-            <Button layoutX="142.0" layoutY="325.0" mnemonicParsing="false" onAction="#clicCancelar" style="-fx-font-size: 20px;" styleClass="boton-cancelar" stylesheets="@css/principal.css" text="Cancelar" />
+            <Label layoutX="15.0" layoutY="47.0" style="-fx-font-size: 18px;" text="Descripción:" textFill="#757474" />
+            <Label layoutX="35.0" layoutY="210.0" style="-fx-font-size: 18px;" text="Peso (kg):" textFill="#757474" />
+            <Label layoutX="191.0" layoutY="210.0" style="-fx-font-size: 18px;" text="Alto (cm):" textFill="#757474" />
+            <Label layoutX="481.0" layoutY="210.0" style="-fx-font-size: 18px;" text="Profundidad (cm):" textFill="#757474" />
+            <Label layoutX="333.0" layoutY="210.0" style="-fx-font-size: 18px;" text="Ancho (cm):" textFill="#757474" />
+            <TextField fx:id="tfPeso" layoutX="14.0" layoutY="237.0" prefHeight="41.0" prefWidth="118.0" promptText="00.00" style="-fx-font-size: 18px;" styleClass="textfield" stylesheets="@css/principal.css" />
+            <TextArea fx:id="taDescripcion" layoutX="15.0" layoutY="74.0" prefHeight="113.0" prefWidth="635.0" promptText="Descripción del paquete" style="-fx-font-size: 18px;" stylesheets="@css/principal.css" wrapText="true" />
+            <TextField fx:id="tfAncho" layoutX="321.0" layoutY="237.0" prefHeight="41.0" prefWidth="118.0" promptText="00.00" style="-fx-font-size: 18px;" styleClass="textfield" stylesheets="@css/principal.css" />
+            <TextField fx:id="tfProfundidad" layoutX="481.0" layoutY="237.0" prefHeight="41.0" prefWidth="142.0" promptText="00.00" style="-fx-font-size: 18px;" styleClass="textfield" stylesheets="@css/principal.css" />
+            <TextField fx:id="tfAlto" layoutX="170.0" layoutY="237.0" prefHeight="41.0" prefWidth="118.0" promptText="00.00" style="-fx-font-size: 18px;" styleClass="textfield" stylesheets="@css/principal.css" />
+            <Button fx:id="btAgregar" layoutX="23.0" layoutY="325.0" mnemonicParsing="false" onAction="#clicAgregar" style="-fx-font-size: 18px;" styleClass="boton" stylesheets="@css/principal.css" text="Agregar" />
+            <Button layoutX="142.0" layoutY="325.0" mnemonicParsing="false" onAction="#clicCancelar" style="-fx-font-size: 18px;" styleClass="boton-cancelar" stylesheets="@css/principal.css" text="Cancelar" />
          </children>
       </Pane>
    </children>
