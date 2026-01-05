@@ -73,5 +73,11 @@
       </ImageView>
       <Button layoutX="54.0" layoutY="275.0" mnemonicParsing="false" onAction="#clicClientes" style="-fx-background-color: transparent;" styleClass="inicio-bt" stylesheets="@css/principal.css" text="Paquetes" />
       <Button layoutX="55.0" layoutY="311.0" mnemonicParsing="false" onAction="#clicEnvios" style="-fx-background-color: transparent;" styleClass="inicio-bt" stylesheets="@css/principal.css" text="Envíos" />
+      <Button layoutX="57.0" layoutY="347.0" mnemonicParsing="false" onAction="#clicAsociaciones" style="-fx-background-color: transparent;" styleClass="inicio-bt" stylesheets="@css/principal.css" text="Asociaciones" />
+      <ImageView fitHeight="22.0" fitWidth="20.0" layoutX="24.0" layoutY="350.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@imagenes/asociacion.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
