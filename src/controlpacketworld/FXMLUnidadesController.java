@@ -21,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -61,6 +62,10 @@ public class FXMLUnidadesController implements Initializable, INotificador{
     private Colaborador colaboradorSesion;
     @FXML
     private TextField tfBarraBusqueda;
+    @FXML
+    private TableColumn colConductor;
+    @FXML
+    private Button btnMostrarTodos;
 
     /**
      * Initializes the controller class.
@@ -70,6 +75,9 @@ public class FXMLUnidadesController implements Initializable, INotificador{
         // TODO
         configurarTabla();
         cargarInformacionUnidades();
+        if(btnMostrarTodos != null) {
+            btnMostrarTodos.setVisible(false);
+        }
     } 
     
     public void inicializarColaborador(Colaborador colaborador) {
@@ -84,10 +92,12 @@ public class FXMLUnidadesController implements Initializable, INotificador{
         colTipo.setCellValueFactory(new PropertyValueFactory("nombreTipoUnidad"));
         colNii.setCellValueFactory(new PropertyValueFactory("nii"));
         colEstatus.setCellValueFactory(new PropertyValueFactory("estatus"));
+        colConductor.setCellValueFactory(new PropertyValueFactory("conductorLegible"));
     }
     
     private void cargarInformacionUnidades() {
-        HashMap<String, Object> respuesta = UnidadImp.obtenerTodos();
+        HashMap<String, Object> respuesta = UnidadImp.obtenerUnidadesAsignadas();
+        
         boolean esError = (boolean) respuesta.get("error");
         if (!esError) {
             List<Unidad> unidadAPI = (List<Unidad>) respuesta.get("unidades");
@@ -95,7 +105,7 @@ public class FXMLUnidadesController implements Initializable, INotificador{
             unidades.addAll(unidadAPI);
             tvUnidades.setItems(unidades);
         } else {
-            Utilidades.mostrarAlertaSimple("Error al cargar", "" + respuesta.get("mensaje"), Alert.AlertType.NONE);
+            Utilidades.mostrarAlertaSimple("Error al cargar", "" + respuesta.get("mensaje"), Alert.AlertType.ERROR);
         }
     }
 
@@ -196,8 +206,15 @@ public class FXMLUnidadesController implements Initializable, INotificador{
     
         if (busqueda != null && !busqueda.trim().isEmpty()) {
             buscarUnidades(busqueda);
+            
+            if(btnMostrarTodos != null) {
+                btnMostrarTodos.setVisible(true);
+            }
         } else {
             cargarInformacionUnidades();
+            if(btnMostrarTodos != null) {
+                btnMostrarTodos.setVisible(false);
+            }
         }
     }
 
@@ -207,19 +224,75 @@ public class FXMLUnidadesController implements Initializable, INotificador{
     }
 
     @FXML
-    private void clicGestionarUnidades(ActionEvent event) {
+    private void clicAsignar(ActionEvent event) {
+        Unidad unidadSeleccionada = tvUnidades.getSelectionModel().getSelectedItem();
+        
+        if (unidadSeleccionada != null) {
+            if (unidadSeleccionada.getEstatus() != null && unidadSeleccionada.getEstatus().equalsIgnoreCase("baja")) {
+                Utilidades.mostrarAlertaSimple("Acción no permitida", 
+                        "No se puede asignar un conductor a una unidad que está dada de baja.", 
+                        Alert.AlertType.WARNING);
+                return; 
+            }
+            irPantallaSeleccionConductor(unidadSeleccionada);
+        } else {
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona una unidad para asignar o cambiar su conductor.", Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
+    private void clicDesasignar(ActionEvent event) {
+        Unidad unidadSeleccionada = tvUnidades.getSelectionModel().getSelectedItem();
+        
+        if (unidadSeleccionada != null) {
+            if (unidadSeleccionada.getIdConductor() != null && unidadSeleccionada.getIdConductor() > 0) {
+                
+                boolean confirmar = Utilidades.mostrarAlertaConfirmacion("Desasignar", 
+                        "¿Estás seguro de quitar a " + unidadSeleccionada.getNombreConductor() + " de la unidad " + unidadSeleccionada.getModelo() + "?");
+                
+                if (confirmar) {
+                    Respuesta respuesta = UnidadImp.desasignarConductor(unidadSeleccionada.getIdConductor());
+                    if (!respuesta.isError()) {
+                        Utilidades.mostrarAlertaSimple("Éxito", "Unidad liberada correctamente.", Alert.AlertType.INFORMATION);
+                        cargarInformacionUnidades(); 
+                    } else {
+                        Utilidades.mostrarAlertaSimple("Error", respuesta.getMensaje(), Alert.AlertType.ERROR);
+                    }
+                }
+            } else {
+                Utilidades.mostrarAlertaSimple("Aviso", "La unidad seleccionada no tiene conductor asignado.", Alert.AlertType.WARNING);
+            }
+        } else {
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona una unidad para desasignar.", Alert.AlertType.WARNING);
+        }
+    }
+    
+    private void irPantallaSeleccionConductor(Unidad unidad) {
         try {
-            FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLUnidadGestionar.fxml"));
-            Parent vista = cargador.load();
-            FXMLUnidadGestionarController controlador = cargador.getController();
-            Scene scUnidadGestionar = new Scene(vista);
-            Stage stUnidadGestionar = new Stage();
-            stUnidadGestionar.setScene(scUnidadGestionar);
-            stUnidadGestionar.setTitle("Gestionar unidades");
-            stUnidadGestionar.initModality(Modality.APPLICATION_MODAL);
-            stUnidadGestionar.showAndWait();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLUnidadAsignacion.fxml"));
+            Parent root = loader.load();
+            
+            FXMLUnidadAsignacionController controller = loader.getController();
+            controller.inicializarDatos(unidad, this);
+            
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Seleccionar Conductor");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            
         } catch (IOException ex) {
-           ex.printStackTrace();
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void clicMostrarTodos(ActionEvent event) {
+        tfBarraBusqueda.setText(""); 
+        cargarInformacionUnidades(); 
+        
+        if(btnMostrarTodos != null) {
+            btnMostrarTodos.setVisible(false);
         }
     }
 }

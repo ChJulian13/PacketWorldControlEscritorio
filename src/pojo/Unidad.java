@@ -120,9 +120,14 @@ public class Unidad {
     }
     
     public String getConductorLegible() {
+        if (estatus != null && estatus.equalsIgnoreCase("baja")) {
+            return "NO DISPONIBLE";
+        }
+        
         if (nombreConductor == null || nombreConductor.trim().isEmpty()) {
             return "SIN ASIGNAR";
         }
+        
         return nombreConductor;
     }
 
