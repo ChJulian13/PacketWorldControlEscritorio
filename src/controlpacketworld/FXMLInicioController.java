@@ -161,23 +161,5 @@ public class FXMLInicioController implements Initializable {
         } catch (IOException ex) {
            ex.printStackTrace();
         }
-    }
-
-    @FXML
-    private void clicAsociaciones(ActionEvent event) {
-        try {
-            FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLAsociacion.fxml"));
-            Parent vista = cargador.load();
-            FXMLAsociacionController controlador = cargador.getController();
-            Scene scAsociacion = new Scene(vista);
-            Stage stAsociacion = new Stage();
-            stAsociacion.setScene(scAsociacion);
-            stAsociacion.setTitle("Asociaciones");
-            stAsociacion.initModality(Modality.APPLICATION_MODAL);
-            stAsociacion.showAndWait();
-        } catch (IOException ex) {
-           ex.printStackTrace();
-        }
-    }
-    
+    } 
 }
