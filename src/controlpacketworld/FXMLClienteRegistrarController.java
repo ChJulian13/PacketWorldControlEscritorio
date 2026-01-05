@@ -2,8 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
-
-
 package controlpacketworld;
 
 import com.google.gson.reflect.TypeToken;
@@ -16,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,17 +30,12 @@ import pojo.Direccion;
 import utilidad.Constantes;
 import utilidad.GsonUtil;
 import utilidad.Utilidades;
-import utilidad.Validaciones;
-
 
 /**
  * FXML Controller class
  *
  * @author julia
  */
-
-
-
 public class FXMLClienteRegistrarController implements Initializable {
 
     @FXML
@@ -80,7 +71,6 @@ public class FXMLClienteRegistrarController implements Initializable {
         colonias = FXCollections.observableArrayList();
         cbColonia.setItems(colonias);
         
-        // CORRECCIÓN: Usamos getColonia() porque así se llama en tu POJO Direccion
         cbColonia.setConverter(new StringConverter<Direccion>() {
             @Override
             public String toString(Direccion object) {
@@ -93,9 +83,8 @@ public class FXMLClienteRegistrarController implements Initializable {
             }
         });
 
-        // Listener para cargar colonias al perder foco del CP
         tfCodigoPostal.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) { // Cuando pierde el foco
+            if (!newValue) { 
                 cargarColonias(tfCodigoPostal.getText());
             }
         });
@@ -119,12 +108,10 @@ public class FXMLClienteRegistrarController implements Initializable {
         tfTelefono.setText(clienteEdicion.getTelefono());
         tfCorreo.setText(clienteEdicion.getCorreo());
         
-        // Datos planos de dirección
         tfCalle.setText(clienteEdicion.getCalle());
         tfNumero.setText(clienteEdicion.getNumero());
         tfCodigoPostal.setText(clienteEdicion.getCodigoPostal());
 
-        // Cargar y seleccionar
         cargarColonias(clienteEdicion.getCodigoPostal());
         seleccionarColonia(clienteEdicion.getIdColonia());
     }
@@ -136,7 +123,6 @@ public class FXMLClienteRegistrarController implements Initializable {
             HashMap<String, Object> respuesta = DireccionImp.obtenerDireccion(codigoPostal);
             
             if( !(boolean) respuesta.get(Constantes.KEY_ERROR)){
-                // Rehidratación de la lista para evitar ClassCastException (LinkedTreeMap)
                 Object listaObjeto = respuesta.get(Constantes.KEY_LISTA);
                 
                 if (listaObjeto != null) {
@@ -165,9 +151,9 @@ public class FXMLClienteRegistrarController implements Initializable {
     private void clicCancelar(ActionEvent event) {
         cerrarVentana();
     }
-
-    @FXML
-    private void clicGuardar(ActionEvent event) {
+    
+     @FXML
+    private void clicRegistrar(ActionEvent event) {
         if (validarCampos()) {
             Cliente cliente = new Cliente();
             cliente.setNombre(tfNombre.getText());
@@ -176,7 +162,6 @@ public class FXMLClienteRegistrarController implements Initializable {
             cliente.setTelefono(tfTelefono.getText());
             cliente.setCorreo(tfCorreo.getText());
             
-            // Datos planos para el Mapper
             cliente.setCalle(tfCalle.getText());
             cliente.setNumero(tfNumero.getText());
             cliente.setCodigoPostal(tfCodigoPostal.getText());
@@ -208,9 +193,8 @@ public class FXMLClienteRegistrarController implements Initializable {
 
     private void procesarRespuesta(HashMap<String, Object> respuesta, String nombreCliente) {
         if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
-            // Usamos notificarOperacionExitosa según tu interfaz INotificador
             if (notificador != null) {
-                notificador.notificarOperacionExitosa(esEdicion ? "Edición" : "Registro", nombreCliente);
+                notificador.notificarOperacionExitosa(esEdicion ? "actualizado" : "registrado", nombreCliente);
             } else {
                 Utilidades.mostrarAlertaSimple("Operación exitosa", (String) respuesta.get(Constantes.KEY_MENSAJE), Alert.AlertType.INFORMATION);
             }
@@ -242,4 +226,6 @@ public class FXMLClienteRegistrarController implements Initializable {
         Stage stage = (Stage) tfNombre.getScene().getWindow();
         stage.close();
     }
+
+    
 }
