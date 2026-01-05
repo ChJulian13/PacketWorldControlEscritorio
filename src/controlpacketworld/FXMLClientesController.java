@@ -8,6 +8,7 @@ import controlpacketworld.interfaz.INotificador;
 import dominio.ClienteImp;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -19,12 +20,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pojo.Cliente;
+import utilidad.Constantes;
 import utilidad.Utilidades;
 
 /**
@@ -56,10 +61,18 @@ public class FXMLClientesController implements Initializable, INotificador {
     private TableColumn<Cliente, String> colCP;
     
     private ObservableList<Cliente> listaClientes;
+    
+    @FXML
+    private TextField tfBuscar;
+    @FXML
+    private ComboBox<String> cbBuscar; // Corregido el tipo a String
+    @FXML
+    private Button btnMostrarTodos;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
+        configurarBusqueda(); // Importante inicializar la búsqueda
         cargarDatosTabla();
     }
 
@@ -73,6 +86,15 @@ public class FXMLClientesController implements Initializable, INotificador {
         colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
         colColonia.setCellValueFactory(new PropertyValueFactory<>("nombreColonia"));
         colCP.setCellValueFactory(new PropertyValueFactory<>("codigoPostal"));
+    }
+    
+    private void configurarBusqueda() {
+        ObservableList<String> criterios = FXCollections.observableArrayList("Nombre", "Correo", "Teléfono");
+        cbBuscar.setItems(criterios);
+        // El botón mostrar todos comienza oculto si se desea esa lógica
+        if (btnMostrarTodos != null) {
+            btnMostrarTodos.setVisible(false);
+        }
     }
 
     private void cargarDatosTabla() {
@@ -104,6 +126,73 @@ public class FXMLClientesController implements Initializable, INotificador {
                 Alert.AlertType.WARNING);
         }
     }
+    
+    @FXML
+    private void clicEliminar(ActionEvent event) {
+        Cliente clienteSeleccionado = tvClientes.getSelectionModel().getSelectedItem();
+        if (clienteSeleccionado != null) {
+            boolean confirmar = Utilidades.mostrarAlertaConfirmacion("Eliminar Cliente", 
+                    "¿Estás seguro de que deseas eliminar al cliente " + clienteSeleccionado.getNombre() + "?");
+            
+            if (confirmar) {
+                HashMap<String, Object> respuesta = ClienteImp.eliminarCliente(clienteSeleccionado.getIdCliente());
+                if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
+                    Utilidades.mostrarAlertaSimple("Cliente eliminado", 
+                            (String) respuesta.get(Constantes.KEY_MENSAJE), 
+                            Alert.AlertType.INFORMATION);
+                    cargarDatosTabla(); // Recargamos la tabla para ver que se eliminó
+                } else {
+                    Utilidades.mostrarAlertaSimple("Error al eliminar", 
+                            (String) respuesta.get(Constantes.KEY_MENSAJE), 
+                            Alert.AlertType.ERROR);
+                }
+            }
+        } else {
+            Utilidades.mostrarAlertaSimple("Selección requerida", 
+                    "Para eliminar un cliente debes seleccionarlo previamente de la tabla.", 
+                    Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
+    private void clicBuscar(ActionEvent event) {
+        String criterio = cbBuscar.getSelectionModel().getSelectedItem();
+        String busqueda = tfBuscar.getText();
+        
+        if (criterio != null && !busqueda.isEmpty()) {
+            HashMap<String, Object> respuesta = ClienteImp.buscarCliente(busqueda, criterio);
+            if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
+                List<Cliente> resultados = (List<Cliente>) respuesta.get(Constantes.KEY_LISTA);
+                listaClientes.clear();
+                listaClientes.addAll(resultados);
+                tvClientes.setItems(listaClientes);
+                
+                if (btnMostrarTodos != null) {
+                    btnMostrarTodos.setVisible(true); // Mostramos el botón para limpiar filtro
+                }
+            } else {
+                listaClientes.clear(); 
+                Utilidades.mostrarAlertaSimple("Sin resultados", 
+                        (String) respuesta.get(Constantes.KEY_MENSAJE), 
+                        Alert.AlertType.INFORMATION);
+            }
+        } else {
+            Utilidades.mostrarAlertaSimple("Campos requeridos", 
+                    "Selecciona un criterio de búsqueda e ingresa un valor.", 
+                    Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
+    private void clicMostrarTodos(ActionEvent event) {
+        tfBuscar.clear();
+        cbBuscar.getSelectionModel().clearSelection();
+        cargarDatosTabla();
+        
+        if (btnMostrarTodos != null) {
+            btnMostrarTodos.setVisible(false); // Volvemos a ocultar el botón
+        }
+    }
 
     private void irFormulario(boolean esEdicion, Cliente cliente) {
         try {
@@ -128,6 +217,11 @@ public class FXMLClientesController implements Initializable, INotificador {
 
     @Override
     public void notificarOperacionExitosa(String operacion, String nombre) {
+        // Al regresar de un registro/edición, limpiamos filtros y recargamos
+        tfBuscar.clear();
+        if (btnMostrarTodos != null) {
+            btnMostrarTodos.setVisible(false);
+        }
         cargarDatosTabla();
         Utilidades.mostrarAlertaSimple("Operación exitosa", 
             "El cliente " + nombre + " se ha " + operacion + " correctamente.", 
@@ -137,9 +231,5 @@ public class FXMLClientesController implements Initializable, INotificador {
     @Override
     public void enviarObjeto(Object object) {
         // Implementación opcional
-    }
-
-    @FXML
-    private void clicEliminar(ActionEvent event) {
     }
 }
