@@ -32,6 +32,7 @@ import utilidad.Validaciones;
 public class FXMLEnvioController implements Initializable, INotificador{
 
     private Integer idSucursal;
+    private Integer idColaboradorSesion;
     @FXML
     private TableView<Envio> tvEnvios;
     @FXML
@@ -66,8 +67,9 @@ public class FXMLEnvioController implements Initializable, INotificador{
     public void enviarObjeto(Object object) {
     }
     
-    public void cargarInformacionSucursal(Integer idSucursal){
+    public void cargarInformacion(Integer idSucursal, Integer idColaboradorSesion){
         this.idSucursal = idSucursal;
+        this.idColaboradorSesion = idColaboradorSesion;
         cargarInformacionEnvios(null);
     }
 
@@ -107,7 +109,7 @@ public class FXMLEnvioController implements Initializable, INotificador{
                 FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLEnvioRegistrar.fxml"));
                 Parent vista = cargador.load();
                 FXMLEnvioRegistrarController controlador = cargador.getController();
-                controlador.cargarInformacionModoEdicion(tvEnvios.getSelectionModel().getSelectedItem(), this);
+                controlador.cargarInformacionModoEdicion(idColaboradorSesion, tvEnvios.getSelectionModel().getSelectedItem(), this);
 
                 Scene scEnvio = new Scene(vista);
                 Stage stEnvio = new Stage();

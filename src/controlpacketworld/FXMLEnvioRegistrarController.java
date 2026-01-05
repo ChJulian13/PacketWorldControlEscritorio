@@ -46,6 +46,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
     private Cliente cliente;
     private boolean esModoEdicion;
     private Integer idSucursal;
+    private Integer idColaboradorSesion;
     private Envio envio;
     private Direccion direccion;
     private Direccion direccionEdicion;
@@ -120,7 +121,8 @@ public class FXMLEnvioRegistrarController implements Initializable {
         this.esModoEdicion = false;
         cargarInformaciónSucursales();
     }
-    public void cargarInformacionModoEdicion(Envio envio, INotificador observador){
+    public void cargarInformacionModoEdicion(Integer idColaboradorSesion, Envio envio, INotificador observador){
+        this.idColaboradorSesion = idColaboradorSesion;
         this.observadorEnvio = observador;
         this.esModoEdicion = true;
         btContinuar.setText("Guardar");
@@ -555,9 +557,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
             } else {
                 historial.setComentario(" ");
             }
-            // ---------------------------------------------------------------------------------------------------------------------
-            historial.setIdColaborador(this.envio.getIdConductor()); // TODO: obtener idColaborador con loader desde pantalla inicio
-            // ---------------------------------------------------------------------------------------------------------------------
+            historial.setIdColaborador(this.idColaboradorSesion);
             Respuesta respuesta = EnvioImp.actualizarEstatus(historial);
             return !respuesta.isError();
         }
