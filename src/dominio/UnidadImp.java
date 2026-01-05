@@ -134,7 +134,7 @@ public class UnidadImp {
     
    public static HashMap<String, Object> buscar(String textoBusqueda) {
         HashMap<String, Object> respuesta = new LinkedHashMap<>();
-        respuesta.put("error", true); // Asumimos error por defecto
+        respuesta.put("error", true); 
         
         try {
             String busquedaCodificada = URLEncoder.encode(textoBusqueda, StandardCharsets.UTF_8.toString());
@@ -158,6 +158,93 @@ public class UnidadImp {
             e.printStackTrace();
         }
         
+        return respuesta;
+    }
+   
+   public static Respuesta asignarConductor(int idUnidad, int idConductor) {
+        Respuesta respuesta = new Respuesta();
+        String URL = Constantes.URL_WS + "unidades/asignar";
+
+        try {
+            String parametros = "idUnidad=" + idUnidad + "&idConductor=" + idConductor;
+
+            RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(URL, "POST", parametros, "application/x-www-form-urlencoded");
+
+            if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+                Gson gson = new Gson();
+                respuesta = gson.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+            } else {
+                respuesta.setError(true);
+                respuesta.setMensaje("Error en la petición: " + respuestaAPI.getCodigo());
+            }
+        } catch (Exception e) {
+            respuesta.setError(true);
+            respuesta.setMensaje("Error de conexión.");
+        }
+        return respuesta;
+    }
+
+    public static Respuesta cambiarConductor(int idUnidad, int idConductor) {
+        Respuesta respuesta = new Respuesta();
+        String URL = Constantes.URL_WS + "unidades/cambiar";
+
+        try {
+            String parametros = "idUnidad=" + idUnidad + "&idConductor=" + idConductor;
+
+            RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(URL, "PUT", parametros, "application/x-www-form-urlencoded");
+
+            if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+                Gson gson = new Gson();
+                respuesta = gson.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+            } else {
+                respuesta.setError(true);
+                respuesta.setMensaje("Error en la petición: " + respuestaAPI.getCodigo());
+            }
+        } catch (Exception e) {
+            respuesta.setError(true);
+            respuesta.setMensaje("Error de conexión.");
+        }
+        return respuesta;
+    }
+
+    public static Respuesta desasignarConductor(int idConductor) {
+        Respuesta respuesta = new Respuesta();
+        String URL = Constantes.URL_WS + "unidades/desasignar/" + idConductor;
+
+        try {
+            RespuestaHTTP respuestaAPI = ConexionAPI.peticionSinBody(URL, "DELETE");
+
+            if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+                Gson gson = new Gson();
+                respuesta = gson.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+            } else {
+                respuesta.setError(true);
+                respuesta.setMensaje("Error al desasignar: " + respuestaAPI.getCodigo());
+            }
+        } catch (Exception e) {
+            respuesta.setError(true);
+            respuesta.setMensaje("Error de conexión.");
+        }
+        return respuesta;
+    }
+    
+    public static HashMap<String, Object> obtenerUnidadesAsignadas() {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+        String URL = Constantes.URL_WS + "unidades/obtener-asignadas"; 
+        
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+        
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Gson gson = new Gson();
+            Type tipoLista = new TypeToken<List<Unidad>>(){}.getType();
+            List<Unidad> unidades = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
+            
+            respuesta.put("error", false);
+            respuesta.put("unidades", unidades);
+        } else {
+            respuesta.put("error", true);
+            respuesta.put("mensaje", "Error al cargar la lista de asignaciones.");
+        }
         return respuesta;
     }
 }

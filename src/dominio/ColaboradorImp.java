@@ -263,4 +263,45 @@ public class ColaboradorImp {
         return respuesta;
     }
     
+    public static HashMap<String, Object> obtenerConductoresDisponibles() {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+        String URL = Constantes.URL_WS + "colaborador/obtener-conductores-disponibles"; 
+        
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+        
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Gson gson = new Gson();
+            Type tipoLista = new TypeToken<List<Colaborador>>(){}.getType();
+            List<Colaborador> colaboradores = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
+            
+            respuesta.put(Constantes.KEY_ERROR, false);
+            respuesta.put("colaboradores", colaboradores);
+        } else {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            respuesta.put(Constantes.KEY_MENSAJE, "Error al cargar conductores disponibles: " + respuestaAPI.getCodigo());
+        }
+        
+        return respuesta;
+    }
+        
+    public static HashMap<String, Object> obtenerTodosLosConductores() {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+        String URL = Constantes.URL_WS + "colaborador/obtener-conductores-todos"; 
+        
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+        
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Gson gson = new Gson();
+            Type tipoLista = new TypeToken<List<Colaborador>>(){}.getType();
+            List<Colaborador> colaboradores = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
+            
+            respuesta.put(Constantes.KEY_ERROR, false);
+            respuesta.put("colaboradores", colaboradores);
+        } else {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            respuesta.put(Constantes.KEY_MENSAJE, "Error al cargar conductores.");
+        }
+        return respuesta;
+    }
+    
 }

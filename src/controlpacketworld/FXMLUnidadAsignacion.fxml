@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controlpacketworld.FXMLUnidadAsignacionController">
+   <children>
+      <Button layoutX="481.0" layoutY="345.0" mnemonicParsing="false" onAction="#clicCancelar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Cancelar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="369.0" layoutY="345.0" mnemonicParsing="false" onAction="#clicAsignar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Asignar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Pane layoutX="40.0" layoutY="97.0" prefHeight="167.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="257.0" text="Seleccione un conductor">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbUnidad" layoutX="24.0" layoutY="57.0" text="Unidad" textFill="#757474" />
+            <ComboBox fx:id="cbConductores" layoutX="25.0" layoutY="84.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+         </children>
+      </Pane>
+      <Label layoutX="40.0" layoutY="38.0" prefHeight="39.0" prefWidth="350.0" text="Asociaciar Unidad a Conductor">
+         <font>
+            <Font name="Segoe UI" size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

@@ -18,11 +18,14 @@ public class Unidad {
     private String estatus; 
     private Integer idTipoUnidad; 
     private String nombreTipoUnidad;
+    
+    private String nombreConductor; 
+    private Integer idConductor;
 
     public Unidad() {
     }
 
-    public Unidad(Integer idUnidad, String marca, String modelo, Integer anio, String vin, String nii, String estatus, Integer idTipoUnidad, String nombreTipoUnidad) {
+    public Unidad(Integer idUnidad, String marca, String modelo, Integer anio, String vin, String nii, String estatus, Integer idTipoUnidad, String nombreTipoUnidad, String nombreConductor, Integer idConductor) {
         this.idUnidad = idUnidad;
         this.marca = marca;
         this.modelo = modelo;
@@ -32,6 +35,8 @@ public class Unidad {
         this.estatus = estatus;
         this.idTipoUnidad = idTipoUnidad;
         this.nombreTipoUnidad = nombreTipoUnidad;
+        this.nombreConductor = nombreConductor;
+        this.idConductor = idConductor;
     }
 
     public Integer getIdUnidad() {
@@ -104,5 +109,28 @@ public class Unidad {
 
     public void setNombreTipoUnidad(String nombreTipoUnidad) {
         this.nombreTipoUnidad = nombreTipoUnidad;
+    }
+
+    public String getNombreConductor() {
+        return nombreConductor;
+    }
+
+    public void setNombreConductor(String nombreConductor) {
+        this.nombreConductor = nombreConductor;
+    }
+    
+    public String getConductorLegible() {
+        if (nombreConductor == null || nombreConductor.trim().isEmpty()) {
+            return "SIN ASIGNAR";
+        }
+        return nombreConductor;
+    }
+
+    public Integer getIdConductor() {
+        return idConductor;
+    }
+
+    public void setIdConductor(Integer idConductor) {
+        this.idConductor = idConductor;
     }
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="741.0" prefWidth="1294.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controlpacketworld.FXMLUnidadGestionarController">
+   <children>
+      <Button layoutX="909.0" layoutY="96.0" mnemonicParsing="false" onAction="#clicAsignar" prefHeight="31.0" prefWidth="130.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Asignar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="1055.0" layoutY="97.0" mnemonicParsing="false" onAction="#clicDesasignar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Desasignar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <TableView fx:id="tvAsignaciones" layoutX="50.0" layoutY="152.0" prefHeight="553.0" prefWidth="1208.0">
+         <columns>
+            <TableColumn fx:id="colMarca" prefWidth="207.0" text="Marca" />
+            <TableColumn fx:id="colModelo" prefWidth="260.0" text="Modelo" />
+            <TableColumn fx:id="colVin" prefWidth="359.0" text="VIN" />
+            <TableColumn fx:id="colConductor" prefWidth="381.0" text="Conductor asignado" />
+         </columns>
+      </TableView>
+      <Label layoutX="50.0" layoutY="59.0" prefHeight="39.0" prefWidth="214.0" text="Gestionar unidades">
+         <font>
+            <Font name="Segoe UI" size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

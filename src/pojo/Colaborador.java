@@ -165,6 +165,11 @@ public class Colaborador {
     public void setNumeroLicencia(String numeroLicencia) {
         this.numeroLicencia = numeroLicencia;
     }
+    
+    @Override
+    public String toString() {
+        return nombre + " " + apellidoPaterno + " " + apellidoMaterno;
+    }
 
 }
 

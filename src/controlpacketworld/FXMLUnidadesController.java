@@ -126,7 +126,6 @@ public class FXMLUnidadesController implements Initializable, INotificador{
 
             java.util.Optional<String> resultado = dialogo.showAndWait();
             
-            // 3. Si el usuario escribió algo y dio Aceptar
             if (resultado.isPresent() && !resultado.get().trim().isEmpty()) {
                 String motivo = resultado.get();
                 
@@ -205,5 +204,22 @@ public class FXMLUnidadesController implements Initializable, INotificador{
     @Override
     public void enviarObjeto(Object object) {
         throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    @FXML
+    private void clicGestionarUnidades(ActionEvent event) {
+        try {
+            FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLUnidadGestionar.fxml"));
+            Parent vista = cargador.load();
+            FXMLUnidadGestionarController controlador = cargador.getController();
+            Scene scUnidadGestionar = new Scene(vista);
+            Stage stUnidadGestionar = new Stage();
+            stUnidadGestionar.setScene(scUnidadGestionar);
+            stUnidadGestionar.setTitle("Gestionar unidades");
+            stUnidadGestionar.initModality(Modality.APPLICATION_MODAL);
+            stUnidadGestionar.showAndWait();
+        } catch (IOException ex) {
+           ex.printStackTrace();
+        }
     }
 }
