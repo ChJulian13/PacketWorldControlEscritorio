@@ -9,6 +9,7 @@ import dominio.CatalogoImp;
 import dominio.ColaboradorImp;
 import dominio.SucursalImp;
 import dto.Respuesta;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +18,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pojo.Colaborador;
 import pojo.Rol;
@@ -38,45 +49,32 @@ import utilidad.Utilidades;
  */
 public class FXMLColaboradorFormularioController implements Initializable {
 
-    @FXML
-    private TextField tfNombre;
-    @FXML
-    private TextField tfApellidoPaterno;
-    @FXML
-    private TextField tfApellidoMaterno;
-    @FXML
-    private TextField tfCurp;
-    @FXML
-    private TextField tfNumPersonal;
-    @FXML
-    private ComboBox<Sucursal> cbSurcusal;
-    @FXML
-    private TextField tfCorreo;
-    @FXML
-    private TextField tfPassword;
-    @FXML
-    private ComboBox<Rol> cbRol;
+    @FXML private TextField tfNombre;
+    @FXML private TextField tfApellidoPaterno;
+    @FXML private TextField tfApellidoMaterno;
+    @FXML private TextField tfCurp;
+    @FXML private TextField tfNumPersonal;
+    @FXML private ComboBox<Sucursal> cbSurcusal;
+    @FXML private TextField tfCorreo;
+    
+    @FXML private TextField tfPassword; 
+    
+    @FXML private ComboBox<Rol> cbRol;
     
     private ObservableList<Rol> roles;
-    
     private ObservableList<Sucursal> sucursales;
-    
     private INotificador observador;
-    @FXML
-    private TextField tfNumLicencia;
-    @FXML
-    private Pane pDatosConductor;
+    
+    @FXML private TextField tfNumLicencia;
+    @FXML private Pane pDatosConductor;
     
     private Colaborador colaboradorEdicion;
-    @FXML
-    private Label lbPassword;
-    @FXML
-    private CheckBox cbCambiarPassword;
+    
+    @FXML private Label lbPassword; 
+    
+    @FXML private Button btnCambiarPassword; 
 
-    /**
-     * Initializes the controller class.
-     */
-   @Override
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
         cargarRolesColaborador();
         cargarSucursalesActivas();
@@ -84,17 +82,9 @@ public class FXMLColaboradorFormularioController implements Initializable {
         pDatosConductor.setVisible(false);
         tfNumLicencia.setText("");
         
-        cbCambiarPassword.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            tfPassword.setDisable(!newVal);
-            if (!newVal) {
-                tfPassword.setText("");
-            }
-        });
-
         cbRol.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 String nombreRol = newValue.getRol().trim(); 
-
                 if ("Conductor".equalsIgnoreCase(nombreRol)) {
                     pDatosConductor.setVisible(true);
                 } else {
@@ -108,6 +98,7 @@ public class FXMLColaboradorFormularioController implements Initializable {
     public void inicializarDatos(Colaborador colaboradorEdicion, INotificador observador){
         this.colaboradorEdicion = colaboradorEdicion;
         this.observador = observador;
+        
         if (colaboradorEdicion != null) {
             tfNombre.setText(colaboradorEdicion.getNombre());
             tfApellidoPaterno.setText(colaboradorEdicion.getApellidoPaterno());
@@ -115,32 +106,36 @@ public class FXMLColaboradorFormularioController implements Initializable {
             tfCurp.setText(colaboradorEdicion.getCurp());
             tfCorreo.setText(colaboradorEdicion.getCorreo());
             tfNumLicencia.setText(colaboradorEdicion.getNumeroLicencia());
+            
             int posicionSucursal = obtenerPosicionSucursal(colaboradorEdicion.getIdSucursal());
             cbSurcusal.getSelectionModel().select(posicionSucursal);
+            
             tfNumPersonal.setText(colaboradorEdicion.getNoPersonal());
-            int posicionRol = obtenerPosicionRol(colaboradorEdicion.getIdRol());
-            cbRol.getSelectionModel().select(posicionRol);
-            cbRol.setDisable(true);
             tfNumPersonal.setEditable(false);
             tfNumPersonal.setDisable(true);
-            tfPassword.setText("");
-            lbPassword.setVisible(false);
-            lbPassword.setManaged(false); 
-            cbCambiarPassword.setVisible(true);
-            cbCambiarPassword.setManaged(true);
-            cbCambiarPassword.setSelected(false); 
+            
+            int posicionRol = obtenerPosicionRol(colaboradorEdicion.getIdRol());
+            cbRol.getSelectionModel().select(posicionRol);
+            cbRol.setDisable(true); 
 
-            tfPassword.setText("");
-            tfPassword.setDisable(true); 
+            tfPassword.setVisible(false);
+            tfPassword.setManaged(false); 
+            lbPassword.setVisible(true);
+            lbPassword.setManaged(true);
+            
+            btnCambiarPassword.setVisible(true);
+            btnCambiarPassword.setManaged(true);
+            
         } else {
             lbPassword.setVisible(true);
             lbPassword.setManaged(true);
-
-            cbCambiarPassword.setVisible(false);
-            cbCambiarPassword.setManaged(false);
-
+            tfPassword.setVisible(true);
+            tfPassword.setManaged(true);
             tfPassword.setDisable(false);
             tfPassword.setText("");
+
+            btnCambiarPassword.setVisible(false);
+            btnCambiarPassword.setManaged(false);
         }
     }
     
@@ -149,7 +144,6 @@ public class FXMLColaboradorFormularioController implements Initializable {
             if (sucursales.get(i).getIdSucursal() == idSucursal)
                 return i;
         }
-        
         return -1;
     }
     
@@ -158,7 +152,6 @@ public class FXMLColaboradorFormularioController implements Initializable {
             if (roles.get(i).getIdRol() == idRol)
                 return i;
         }
-        
         return -1;
     }
     
@@ -217,10 +210,6 @@ public class FXMLColaboradorFormularioController implements Initializable {
             return false;
         }
         
-        if (colaboradorEdicion != null && cbCambiarPassword.isSelected() && tfPassword.getText().trim().isEmpty()) {
-            Utilidades.mostrarAlertaSimple("Contraseña requerida", "Si activaste 'Cambiar contraseña', debes escribir la nueva clave.", Alert.AlertType.WARNING);
-            return false;
-        }
 
         if (cbSurcusal.getSelectionModel().getSelectedItem() == null) {
             Utilidades.mostrarAlertaSimple("Selección requerida", "Debes seleccionar una Sucursal.", Alert.AlertType.WARNING);
@@ -250,7 +239,7 @@ public class FXMLColaboradorFormularioController implements Initializable {
             colaborador.setCurp(tfCurp.getText());
             colaborador.setCorreo(tfCorreo.getText());
             colaborador.setNoPersonal(tfNumPersonal.getText());
-            colaborador.setContrasenia(tfPassword.getText());
+            
             Rol rolSeleccionado = cbRol.getSelectionModel().getSelectedItem();
             colaborador.setIdRol(rolSeleccionado.getIdRol());
             Sucursal sucursalSeleccionada = cbSurcusal.getSelectionModel().getSelectedItem();
@@ -263,6 +252,7 @@ public class FXMLColaboradorFormularioController implements Initializable {
             }
             
             if (colaboradorEdicion == null) {
+                colaborador.setContrasenia(tfPassword.getText());
                 registrarColaborador(colaborador);
             } else {
                 editarColaborador(colaborador);
@@ -282,6 +272,27 @@ public class FXMLColaboradorFormularioController implements Initializable {
         }
     }
 
-    
+    @FXML
+    private void clicCambiarPassword(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLColaboradorContrasenia.fxml"));
+            Parent root = loader.load();
+            
+            FXMLColaboradorContraseniaController controlador = loader.getController();
+            controlador.inicializarDatos(colaboradorEdicion.getIdColaborador());
+            
+            Stage escenario = new Stage();
+            escenario.setScene(new Scene(root));
+            escenario.setTitle("Seguridad");
+            
+            escenario.initModality(Modality.WINDOW_MODAL);
+            escenario.initOwner( btnCambiarPassword.getScene().getWindow() );
+            
+            escenario.showAndWait();
+            
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Utilidades.mostrarAlertaSimple("Error", "No se pudo abrir la ventana de cambio de contraseña.", Alert.AlertType.ERROR);
+        }
+    }
 }
- 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="325.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLColaboradorContraseniaController">
+   <children>
+      <Button layoutX="194.0" layoutY="278.0" mnemonicParsing="false" onAction="#clicGuardar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Cambiar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="306.0" layoutY="278.0" mnemonicParsing="false" onAction="#clicCancelar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Cancelar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Pane layoutX="20.0" layoutY="22.0" prefHeight="239.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="311.0" text="Actualizar contraseña">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="24.0" layoutY="55.0" text="Actual:" textFill="#757474" />
+            <Label layoutX="24.0" layoutY="111.0" text="Nueva:" textFill="#757474" />
+            <Label layoutX="25.0" layoutY="169.0" text="Confirmar:" textFill="#757474" />
+            <PasswordField fx:id="pfActual" layoutX="24.0" layoutY="78.0" prefHeight="27.0" prefWidth="331.0" style="-fx-border-color: #e2e2e2; -fx-border-radius: 5px; -fx-background-color: transparent;" />
+            <PasswordField fx:id="pfNueva" layoutX="25.0" layoutY="134.0" prefHeight="27.0" prefWidth="331.0" style="-fx-border-color: #e2e2e2; -fx-border-radius: 5px; -fx-background-color: transparent;" />
+            <PasswordField fx:id="pfConfirmar" layoutX="24.0" layoutY="186.0" prefHeight="27.0" prefWidth="331.0" style="-fx-border-color: #e2e2e2; -fx-border-radius: 5px; -fx-background-color: transparent;" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

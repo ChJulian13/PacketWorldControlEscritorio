@@ -107,6 +107,32 @@ public class ColaboradorImp {
         return respuesta;
     }
     
+    public static Respuesta cambiarPassword(int idColaborador, String passwordActual, String passwordNueva) {
+        Respuesta respuesta = new Respuesta();
+        String URL = Constantes.URL_WS + "colaborador/cambiar-password";
+
+        try {
+            String parametros = "idColaborador=" + idColaborador +
+                                "&passwordActual=" + URLEncoder.encode(passwordActual, StandardCharsets.UTF_8.name()) +
+                                "&passwordNueva=" + URLEncoder.encode(passwordNueva, StandardCharsets.UTF_8.name());
+
+            RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(URL, "PUT", parametros, "application/x-www-form-urlencoded");
+
+            if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+                Gson gson = new Gson();
+                respuesta = gson.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+            } else {
+                respuesta.setError(true);
+                respuesta.setMensaje("Error al cambiar contraseña: " + respuestaAPI.getCodigo());
+            }
+        } catch (Exception e) {
+            respuesta.setError(true);
+            respuesta.setMensaje("Error al procesar la solicitud: " + e.getMessage());
+        }
+
+        return respuesta;
+    }
+    
     public static Respuesta eliminar(int idColaborador) {
         Respuesta respuesta = new Respuesta();
         Gson gson = new Gson();
