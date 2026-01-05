@@ -41,6 +41,7 @@ import pojo.Rol;
 import pojo.Sucursal;
 import utilidad.Constantes;
 import utilidad.Utilidades;
+import utilidad.Validaciones;
 
 /**
  * FXML Controller class
@@ -195,30 +196,81 @@ public class FXMLColaboradorFormularioController implements Initializable {
     }
     
     private boolean sonCamposValidos() {
-        if (tfNombre.getText().trim().isEmpty() || 
-            tfApellidoPaterno.getText().trim().isEmpty() ||
-            tfCurp.getText().trim().isEmpty() ||
-            tfCorreo.getText().trim().isEmpty() ||
-            tfNumPersonal.getText().trim().isEmpty()) {
+        if (Validaciones.esVacio(tfNombre.getText()) || 
+            Validaciones.esVacio(tfApellidoPaterno.getText()) ||
+            Validaciones.esVacio(tfCurp.getText()) ||
+            Validaciones.esVacio(tfCorreo.getText()) ||
+            Validaciones.esVacio(tfNumPersonal.getText())) {
 
             Utilidades.mostrarAlertaSimple("Campos vacíos", "Por favor llena todos los campos de texto obligatorios.", Alert.AlertType.WARNING);
             return false;
         }
-        
-        if (colaboradorEdicion == null && tfPassword.getText().trim().isEmpty()) {
-            Utilidades.mostrarAlertaSimple("Contraseña requerida", "Para registrar un nuevo colaborador, la contraseña es obligatoria.", Alert.AlertType.WARNING);
+
+        if (!Validaciones.esSoloTexto(tfNombre.getText())) {
+            Utilidades.mostrarAlertaSimple("Nombre inválido", "El nombre solo debe contener letras y espacios.", Alert.AlertType.WARNING);
             return false;
         }
-        
+        if (!Validaciones.esSoloTexto(tfApellidoPaterno.getText())) {
+            Utilidades.mostrarAlertaSimple("Apellido inválido", "El apellido paterno solo debe contener letras y espacios.", Alert.AlertType.WARNING);
+            return false;
+        }
+        if (!Validaciones.esVacio(tfApellidoMaterno.getText()) && !Validaciones.esSoloTexto(tfApellidoMaterno.getText())) {
+            Utilidades.mostrarAlertaSimple("Apellido inválido", "El apellido materno solo debe contener letras y espacios.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (!Validaciones.esNumPersonalValido(tfNumPersonal.getText())) {
+            Utilidades.mostrarAlertaSimple("Formato inválido", 
+                "El No. de Personal debe iniciar con 'PW' seguido de 3 a 10 números (y no puede ser '000').", 
+                Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (!Validaciones.esCorreoValido(tfCorreo.getText())) {
+            Utilidades.mostrarAlertaSimple("Correo inválido", "Por favor ingresa un correo electrónico válido.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (!Validaciones.esCurpValida(tfCurp.getText())) {
+            Utilidades.mostrarAlertaSimple("CURP inválida", "El formato de la CURP no es correcto. Verifica los caracteres.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (colaboradorEdicion == null) {
+            if (Validaciones.esVacio(tfPassword.getText())) {
+                Utilidades.mostrarAlertaSimple("Contraseña requerida", "Para registrar un nuevo colaborador, la contraseña es obligatoria.", Alert.AlertType.WARNING);
+                return false;
+            }
+            if (!Validaciones.esPasswordSegura(tfPassword.getText())) {
+                Utilidades.mostrarAlertaSimple("Contraseña insegura", 
+                    "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (@#$%^&+=!).", 
+                    Alert.AlertType.WARNING);
+                return false;
+            }
+        }
 
         if (cbSurcusal.getSelectionModel().getSelectedItem() == null) {
             Utilidades.mostrarAlertaSimple("Selección requerida", "Debes seleccionar una Sucursal.", Alert.AlertType.WARNING);
             return false;
         }
 
-        if (pDatosConductor.isVisible() && tfNumLicencia.getText().trim().isEmpty()) {
-            Utilidades.mostrarAlertaSimple("Dato requerido", "Para los conductores, el N° de Licencia es obligatorio.", Alert.AlertType.WARNING);
+        if (cbRol.getSelectionModel().getSelectedItem() == null) {
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Debes seleccionar un Rol.", Alert.AlertType.WARNING);
             return false;
+        }
+
+        if (pDatosConductor.isVisible()) {
+            if (Validaciones.esVacio(tfNumLicencia.getText())) {
+                Utilidades.mostrarAlertaSimple("Dato requerido", "Para los conductores, el N° de Licencia es obligatorio.", Alert.AlertType.WARNING);
+                return false;
+            }
+            
+            if (!Validaciones.esLicenciaValida(tfNumLicencia.getText())) {
+                Utilidades.mostrarAlertaSimple("Licencia inválida", 
+                    "El número de licencia contiene caracteres inválidos o longitud incorrecta (Min 5, Max 20).", 
+                    Alert.AlertType.WARNING);
+                return false;
+            }
         }
 
         return true;
@@ -233,20 +285,28 @@ public class FXMLColaboradorFormularioController implements Initializable {
     private void clicGuardar(ActionEvent event) {
         if (sonCamposValidos()) {
             Colaborador colaborador = new Colaborador();
-            colaborador.setNombre(tfNombre.getText());
-            colaborador.setApellidoPaterno(tfApellidoPaterno.getText());
-            colaborador.setApellidoMaterno(tfApellidoMaterno.getText());
-            colaborador.setCurp(tfCurp.getText());
-            colaborador.setCorreo(tfCorreo.getText());
-            colaborador.setNoPersonal(tfNumPersonal.getText());
+            
+            colaborador.setNombre(Utilidades.capitalizarTexto(tfNombre.getText()));
+            colaborador.setApellidoPaterno(Utilidades.capitalizarTexto(tfApellidoPaterno.getText()));
+            
+            if (!tfApellidoMaterno.getText().trim().isEmpty()) {
+                colaborador.setApellidoMaterno(Utilidades.capitalizarTexto(tfApellidoMaterno.getText()));
+            } else {
+                colaborador.setApellidoMaterno("");
+            }
+
+            colaborador.setCurp(tfCurp.getText().trim().toUpperCase());         
+            colaborador.setCorreo(tfCorreo.getText().trim().toLowerCase());     
+            colaborador.setNoPersonal(tfNumPersonal.getText().trim().toUpperCase()); 
             
             Rol rolSeleccionado = cbRol.getSelectionModel().getSelectedItem();
             colaborador.setIdRol(rolSeleccionado.getIdRol());
+            
             Sucursal sucursalSeleccionada = cbSurcusal.getSelectionModel().getSelectedItem();
             colaborador.setIdSucursal(sucursalSeleccionada.getIdSucursal()); 
             
             if (pDatosConductor.isVisible()) {
-                colaborador.setNumeroLicencia(tfNumLicencia.getText());
+                colaborador.setNumeroLicencia(tfNumLicencia.getText().trim().toUpperCase());
             } else {
                 colaborador.setNumeroLicencia(null);
             }

@@ -52,4 +52,22 @@ public class Utilidades {
        return (btnSeleccion.get() == ButtonType.OK);
        
    }
+   
+    public static String capitalizarTexto(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            return texto;
+        }
+        
+        String[] palabras = texto.trim().split("\\s+");
+        StringBuilder textoFormateado = new StringBuilder();
+        
+        for (String palabra : palabras) {
+            if (!palabra.isEmpty()) {
+                textoFormateado.append(palabra.substring(0, 1).toUpperCase())
+                               .append(palabra.substring(1).toLowerCase())
+                               .append(" ");
+            }
+        }
+        return textoFormateado.toString().trim();
+    }
 }
