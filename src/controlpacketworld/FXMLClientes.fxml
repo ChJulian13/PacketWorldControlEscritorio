@@ -9,22 +9,22 @@
 
 <AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #F3F3F3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLClientesController">
    <children>
-      <Button layoutX="1139.0" layoutY="61.0" mnemonicParsing="false" onAction="#clicEliminar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Eliminar">
+      <Button layoutX="1143.0" layoutY="73.0" mnemonicParsing="false" onAction="#clicEliminar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Eliminar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="1035.0" layoutY="60.0" mnemonicParsing="false" onAction="#clicEditar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
+      <Button layoutX="1039.0" layoutY="72.0" mnemonicParsing="false" onAction="#clicEditar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="924.0" layoutY="61.0" mnemonicParsing="false" onAction="#clicRegistrar" prefHeight="39.0" prefWidth="101.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
+      <Button layoutX="928.0" layoutY="73.0" mnemonicParsing="false" onAction="#clicRegistrar" prefHeight="29.0" prefWidth="101.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TextField fx:id="tfBuscar" layoutX="213.0" layoutY="71.0" prefHeight="43.0" prefWidth="317.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
+      <TextField fx:id="tfBuscar" layoutX="176.0" layoutY="72.0" prefHeight="31.0" prefWidth="317.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
       <TableView fx:id="tvClientes" layoutX="42.0" layoutY="122.0" prefHeight="580.0" prefWidth="1200.0">
          <columns>
             <TableColumn fx:id="colNombre" prefWidth="75.0" text="Nombre" />
@@ -43,13 +43,13 @@
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
-      <ComboBox fx:id="cbBuscar" layoutX="42.0" layoutY="73.0" prefHeight="39.0" prefWidth="161.0" promptText="Buscar por:" />
-      <Button layoutX="536.0" layoutY="72.0" mnemonicParsing="false" onAction="#clicBuscar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Buscar">
+      <ComboBox fx:id="cbBuscar" layoutX="42.0" layoutY="73.0" prefHeight="31.0" prefWidth="123.0" promptText="Buscar por:" style="-fx-background-color: #FBFBFB; -fx-border-color: #CCCCCC; -fx-border-radius: 6px; -fx-background-radius: 6px;" />
+      <Button layoutX="499.0" layoutY="72.0" mnemonicParsing="false" onAction="#clicBuscar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Buscar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="btnMostrarTodos" layoutX="642.0" layoutY="72.0" mnemonicParsing="false" onAction="#clicMostrarTodos" prefHeight="35.0" prefWidth="123.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Mostrar Todos">
+      <Button fx:id="btnMostrarTodos" layoutX="605.0" layoutY="72.0" mnemonicParsing="false" onAction="#clicMostrarTodos" prefHeight="29.0" prefWidth="123.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Mostrar Todos">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

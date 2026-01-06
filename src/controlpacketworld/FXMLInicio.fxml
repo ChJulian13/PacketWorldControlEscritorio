@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1104.0" style="-fx-background-color: #f3f3f3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLInicioController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1105.0" style="-fx-background-color: #f3f3f3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLInicioController">
    <children>
       <Label fx:id="lbNombreCompleto" layoutX="27.0" layoutY="37.0" prefHeight="17.0" prefWidth="148.0" text="Christian Julián">
          <font>

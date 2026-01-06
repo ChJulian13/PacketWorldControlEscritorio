@@ -42,7 +42,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <ComboBox fx:id="cbBuscar" layoutX="32.0" layoutY="85.0" prefHeight="31.0" prefWidth="105.0" promptText="Buscar por:" />
+      <ComboBox fx:id="cbBuscar" layoutX="32.0" layoutY="85.0" prefHeight="31.0" prefWidth="105.0" promptText="Buscar por:" style="-fx-background-color: #FBFBFB; -fx-border-color: #CCCCCC; -fx-border-radius: 6px; -fx-background-radius: 6px;" />
       <Button fx:id="btnBuscar" layoutX="358.0" layoutY="85.0" mnemonicParsing="false" onAction="#clicBuscar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Buscar">
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -53,8 +53,8 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <ComboBox fx:id="cbBusquedaRol" layoutX="146.0" layoutY="85.0" prefHeight="31.0" prefWidth="203.0" promptText="Selecciona un rol:" />
-      <Button fx:id="btnMostrarTodos1" layoutX="905.0" layoutY="84.0" mnemonicParsing="false" onAction="#clicFoto" prefHeight="31.0" prefWidth="124.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Subir foto">
+      <ComboBox fx:id="cbBusquedaRol" layoutX="146.0" layoutY="85.0" prefHeight="31.0" prefWidth="203.0" promptText="Selecciona un rol:" style="-fx-background-color: #FBFBFB; -fx-border-color: #CCCCCC; -fx-border-radius: 6px; -fx-background-radius: 6px;" />
+      <Button layoutX="905.0" layoutY="84.0" mnemonicParsing="false" onAction="#clicFoto" prefHeight="31.0" prefWidth="124.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Subir foto">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
