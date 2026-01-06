@@ -16,6 +16,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import utilidad.Utilidades;
+import utilidad.Validaciones;
 
 /**
  * FXML Controller class
@@ -56,6 +57,18 @@ public class FXMLColaboradorContraseniaController implements Initializable {
         
         if (!passNueva.equals(passConfirmar)) {
             Utilidades.mostrarAlertaSimple("Error de validación", "Las nuevas contraseñas no coinciden.", Alert.AlertType.WARNING);
+            return;
+        }
+        
+        if (passActual.equals(passNueva)) {
+            Utilidades.mostrarAlertaSimple("Aviso", "La nueva contraseña debe ser diferente a la actual.", Alert.AlertType.WARNING);
+            return;
+        }
+        
+        if (!Validaciones.esPasswordSegura(passNueva)) {
+            Utilidades.mostrarAlertaSimple("Contraseña insegura", 
+                "La nueva contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (@#$%^&+=!).", 
+                Alert.AlertType.WARNING);
             return;
         }
         
