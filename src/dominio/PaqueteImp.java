@@ -7,6 +7,8 @@ import dto.RSDistanciaKM;
 import dto.Respuesta;
 import dto.RespuestaGenerica;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -82,7 +84,8 @@ public class PaqueteImp {
         }
 
         respuesta.setError(false);
-        respuesta.setValor(costoEnvio);
+        BigDecimal costoRedondeado = BigDecimal .valueOf(costoEnvio) .setScale(2, RoundingMode.HALF_UP);
+        respuesta.setValor(costoRedondeado.doubleValue());
         respuesta.setMensaje("Costo calculado correctamente.");
 
        return respuesta;
