@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #f3f3f3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLInicioController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1104.0" style="-fx-background-color: #f3f3f3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLInicioController">
    <children>
       <Label fx:id="lbNombreCompleto" layoutX="27.0" layoutY="37.0" prefHeight="17.0" prefWidth="148.0" text="Christian Julián">
          <font>
@@ -21,7 +21,7 @@
             <Font name="Segoe UI" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="252.0" layoutY="33.0" text="Inicio">
+      <Label layoutX="274.0" layoutY="33.0" text="Inicio">
          <font>
             <Font name="Segoe UI Semibold" size="23.0" />
          </font>
@@ -50,28 +50,75 @@
             <Image url="@imagenes/clientes.png" />
          </image>
       </ImageView>
-      <Button layoutX="593.0" layoutY="340.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Button">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
       <ImageView fitHeight="22.0" fitWidth="20.0" layoutX="23.0" layoutY="660.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@imagenes/logout.png" />
          </image>
       </ImageView>
       <Button alignment="CENTER" layoutX="59.0" layoutY="658.0" mnemonicParsing="false" onAction="#clicCerrarSesion" style="-fx-background-color: transparent;" text="Cerrar sesión" textAlignment="CENTER" />
-      <ImageView fitHeight="22.0" fitWidth="20.0" layoutX="23.0" layoutY="277.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@imagenes/paquete.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="22.0" fitWidth="20.0" layoutX="24.0" layoutY="313.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="22.0" fitWidth="20.0" layoutX="24.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@imagenes/envío.png" />
          </image>
       </ImageView>
-      <Button layoutX="54.0" layoutY="275.0" mnemonicParsing="false" onAction="#clicClientes" style="-fx-background-color: transparent;" styleClass="inicio-bt" stylesheets="@css/principal.css" text="Paquetes" />
-      <Button layoutX="55.0" layoutY="311.0" mnemonicParsing="false" onAction="#clicEnvios" style="-fx-background-color: transparent;" styleClass="inicio-bt" stylesheets="@css/principal.css" text="Envíos" />
+      <Button layoutX="55.0" layoutY="277.0" mnemonicParsing="false" onAction="#clicEnvios" style="-fx-background-color: transparent;" styleClass="inicio-bt" stylesheets="@css/principal.css" text="Envíos" />
+      <Pane layoutX="274.0" layoutY="103.0" prefHeight="270.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="195.0" text="Conozca el sistema">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Button layoutX="218.0" layoutY="221.0" mnemonicParsing="false" onAction="#clicManualUsuario" prefHeight="31.0" prefWidth="131.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Manual de usuario">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Text layoutX="26.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sistema integral de gestión logística diseñado para optimizar el control de envíos y recursos. Desde este panel podrá administrar el ciclo de vida de los paquetes, gestionar la flotilla de unidades y controlar los accesos de los colaboradores. Utilice el menú lateral para navegar por los módulos." wrappingWidth="327.232421875" />
+         </children>
+      </Pane>
+      <Pane layoutX="671.0" layoutY="103.0" prefHeight="270.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="195.0" text="Soporte Técnico">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Text layoutX="24.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="¿Experimenta problemas técnicos con la plataforma o necesita reportar un fallo en la sincronización de datos?" wrappingWidth="304.232421875">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Text>
+            <Text layoutX="26.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Horario de atención: Lunes a Viernes, 09:00 - 18:00 hrs." wrappingWidth="327.232421875" />
+            <Text layoutX="26.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Correo interno: soporte@packetworld.mx" wrappingWidth="327.232421875" />
+            <Text layoutX="26.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Línea directa: (228) 845-0000 Ext. 4420" wrappingWidth="327.232421875" />
+         </children>
+      </Pane>
+      <Pane layoutX="274.0" layoutY="388.0" prefHeight="270.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="195.0" text="Avisos y Políticas">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Text layoutX="24.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Seguridad: Se recuerda a todos los colaboradores cerrar su sesión al finalizar el turno para evitar accesos no autorizados." wrappingWidth="327.232421875" />
+            <Text layoutX="26.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Versión: Actualmente está operando en la versión v1.2.4 (Stable)." wrappingWidth="327.232421875" />
+         </children>
+      </Pane>
+      <Pane layoutX="671.0" layoutY="388.0" prefHeight="270.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="195.0" text="Misión">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <Text layoutX="26.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brindar soluciones logísticas de vanguardia, conectando destinos con eficiencia, seguridad y compromiso, garantizando la satisfacción total de nuestros clientes en cada entrega realizada a través de nuestra red PacketWorld." wrappingWidth="327.232421875" />
+            <Text layoutX="26.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Comprometidos con la excelencia." wrappingWidth="327.232421875">
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

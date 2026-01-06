@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -23,6 +24,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pojo.Colaborador;
+import utilidad.Utilidades;
 
 /**
  * FXML Controller class
@@ -162,4 +164,17 @@ public class FXMLInicioController implements Initializable {
            ex.printStackTrace();
         }
     } 
+
+    @FXML
+    private void clicManualUsuario(ActionEvent event) {
+        try {
+            String url = "https://uvmx-my.sharepoint.com/:w:/g/personal/zs22016079_estudiantes_uv_mx/IQC68Wms34EySpoxdc4TG12mAdZjtjT6QPFHKHw7SsLar4U?e=6ETUXs"; 
+            
+            java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Utilidades.mostrarAlertaSimple("Error", "No se pudo abrir el enlace.", Alert.AlertType.ERROR);
+        }
+    }
 }

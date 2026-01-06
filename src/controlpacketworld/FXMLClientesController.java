@@ -65,14 +65,14 @@ public class FXMLClientesController implements Initializable, INotificador {
     @FXML
     private TextField tfBuscar;
     @FXML
-    private ComboBox<String> cbBuscar; // Corregido el tipo a String
+    private ComboBox<String> cbBuscar; 
     @FXML
     private Button btnMostrarTodos;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
-        configurarBusqueda(); // Importante inicializar la búsqueda
+        configurarBusqueda(); 
         cargarDatosTabla();
     }
 
@@ -91,7 +91,7 @@ public class FXMLClientesController implements Initializable, INotificador {
     private void configurarBusqueda() {
         ObservableList<String> criterios = FXCollections.observableArrayList("Nombre", "Correo", "Teléfono");
         cbBuscar.setItems(criterios);
-        // El botón mostrar todos comienza oculto si se desea esa lógica
+        
         if (btnMostrarTodos != null) {
             btnMostrarTodos.setVisible(false);
         }
@@ -160,7 +160,7 @@ public class FXMLClientesController implements Initializable, INotificador {
         String busqueda = tfBuscar.getText();
         
         if (criterio != null && !busqueda.isEmpty()) {
-            HashMap<String, Object> respuesta = ClienteImp.buscarCliente(busqueda, criterio);
+            HashMap<String, Object> respuesta = ClienteImp.buscarCliente2(busqueda, criterio);
             if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
                 List<Cliente> resultados = (List<Cliente>) respuesta.get(Constantes.KEY_LISTA);
                 listaClientes.clear();
@@ -168,7 +168,7 @@ public class FXMLClientesController implements Initializable, INotificador {
                 tvClientes.setItems(listaClientes);
                 
                 if (btnMostrarTodos != null) {
-                    btnMostrarTodos.setVisible(true); // Mostramos el botón para limpiar filtro
+                    btnMostrarTodos.setVisible(true); 
                 }
             } else {
                 listaClientes.clear(); 
@@ -190,7 +190,7 @@ public class FXMLClientesController implements Initializable, INotificador {
         cargarDatosTabla();
         
         if (btnMostrarTodos != null) {
-            btnMostrarTodos.setVisible(false); // Volvemos a ocultar el botón
+            btnMostrarTodos.setVisible(false);
         }
     }
 
@@ -217,7 +217,6 @@ public class FXMLClientesController implements Initializable, INotificador {
 
     @Override
     public void notificarOperacionExitosa(String operacion, String nombre) {
-        // Al regresar de un registro/edición, limpiamos filtros y recargamos
         tfBuscar.clear();
         if (btnMostrarTodos != null) {
             btnMostrarTodos.setVisible(false);
