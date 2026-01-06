@@ -25,9 +25,9 @@
             </Label>
             <Label layoutX="612.0" layoutY="76.0" prefHeight="27.0" prefWidth="75.0" text="Teléfono:" textAlignment="RIGHT">
             </Label>
-            <Label fx:id="lbClienteNombre" layoutX="694.0" layoutY="25.0" prefHeight="27.0" prefWidth="519.0" text="\${nombre}" />
-            <Label fx:id="lbClienteCorreo" layoutX="694.0" layoutY="50.0" prefHeight="27.0" prefWidth="513.0" text="\${correo}" />
-            <Label fx:id="lbClienteTelefono" layoutX="694.0" layoutY="76.0" prefHeight="27.0" prefWidth="242.0" text="\${telefono}" />
+            <Label fx:id="lbClienteNombre" layoutX="694.0" layoutY="25.0" prefHeight="27.0" prefWidth="519.0" text=" " />
+            <Label fx:id="lbClienteCorreo" layoutX="694.0" layoutY="50.0" prefHeight="27.0" prefWidth="513.0" text=" " />
+            <Label fx:id="lbClienteTelefono" layoutX="694.0" layoutY="76.0" prefHeight="27.0" prefWidth="242.0" text=" " />
          </children>
       </Pane>
       <Pane layoutX="24.0" layoutY="164.0" prefHeight="299.0" prefWidth="380.0" styleClass="panel" stylesheets="@css/principal.css">
