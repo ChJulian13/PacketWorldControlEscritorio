@@ -78,7 +78,7 @@ public class FXMLColaboradorFormularioController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cargarRolesColaborador();
-       // cargarSucursalesActivas();
+        cargarSucursalesActivas();
         
         pDatosConductor.setVisible(false);
         tfNumLicencia.setText("");
@@ -183,7 +183,6 @@ public class FXMLColaboradorFormularioController implements Initializable {
         }
     }
     
-    /*
     private void cargarSucursalesActivas() {
         HashMap<String, Object> respuesta = SucursalImp.obtenerSucursalesActivasSistema();
         if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
@@ -195,7 +194,6 @@ public class FXMLColaboradorFormularioController implements Initializable {
             Utilidades.mostrarAlertaSimple("ERROR", respuesta.get(Constantes.KEY_MENSAJE).toString(), Alert.AlertType.NONE);
         }
     }
-*/
     
     private boolean sonCamposValidos() {
         if (Validaciones.esVacio(tfNombre.getText()) || 
