@@ -98,6 +98,8 @@ public class FXMLClienteRegistrarController implements Initializable {
         if (esEdicion) {
             btnRegistrar.setText("Actualizar");
             cargarDatosEdicion();
+            
+            tfCodigoPostal.setDisable(true);
         }
     }
 
