@@ -26,6 +26,7 @@ import pojo.TipoUnidad;
 import pojo.Unidad;
 import utilidad.Constantes;
 import utilidad.Utilidades;
+import utilidad.Validaciones;
 
 /**
  * FXML Controller class
@@ -58,10 +59,10 @@ public class FXMLUnidadFormularioController implements Initializable {
     }   
     
     private boolean sonCamposValidos() {
-        if (tfMarca.getText().trim().isEmpty() || 
-            tfModelo.getText().trim().isEmpty() || 
-            tfAnio.getText().trim().isEmpty() || 
-            tfVin.getText().trim().isEmpty()) {
+        if (Validaciones.esVacio(tfMarca.getText()) || 
+            Validaciones.esVacio(tfModelo.getText()) || 
+            Validaciones.esVacio(tfAnio.getText()) || 
+            Validaciones.esVacio(tfVin.getText())) {
             
             Utilidades.mostrarAlertaSimple("Campos vacíos", "Por favor llena todos los campos.", Alert.AlertType.WARNING);
             return false;
@@ -72,9 +73,20 @@ public class FXMLUnidadFormularioController implements Initializable {
             return false;
         }
 
-        String anioTexto = tfAnio.getText().trim();
-        if (!anioTexto.matches("\\d{4}")) {
+        if (!Validaciones.esNumericoConLongitud(tfAnio.getText(), 4)) {
             Utilidades.mostrarAlertaSimple("Año inválido", "El año debe ser un número de 4 dígitos.", Alert.AlertType.WARNING);
+            return false;
+        }
+        int anio = Integer.parseInt(tfAnio.getText());
+        int anioActual = java.time.Year.now().getValue();
+        if (anio < 1980 || anio > (anioActual + 1)) {
+            Utilidades.mostrarAlertaSimple("Año fuera de rango", "Ingresa un año válido (1980 - " + (anioActual + 1) + ").", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        String vin = tfVin.getText().trim();
+        if (vin.length() != 17 || !vin.matches("[A-Z0-9]+")) { 
+            Utilidades.mostrarAlertaSimple("VIN inválido", "El VIN debe tener exactamente 17 caracteres alfanuméricos.", Alert.AlertType.WARNING);
             return false;
         }
 
