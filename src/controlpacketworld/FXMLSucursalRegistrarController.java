@@ -96,7 +96,7 @@ public class FXMLSucursalRegistrarController implements Initializable {
         if (esEdicion) {
              btnRegistrar.setText("Actualizar");
              cargarDatosEdicion();
-             cbEstatus.setDisable(false); 
+             cbEstatus.setDisable(true); 
         } else {
              cbEstatus.setValue("Activa");
              cbEstatus.setDisable(true);  
