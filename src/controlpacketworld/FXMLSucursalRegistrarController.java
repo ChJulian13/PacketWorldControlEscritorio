@@ -113,6 +113,8 @@ public class FXMLSucursalRegistrarController implements Initializable {
         
         String cp = extraerCP(sucursalEdicion.getDireccionCompleta());
         tfCodigoPostal.setText(cp);
+        tfCodigo.setDisable(true);
+        
         
         cargarColonias(cp);
         seleccionarColonia(sucursalEdicion.getIdColonia());
