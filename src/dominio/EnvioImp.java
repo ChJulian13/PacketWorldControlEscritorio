@@ -285,4 +285,27 @@ public class EnvioImp {
         }
         return respuesta;
     }
+    
+    public static Respuesta actualizarCosto(Envio envio){
+        Respuesta respuesta = new Respuesta();
+        respuesta.setError(true);
+        String URL = Constantes.URL_WS + "envio/actualizar-costo";
+        String parametrosJSON = GsonUtil.GSON.toJson(envio);
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(URL, Constantes.PETICION_PUT, parametrosJSON, Constantes.APPLICATION_JSON);
+        if ( respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK ){
+            respuesta = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+        } else {
+            switch (respuestaAPI.getCodigo()){
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_URL);
+                    break;
+                case Constantes.ERROR_PETICION:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_PETICION);
+                    break;
+                default:
+                    respuesta.setMensaje(Constantes.MSJ_DEFAULT);
+            }
+        }
+        return respuesta;
+    }
 }

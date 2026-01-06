@@ -132,7 +132,7 @@ public class FXMLEnvioController implements Initializable, INotificador{
                 FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLPaquetes.fxml"));
                 Parent vista = cargador.load();
                 FXMLPaquetesController controlador = cargador.getController();
-                controlador.cargarInformacion(this, tvEnvios.getSelectionModel().getSelectedItem());
+                controlador.cargarModoEnvioRegistrado(this, tvEnvios.getSelectionModel().getSelectedItem());
 
                 Scene scEnvio = new Scene(vista);
                 Stage stEnvio = new Stage();

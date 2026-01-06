@@ -4,6 +4,7 @@ package dominio;
 import com.google.gson.reflect.TypeToken;
 import conexion.ConexionAPI;
 import dto.RSDistanciaKM;
+import dto.Respuesta;
 import dto.RespuestaGenerica;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
@@ -112,4 +113,71 @@ public class PaqueteImp {
         }
        return respuesta;
    }
+
+    public static Respuesta registrar(Paquete paquete){
+        Respuesta respuesta = new Respuesta();
+        respuesta.setError(true);
+        String URL = Constantes.URL_WS + "paquete/registrar";
+        String parametrosJSON = GsonUtil.GSON.toJson(paquete);
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(URL, Constantes.PETICION_POST, parametrosJSON, Constantes.APPLICATION_JSON);
+        if ( respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK ){
+            respuesta = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+        } else {
+            switch (respuestaAPI.getCodigo()){
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_URL);
+                    break;
+                case Constantes.ERROR_PETICION:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_PETICION);
+                    break;
+                default:
+                    respuesta.setMensaje(Constantes.MSJ_DEFAULT);
+            }
+        }
+        return respuesta;
+    }
+    public static Respuesta editar(Paquete paquete){
+        Respuesta respuesta = new Respuesta();
+        respuesta.setError(true);
+        String URL = Constantes.URL_WS + "paquete/editar";
+        String parametrosJSON = GsonUtil.GSON.toJson(paquete);
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(URL, Constantes.PETICION_PUT, parametrosJSON, Constantes.APPLICATION_JSON);
+        if ( respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK ){
+            respuesta = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+        } else {
+            switch (respuestaAPI.getCodigo()){
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_URL);
+                    break;
+                case Constantes.ERROR_PETICION:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_PETICION);
+                    break;
+                default:
+                    respuesta.setMensaje(Constantes.MSJ_DEFAULT);
+            }
+        }
+        return respuesta;
+    }
+    public static Respuesta eliminar(Integer idPaquete){
+        Respuesta respuesta = new Respuesta();
+        respuesta.setError(true);
+        String URL = Constantes.URL_WS + "paquete/eliminar/" + idPaquete;
+
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionSinBody(URL, Constantes.PETICION_DELETE);
+        if ( respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK ){
+            respuesta = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+        } else {
+            switch (respuestaAPI.getCodigo()){
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_URL);
+                    break;
+                case Constantes.ERROR_PETICION:
+                    respuesta.setMensaje(Constantes.MSJ_ERROR_PETICION);
+                    break;
+                default:
+                    respuesta.setMensaje(Constantes.MSJ_DEFAULT);
+            }
+        }
+        return respuesta;
+    }
 }

@@ -47,6 +47,7 @@ public class FXMLPaquetesController implements Initializable, INotificador{
     private double distanciaKM;
     private double costo;
     private INotificador observadorEnvio;
+    
     @FXML
     private TableView<Paquete> tvPaquetes;
     @FXML
@@ -65,6 +66,10 @@ public class FXMLPaquetesController implements Initializable, INotificador{
     private Button btConfirmar;
     @FXML
     private Button btCancelar;
+    @FXML
+    private Label lbNoGuia;
+    @FXML
+    private Label lbKM;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -76,8 +81,11 @@ public class FXMLPaquetesController implements Initializable, INotificador{
 
     @Override
     public void notificarOperacionExitosa(String operacion, String nombre) {
-        paquetes.removeAll();
+        paquetes.clear();
         cargarPaquetesEnvio();
+        calcularCostoEnvio();
+        actualizarCostoEnvio();
+        observadorEnvio.notificarOperacionExitosa("actualizacion", "Costo actualizado");
     }
     @Override
     public void enviarObjeto(Object objetoPaquete) {
@@ -96,23 +104,31 @@ public class FXMLPaquetesController implements Initializable, INotificador{
     }
     
     // Inicialización con loader
-    public void cargarInformacion(INotificador observadorEnvio, Envio envio, Direccion direccion, Integer cpSucursal, Integer cpDestino){
+    public void cargarModoEnvioNuevo(INotificador observadorEnvio, Envio envio, Direccion direccion, Integer cpSucursal, Integer cpDestino){
         this.observadorEnvio = observadorEnvio;
         this.envio = envio;
         this.direccion = direccion;
         this.cpOrigen = cpSucursal;
         this.cpDestino = cpDestino;
         obtenerDistanciaKM();
+        lbKM.setText(String.valueOf(this.distanciaKM));
     }
-    // Inicialización con loader modo edicion
-    public void cargarInformacion(INotificador observadorEnvio, Envio envio){
+    // Inicialización con modo gestionar paquetes de un envío
+    public void cargarModoEnvioRegistrado(INotificador observadorEnvio, Envio envio){
+        this.observadorEnvio = observadorEnvio;
         btCancelar.setVisible(false);
         btConfirmar.setVisible(false);
         esModoEdicion = true;
-        this.observadorEnvio = observadorEnvio;
         this.envio = envio;
+        lbNoGuia.setText(envio.getNoGuia());
         cargarCodigosPostales();
-        obtenerDistanciaKM();
+        if(this.cpOrigen != null && this.cpDestino != null){
+            obtenerDistanciaKM();
+            lbKM.setText(String.valueOf(this.distanciaKM));
+        } else {
+            lbKM.setText("Sin datos");
+        }
+        lbCosto.setText(String.valueOf(envio.getCosto()));
         cargarPaquetesEnvio();
         tvPaquetes.refresh();
     }
@@ -135,13 +151,11 @@ public class FXMLPaquetesController implements Initializable, INotificador{
     }
     
     private void calcularCostoEnvio(){
-        //###########
-        Utilidades.mostrarAlertaSimple("Calculo", "Distancia: "+this.distanciaKM + "Numero paquetes: "+ paquetes.size(), Alert.AlertType.INFORMATION);
+        //# System.out.println("\n[PaquetesController.calcularCostoEnvio()] Distancia: "+this.distanciaKM + "Numero paquetes: "+ paquetes.size()+"\n");
         RespuestaGenerica<Double> respuestaCosto = PaqueteImp.CalcularCosto(this.distanciaKM, paquetes.size());
         if ( !respuestaCosto.isError() && respuestaCosto.getValor()!= null){
             this.costo = respuestaCosto.getValor();
-            //###########
-            Utilidades.mostrarAlertaSimple("Costo actualizado", "Distancia: "+respuestaCosto.getValor().toString(), Alert.AlertType.INFORMATION);
+            //# System.out.println("\n[PaquetesController.calcularCostoEnvio()] Costo: " + respuestaCosto.getValor().toString() + "\n");
             actualizarCosto();
         } else {
             Utilidades.mostrarAlertaSimple("Error al calcular el costo, intentelo más tarde.", respuestaCosto.getMensaje(), Alert.AlertType.ERROR);  
@@ -158,7 +172,13 @@ public class FXMLPaquetesController implements Initializable, INotificador{
             FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLPaqueteRegistrar.fxml"));
             Parent vista = cargador.load();
             FXMLPaqueteRegistrarController controlador = cargador.getController();
-            controlador.cargarInformacion(this);
+            
+            if ( esModoEdicion ) {
+                controlador.cargarModoRegistroEnvioRegistrado(this, this.envio.getIdEnvio());
+            } else {
+                controlador.cargarModoRegistroEnvioNuevo(this);
+            }
+            
             Scene scRegistrarPaquete = new Scene(vista);
             Stage stRegistrarPaquete = new Stage();
             stRegistrarPaquete.setScene(scRegistrarPaquete);
@@ -177,7 +197,13 @@ public class FXMLPaquetesController implements Initializable, INotificador{
                 FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLPaqueteRegistrar.fxml"));
                 Parent vista = cargador.load();
                 FXMLPaqueteRegistrarController controlador = cargador.getController();
-                controlador.cargarModoEdicion(this, tvPaquetes.getSelectionModel().getSelectedItem());
+                
+                if ( esModoEdicion ) {
+                    controlador.cargarModoEdicionPaqueteRegistrado(this, tvPaquetes.getSelectionModel().getSelectedItem());
+                } else {
+                    controlador.cargarModoEdicionEnvioNuevo(this, tvPaquetes.getSelectionModel().getSelectedItem());
+                }
+            
                 Scene scRegistrarPaquete = new Scene(vista);
                 Stage stRegistrarPaquete = new Stage();
                 stRegistrarPaquete.setScene(scRegistrarPaquete);
@@ -195,8 +221,14 @@ public class FXMLPaquetesController implements Initializable, INotificador{
     @FXML
     private void clicEliminar(ActionEvent event) {
         if( tvPaquetes.getSelectionModel().getSelectedItem() != null ){
-            paquetes.remove(tvPaquetes.getSelectionModel().getSelectedItem());
-            calcularCostoEnvio();
+            if (esModoEdicion) {
+                eliminarPaquete(tvPaquetes.getSelectionModel().getSelectedItem().getIdPaquete());
+            } else {
+                paquetes.remove(tvPaquetes.getSelectionModel().getSelectedItem());
+                tvPaquetes.refresh();
+                calcularCostoEnvio();
+            }
+
         } else {
             Utilidades.mostrarAlertaSimple("Seleccion", "Debe de seleccionar un paquete.", Alert.AlertType.WARNING);
         }
@@ -218,6 +250,8 @@ public class FXMLPaquetesController implements Initializable, INotificador{
         Respuesta respuesta = EnvioImp.crearEnvioCompleto(envioCompleto);
         if ( !respuesta.isError() ){
             Utilidades.mostrarAlertaSimple("Envio registrado", "Envio "+ respuesta.getValor() +" guardado.", Alert.AlertType.INFORMATION);
+            observadorEnvio.notificarOperacionExitosa("editar", "exitoso");
+            CerrarVentana();
         } else {
             Utilidades.mostrarAlertaSimple("Error al registrar", respuesta.getMensaje(), Alert.AlertType.INFORMATION);
         }
@@ -242,7 +276,6 @@ public class FXMLPaquetesController implements Initializable, INotificador{
             this.cpDestino = destino;
         } else {
             Utilidades.mostrarAlertaSimple("Error", "Error al cargar codigos postales de origen y destino.", Alert.AlertType.ERROR);
-            CerrarVentana();
         }
     }
     private Integer obtenerCodigoPostalSucursal(Integer idSucursal){
@@ -258,15 +291,14 @@ public class FXMLPaquetesController implements Initializable, INotificador{
             boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
 
             if( !esError ) {
-                Direccion direccion = (Direccion) respuesta.get(Constantes.KEY_OBJETO);
-                if (direccion != null) {
-                    return direccion.getCodigoPostal();
+                Direccion d = (Direccion) respuesta.get(Constantes.KEY_OBJETO);
+                if (d != null) {
+                    return d.getCodigoPostal();
                 }
             }
         }
         return null;
     }
-    
     
     private void cargarPaquetesEnvio(){
         HashMap<String, Object> respuesta = PaqueteImp.obtenerPaquetesEnvio(this.envio.getIdEnvio());
@@ -281,6 +313,29 @@ public class FXMLPaquetesController implements Initializable, INotificador{
             }
         } else {
             Utilidades.mostrarAlertaSimple("Error al cargar paquetes", respuesta.get(Constantes.KEY_MENSAJE).toString(), Alert.AlertType.ERROR);
+        }
+    }
+    
+    private void eliminarPaquete(Integer idPaquete){
+        Respuesta respuesta = PaqueteImp.eliminar(idPaquete);
+        if ( !respuesta.isError() ) {
+            Utilidades.mostrarAlertaSimple("Eliminado", "El paquete fue eliminado del envío.", Alert.AlertType.INFORMATION);
+            notificarOperacionExitosa("eliminar", "exitoso");
+        } else {
+           Utilidades.mostrarAlertaSimple("Error", "Ocurrió un error al eliminar el paquete. " + respuesta.getMensaje(), Alert.AlertType.ERROR);
+        }
+    }
+    
+    private void actualizarCostoEnvio(){
+        Envio e = new Envio();
+        e.setIdEnvio(this.envio.getIdEnvio());
+        e.setCosto(Double.valueOf(lbCosto.getText()));
+        
+        Respuesta respuesta = EnvioImp.actualizarCosto(e);
+        if ( !respuesta.isError() ) {
+            System.out.println("Costo de envío actualizado.");
+        } else {
+           Utilidades.mostrarAlertaSimple("Error", "Ocurrió un error al actualizar el costo del envío. " + respuesta.getMensaje(), Alert.AlertType.ERROR);
         }
     }
 }

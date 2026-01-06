@@ -2,6 +2,8 @@
 package controlpacketworld;
 
 import controlpacketworld.interfaz.INotificador;
+import dominio.PaqueteImp;
+import dto.Respuesta;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -21,7 +23,11 @@ import utilidad.Validaciones;
 
 public class FXMLPaqueteRegistrarController implements Initializable{
     
-    private boolean esModoEdicion;
+    private boolean esModoEnvioNuevo;
+    //private boolean esModoRegistroEnvioNuevo;
+    private boolean esModoRegistroEnvioRegistrado;
+    //private boolean esModoEdicionEnvioNuevo;
+    private boolean esModoEdicionEnvioRegistrado;
     private Paquete paquete;
     private INotificador observador;
     @FXML
@@ -41,7 +47,9 @@ public class FXMLPaqueteRegistrarController implements Initializable{
     public void initialize(URL url, ResourceBundle rb) {
         this.paquete = new Paquete();
         configurarFormaterTextField();
-        esModoEdicion = false;
+        esModoEnvioNuevo = true;
+        esModoEdicionEnvioRegistrado = false;
+        esModoRegistroEnvioRegistrado = false;
     }
     
     private void configurarFormaterTextField(){
@@ -79,20 +87,30 @@ public class FXMLPaqueteRegistrarController implements Initializable{
         });
     }
     
-    // Modo crear
-    public void cargarInformacion(INotificador observador){
+    public void cargarModoRegistroEnvioNuevo(INotificador observador){
         this.observador = observador;
     }
-    // Modo edicion
-    public void cargarModoEdicion(INotificador observador, Paquete paquete){
+    public void cargarModoEdicionEnvioNuevo(INotificador observador, Paquete paquete){
         this.observador = observador;
         this.paquete = paquete;
         cargarInformacionPaquete();
         btAgregar.setText("Guardar");
     }
+    
+    public void cargarModoRegistroEnvioRegistrado(INotificador observador, Integer idEnvio){
+        esModoEnvioNuevo = false;
+        esModoRegistroEnvioRegistrado = true;
+        this.observador = observador;
+        paquete.setIdEnvio(idEnvio);
+    }
     public void cargarModoEdicionPaqueteRegistrado(INotificador observador, Paquete paquete){
-        esModoEdicion = true;
+        esModoEnvioNuevo = false;
+        esModoEdicionEnvioRegistrado = true;
+        this.observador = observador;
+        esModoEnvioNuevo = false;
+        // Paquete ya contienen idEnvio
         this.paquete = paquete;
+        cargarInformacionPaqueteModoEdicion();
         btAgregar.setText("Actualizar");
     }
     
@@ -106,35 +124,62 @@ public class FXMLPaqueteRegistrarController implements Initializable{
 
     @FXML
     private void clicAgregar(ActionEvent event) {
-        if( esInformacionValida() ){
-            try {
-                paquete.setDescripcion(taDescripcion.getText());
-                paquete.setPeso(new BigDecimal(tfPeso.getText()).setScale(2, RoundingMode.HALF_UP));
-                paquete.setAlto(new BigDecimal(tfAlto.getText()).setScale(2, RoundingMode.HALF_UP));
-                paquete.setAncho(new BigDecimal(tfAncho.getText()).setScale(2, RoundingMode.HALF_UP));
-                paquete.setProfundidad(new BigDecimal(tfProfundidad.getText()).setScale(2, RoundingMode.HALF_UP));
-            } catch (NumberFormatException e) {
-                Utilidades.mostrarAlertaSimple("Error", "Ocurrió un error al convertir los números, verifique la información.", Alert.AlertType.ERROR);
-                e.printStackTrace();
-            }
-            
-            if( !esModoEdicion ){
-                observador.enviarObjeto(paquete);
-                Utilidades.mostrarAlertaSimple("Paquete", "El paquete se ha añadido al envío.", Alert.AlertType.INFORMATION);
-                cerrarVentana();
-            } else {
-                // Modificar objeto
-                // TODO:
-                
-                // Notificar edicion a observador
-                observador.notificarOperacionExitosa("editar", this.paquete.getIdPaquete().toString());
-                Utilidades.mostrarAlertaSimple("Paquete", "La información del paquete se ha actualizado.", Alert.AlertType.INFORMATION);
-                cerrarVentana();
-            }
+        
+        if (!esInformacionValida()) {
+            return; 
+        }
+        
+        boolean datosConvertidos = llenarDatosPaquete();
+        if (!datosConvertidos) {
+            return;
+        }
+        if (esModoEnvioNuevo) {
+            manejarModoEnvioNuevo();
+        } else {
+            manejarModoEnvioRegistrado();
+        }
+        
+    }
+    
+    private void manejarModoEnvioNuevo() {
+        this.observador.enviarObjeto(this.paquete);
+        Utilidades.mostrarAlertaSimple("Paquete agregado", "El paquete se ha añadido al envío.", Alert.AlertType.INFORMATION);
+        cerrarVentana();
+    }
+    private void manejarModoEnvioRegistrado() {
+        
+        if ( esModoRegistroEnvioRegistrado ) {
+            // INSERTAR
+            registrarPaquete();
+           
+        } else if (esModoEdicionEnvioRegistrado) {
+            // EDITAR
+            editarPaquete();
         }
     }
     
-private boolean esInformacionValida() {
+    private void registrarPaquete(){
+        Respuesta respuesta = PaqueteImp.registrar(paquete);
+        if ( !respuesta.isError() ){
+            Utilidades.mostrarAlertaSimple("Registrado", "El paquete se ha añadido.", Alert.AlertType.INFORMATION);
+            observador.notificarOperacionExitosa("agregar", "exitoso");
+            cerrarVentana();
+        } else {
+            Utilidades.mostrarAlertaSimple("Error al registrar", respuesta.getMensaje(), Alert.AlertType.ERROR);
+        }
+    }
+    private void editarPaquete(){
+        Respuesta respuesta = PaqueteImp.editar(paquete);
+        if ( !respuesta.isError() ){
+            Utilidades.mostrarAlertaSimple("Actualizado", "La información del paquete ha sido actualizada.", Alert.AlertType.INFORMATION);
+            observador.notificarOperacionExitosa("editar", "exitoso");
+            cerrarVentana();
+        } else {
+            Utilidades.mostrarAlertaSimple("Error al actualizar", respuesta.getMensaje(), Alert.AlertType.ERROR);
+        }
+    }
+    
+    private boolean esInformacionValida() {
         // Descripción
         if (Validaciones.esVacio(taDescripcion.getText())) {
             Utilidades.mostrarAlertaSimple("Información inválida", "Por favor, ingrese una descripción para el paquete.", Alert.AlertType.WARNING);
@@ -195,14 +240,37 @@ private boolean esInformacionValida() {
             return false;
         }
     }
+    
+    private void cerrarVentana(){
+        Stage escenario = (Stage) tfAlto.getScene().getWindow();
+        escenario.close();
+    }
+    
+    private boolean llenarDatosPaquete() {
+        try {
+            paquete.setDescripcion(taDescripcion.getText());
+            paquete.setPeso(new BigDecimal(tfPeso.getText()).setScale(2, RoundingMode.HALF_UP));
+            paquete.setAlto(new BigDecimal(tfAlto.getText()).setScale(2, RoundingMode.HALF_UP));
+            paquete.setAncho(new BigDecimal(tfAncho.getText()).setScale(2, RoundingMode.HALF_UP));
+            paquete.setProfundidad(new BigDecimal(tfProfundidad.getText()).setScale(2, RoundingMode.HALF_UP));
+            return true;
+        } catch (NumberFormatException e) {
+            Utilidades.mostrarAlertaSimple("Error de formato", "Verifique que no haya caracteres inválidos.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+            return false;
+        }
+    }
 
+    private void cargarInformacionPaqueteModoEdicion() {
+        taDescripcion.setText(paquete.getDescripcion());
+        tfAlto.setText(paquete.getAlto().toString());
+        tfAncho.setText(paquete.getAncho().toString());
+        tfPeso.setText(paquete.getPeso().toString());
+        tfProfundidad.setText(paquete.getProfundidad().toString());
+    }
+    
     @FXML
     private void clicCancelar(ActionEvent event) {
         cerrarVentana();
-    }
-    
-    private void cerrarVentana(){
-            Stage escenario = (Stage) tfAlto.getScene().getWindow();
-            escenario.close();
     }
 }

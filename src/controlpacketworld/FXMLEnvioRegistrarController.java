@@ -49,7 +49,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
     private Integer idColaboradorSesion;
     private Envio envio;
     private Direccion direccion;
-    private Direccion direccionEdicion;
+    private Direccion direccionInicial;
     private Integer idEstatusEnvioEdicion;
     private ObservableList<EstatusEnvio> catalogoEstatus;
     private ObservableList<Colaborador> conductores;
@@ -140,6 +140,12 @@ public class FXMLEnvioRegistrarController implements Initializable {
         seleccionarConductorEnvio(envio.getIdConductor());
         this.envio = envio;
         cargarInformacionEstatusEnvio();
+        direccionInicial = new Direccion();
+        direccionInicial.setIdDireccion(direccion.getIdDireccion());
+        direccionInicial.setCalle(direccion.getCalle());
+        direccionInicial.setNumero(direccion.getNumero());
+        direccionInicial.setIdColonia(direccion.getIdColonia());
+        direccionInicial.setIdDireccion(this.direccion.getIdDireccion());
     }
     
     public void configurarComboBoxColoniaSucursalConductor(){
@@ -414,11 +420,9 @@ public class FXMLEnvioRegistrarController implements Initializable {
     private void clicContinuar(ActionEvent event) {
         if( esInformacionEnvioValida() ){
             // Objeto Direccion modificada
-            direccionEdicion = new Direccion();
-            direccionEdicion.setIdDireccion(direccion.getIdDireccion());
-            direccionEdicion.setCalle(tfCalle.getText());
-            direccionEdicion.setNumero(tfNumero.getText());
-            direccionEdicion.setIdColonia(cbColonia.getSelectionModel().getSelectedItem().getIdColonia());
+            direccion.setCalle(tfCalle.getText());
+            direccion.setNumero(tfNumero.getText());
+            direccion.setIdColonia(cbColonia.getSelectionModel().getSelectedItem().getIdColonia());
             
             // Objeto envio
             envio.setIdCliente(this.cliente.getIdCliente());
@@ -427,7 +431,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
             envio.setDestinatarioNombre(tfDestinatarioNombre.getText());
             envio.setDestinatarioApellidoPaterno(tfDestinatarioApellidoPaterno.getText());
             envio.setDestinatarioApellidoMaterno(tfDestinatarioApellidoMaterno.getText());
-
+            
             if ( !esModoEdicion ){
                 // Mandar a loader de paquetes
                 envio.setIdEstatusEnvio(1);
@@ -509,7 +513,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
             FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLPaquetes.fxml"));
             Parent vista = cargador.load();
             FXMLPaquetesController controlador = cargador.getController();
-            controlador.cargarInformacion(this.observadorEnvio, envio, direccion, cpSucursal, cpEnvio);
+            controlador.cargarModoEnvioNuevo(this.observadorEnvio, envio, direccion, cpSucursal, cpEnvio);
             
             Scene scPaquetes = new Scene(vista);
             Stage stPaquetes = (Stage) tfCodigoPostal.getScene().getWindow();
@@ -524,13 +528,13 @@ public class FXMLEnvioRegistrarController implements Initializable {
     }
 
     private boolean seEditoDireccion(){
-        if ( !Objects.equals(direccion.getIdColonia(), direccionEdicion.getIdColonia()) ){
+        if ( !Objects.equals(direccion.getIdColonia(), direccionInicial.getIdColonia()) ){
             return true;
         }
-        if ( !direccion.getCalle().equals(direccionEdicion.getCalle()) ){
+        if ( !direccion.getCalle().equals(direccionInicial.getCalle()) ){
             return true;
         }
-        if ( !direccion.getNumero().equals(direccionEdicion.getNumero()) ){
+        if ( !direccion.getNumero().equals(direccionInicial.getNumero()) ){
             return true;
         }
         return false;
@@ -540,7 +544,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
             Respuesta respuesta = DireccionImp.editar(direccion);
             return !respuesta.isError(); 
         }
-        Utilidades.mostrarAlertaSimple("Edicion", "No se modifico direccion.", Alert.AlertType.INFORMATION);
+        //#System.out.println("[editarEnvioDireccion] No se modifico direccion");
         return true;
     }
     private boolean seEditoEstatus(){
@@ -561,7 +565,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
             Respuesta respuesta = EnvioImp.actualizarEstatus(historial);
             return !respuesta.isError();
         }
-        Utilidades.mostrarAlertaSimple("Edicion", "No se modifico estatus.", Alert.AlertType.INFORMATION);
+        //#System.out.println("[actualizarEstatusEnvio] No se modifico estatus");
         return true;
     }
     
