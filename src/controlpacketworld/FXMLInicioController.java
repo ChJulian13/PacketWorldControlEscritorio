@@ -56,10 +56,13 @@ public class FXMLInicioController implements Initializable {
     @FXML
     private void cliclColaboradores(ActionEvent event) {
         try {
-            Parent vista = FXMLLoader.load(getClass().getResource("FXMLColaboradores.fxml"));
-            Scene scAdminUsuarios = new Scene(vista);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLColaboradores.fxml"));
+            Parent vista = loader.load(); 
             
-            //generar un nuevo stage
+            FXMLColaboradoresController controlador = loader.getController();
+            controlador.inicializar(this.colaboradorSesion); 
+
+            Scene scAdminUsuarios = new Scene(vista);
             Stage stAdmin = new Stage();
             stAdmin.setScene(scAdminUsuarios);
             stAdmin.setTitle("Colaboradores");

@@ -76,8 +76,9 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
     @FXML
     private ComboBox<Rol> cbBusquedaRol;
     private ObservableList<Rol> listaRolesBusqueda;
+    private Colaborador usuarioSesion;
     @FXML
-    private Button btnMostrarTodos1;
+    private Button btnEliminar;
 
     /**
      * Initializes the controller class.
@@ -95,6 +96,14 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
             configurarVisibilidadBusqueda(newVal);
         });
         cbBusquedaRol.setVisible(false);
+    }
+    
+    public void inicializar(Colaborador colaboradorSesion) {
+        this.usuarioSesion = colaboradorSesion;
+        
+        if (usuarioSesion != null && "Ejecutivo de tienda".equalsIgnoreCase(usuarioSesion.getRol())) { 
+             btnEliminar.setDisable(true); 
+        }
     }
     
     private void configurarVisibilidadBusqueda(String criterio) {
@@ -135,6 +144,19 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
         colCorreo.setCellValueFactory(new PropertyValueFactory("correo"));
         colRol.setCellValueFactory(new PropertyValueFactory("rol"));
         colSucursal.setCellValueFactory(new PropertyValueFactory("sucursal"));
+        tvColaboradores.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null && usuarioSesion != null) {
+                if (newSelection.getIdColaborador() == usuarioSesion.getIdColaborador()) {
+                    btnEliminar.setDisable(true); // Bloquear botón
+                } else {
+                    if (!"Ejecutivo de tienda".equalsIgnoreCase(usuarioSesion.getRol())) {
+                        btnEliminar.setDisable(false);
+                    }
+                }
+            } else {
+                // btnEliminar.setDisable(true); 
+            }
+        });
     }
     
     private void cargarInformacionColaboradores() {
@@ -149,13 +171,15 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
             Utilidades.mostrarAlertaSimple("Error al cargar", "" + respuesta.get("mensaje"), Alert.AlertType.NONE);
         }
     }
-    
+        
     private void irFormulario(Colaborador colaborador) {
         FXMLLoader cargador = new FXMLLoader(getClass().getResource("FXMLColaboradorFormulario.fxml"));
         try {
             Parent vista = cargador.load();
             FXMLColaboradorFormularioController controlador = cargador.getController();
-            controlador.inicializarDatos(colaborador, this);
+            
+            controlador.inicializarDatos(colaborador, this, this.usuarioSesion); 
+            
             Scene escena = new Scene(vista);
             Stage escenario = new Stage();
             escenario.setScene(escena);
@@ -188,9 +212,18 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
 
     @FXML
     private void clicEditar(ActionEvent event) {
-        Colaborador colaborador = tvColaboradores.getSelectionModel().getSelectedItem();
-        if (colaborador != null) {
-            irFormulario(colaborador);
+        Colaborador colaboradorSeleccionado = tvColaboradores.getSelectionModel().getSelectedItem();
+        
+        if (colaboradorSeleccionado != null) {
+            if (usuarioSesion != null && "Ejecutivo de tienda".equalsIgnoreCase(usuarioSesion.getRol())) {
+                if (!"Conductor".equalsIgnoreCase(colaboradorSeleccionado.getRol())) {
+                    Utilidades.mostrarAlertaSimple("Acceso denegado", 
+                        "Como Ejecutivo, solo puedes editar la información de los Conductores.", 
+                        Alert.AlertType.WARNING);
+                    return;
+                }
+            }   
+            irFormulario(colaboradorSeleccionado);
         } else {
             Utilidades.mostrarAlertaSimple("Selecciona un colaborador", "Para editar la información de un colaborador, debe seleccionarlo.", Alert.AlertType.WARNING);
         }
@@ -301,7 +334,16 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
     @FXML
     private void clicFoto(ActionEvent event) {
         Colaborador colaborador = tvColaboradores.getSelectionModel().getSelectedItem();
+        
         if (colaborador != null) {
+            if (usuarioSesion != null && "Ejecutivo de tienda".equalsIgnoreCase(usuarioSesion.getRol())) {
+                if (!"Conductor".equalsIgnoreCase(colaborador.getRol())) {
+                    Utilidades.mostrarAlertaSimple("Acceso denegado", 
+                        "Como Ejecutivo, solo puedes subir fotografías a los Conductores.", 
+                        Alert.AlertType.WARNING);
+                    return;
+                }
+            }
             irSeleccionarFoto(colaborador);
         } else {
             Utilidades.mostrarAlertaSimple("Selecciona colaborador", "Para seleccionar la foto de un colaborador, debes seleccionarlo.", Alert.AlertType.WARNING);

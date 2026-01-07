@@ -74,6 +74,11 @@ public class FXMLColaboradorFormularioController implements Initializable {
     @FXML private Label lbPassword; 
     
     @FXML private Button btnCambiarPassword; 
+    private Colaborador usuarioSesion;
+    @FXML
+    private TextField tfPasswordConfirmar;
+    @FXML
+    private Label lbPasswordConfirmar;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -96,10 +101,10 @@ public class FXMLColaboradorFormularioController implements Initializable {
         });
     }
     
-    public void inicializarDatos(Colaborador colaboradorEdicion, INotificador observador){
+    public void inicializarDatos(Colaborador colaboradorEdicion, INotificador observador, Colaborador usuarioSesion) {
         this.colaboradorEdicion = colaboradorEdicion;
         this.observador = observador;
-        
+        this.usuarioSesion = usuarioSesion; 
         if (colaboradorEdicion != null) {
             tfNombre.setText(colaboradorEdicion.getNombre());
             tfApellidoPaterno.setText(colaboradorEdicion.getApellidoPaterno());
@@ -108,21 +113,26 @@ public class FXMLColaboradorFormularioController implements Initializable {
             tfCorreo.setText(colaboradorEdicion.getCorreo());
             tfNumLicencia.setText(colaboradorEdicion.getNumeroLicencia());
             
-            int posicionSucursal = obtenerPosicionSucursal(colaboradorEdicion.getIdSucursal());
-            cbSurcusal.getSelectionModel().select(posicionSucursal);
-            
             tfNumPersonal.setText(colaboradorEdicion.getNoPersonal());
             tfNumPersonal.setEditable(false);
             tfNumPersonal.setDisable(true);
-            
+
+            int posicionSucursal = obtenerPosicionSucursal(colaboradorEdicion.getIdSucursal());
+            cbSurcusal.getSelectionModel().select(posicionSucursal);
+
             int posicionRol = obtenerPosicionRol(colaboradorEdicion.getIdRol());
             cbRol.getSelectionModel().select(posicionRol);
             cbRol.setDisable(true); 
 
             tfPassword.setVisible(false);
             tfPassword.setManaged(false); 
-            lbPassword.setVisible(true);
-            lbPassword.setManaged(true);
+            //lbPassword.setVisible(false); 
+            //lbPassword.setManaged(false);
+            
+            tfPasswordConfirmar.setVisible(false);
+            tfPasswordConfirmar.setManaged(false);
+            lbPasswordConfirmar.setVisible(false);
+            lbPasswordConfirmar.setManaged(false);
             
             btnCambiarPassword.setVisible(true);
             btnCambiarPassword.setManaged(true);
@@ -134,9 +144,38 @@ public class FXMLColaboradorFormularioController implements Initializable {
             tfPassword.setManaged(true);
             tfPassword.setDisable(false);
             tfPassword.setText("");
+            
+            lbPasswordConfirmar.setVisible(true);
+            lbPasswordConfirmar.setManaged(true);
+            tfPasswordConfirmar.setVisible(true);
+            tfPasswordConfirmar.setManaged(true);
+            tfPasswordConfirmar.setText("");
 
             btnCambiarPassword.setVisible(false);
             btnCambiarPassword.setManaged(false);
+        }
+
+        if (usuarioSesion != null && "Ejecutivo de tienda".equalsIgnoreCase(usuarioSesion.getRol())) {
+            btnCambiarPassword.setDisable(true);
+            if (colaboradorEdicion == null) { 
+                for (Rol rol : cbRol.getItems()) {
+                    if ("Conductor".equalsIgnoreCase(rol.getRol())) {
+                        cbRol.getSelectionModel().select(rol);
+                        break;
+                    }
+                }
+            }
+            cbRol.setDisable(true); 
+            
+            if (colaboradorEdicion == null) {
+                for (Sucursal suc : cbSurcusal.getItems()) {
+                    if (suc.getIdSucursal() == usuarioSesion.getIdSucursal()) {
+                        cbSurcusal.getSelectionModel().select(suc);
+                        break;
+                    }
+                }
+            }
+            cbSurcusal.setDisable(true); 
         }
     }
     
@@ -239,6 +278,12 @@ public class FXMLColaboradorFormularioController implements Initializable {
         if (colaboradorEdicion == null) {
             if (Validaciones.esVacio(tfPassword.getText())) {
                 Utilidades.mostrarAlertaSimple("Contraseña requerida", "Para registrar un nuevo colaborador, la contraseña es obligatoria.", Alert.AlertType.WARNING);
+                return false;
+            }
+            if (!tfPassword.getText().equals(tfPasswordConfirmar.getText())) {
+                Utilidades.mostrarAlertaSimple("Contraseñas no coinciden", 
+                    "La contraseña y la confirmación no son iguales. Por favor verifica.", 
+                    Alert.AlertType.WARNING);
                 return false;
             }
             if (!Validaciones.esPasswordSegura(tfPassword.getText())) {
