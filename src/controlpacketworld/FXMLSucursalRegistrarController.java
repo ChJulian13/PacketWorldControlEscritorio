@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import controlpacketworld.interfaz.INotificador;
 import dominio.DireccionImp;
 import dominio.SucursalImp;
+import dto.Respuesta;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.HashMap;
@@ -183,7 +184,23 @@ public class FXMLSucursalRegistrarController implements Initializable {
             if (esEdicion) {
                 sucursal.setIdSucursal(sucursalEdicion.getIdSucursal());
                 sucursal.setIdDireccion(sucursalEdicion.getIdDireccion());
-                actualizarSucursal(sucursal);
+                
+                Direccion direccionEdicion = new Direccion();
+                direccionEdicion.setIdDireccion(sucursalEdicion.getIdDireccion());
+                direccionEdicion.setCalle(tfCalle.getText());
+                direccionEdicion.setNumero(tfNumero.getText());
+                direccionEdicion.setIdColonia(colonia.getIdColonia());
+                
+                Respuesta respuestaDireccion = DireccionImp.editar(direccionEdicion);
+                
+                if (!respuestaDireccion.isError()) {
+                    actualizarSucursal(sucursal);
+                } else {
+                    Utilidades.mostrarAlertaSimple("Error en Dirección", 
+                            "No se pudo actualizar la dirección: " + respuestaDireccion.getMensaje(), 
+                            Alert.AlertType.ERROR);
+                }
+                
             } else {
                 registrarSucursal(sucursal);
             }

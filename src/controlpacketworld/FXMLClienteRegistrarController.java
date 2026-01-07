@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import controlpacketworld.interfaz.INotificador;
 import dominio.ClienteImp;
 import dominio.DireccionImp;
+import dto.Respuesta;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.HashMap;
@@ -177,7 +178,24 @@ public class FXMLClienteRegistrarController implements Initializable {
             if (esEdicion) {
                 cliente.setIdCliente(clienteEdicion.getIdCliente());
                 cliente.setIdDireccion(clienteEdicion.getIdDireccion()); 
-                actualizarCliente(cliente);
+                
+                Direccion direccionEdicion = new Direccion();
+                direccionEdicion.setIdDireccion(clienteEdicion.getIdDireccion());
+                direccionEdicion.setCalle(tfCalle.getText());
+                direccionEdicion.setNumero(tfNumero.getText());
+                if (coloniaSeleccionada != null) {
+                    direccionEdicion.setIdColonia(coloniaSeleccionada.getIdColonia());
+                }
+                
+                Respuesta respuestaDireccion = DireccionImp.editar(direccionEdicion);
+
+                if (!respuestaDireccion.isError()) {
+                    actualizarCliente(cliente);
+                } else {
+                    Utilidades.mostrarAlertaSimple("Error en Dirección", 
+                            "No se pudo actualizar la dirección: " + respuestaDireccion.getMensaje(), 
+                            Alert.AlertType.ERROR);
+                }
             } else {
                 registrarCliente(cliente);
             }
