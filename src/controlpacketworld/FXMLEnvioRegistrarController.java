@@ -300,7 +300,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
     }
     
     public void seleccionarConductorEnvio(Integer idConductor){
-        HashMap<String, Object> respuesta = EnvioImp.obtenerColaboradorPorId(idConductor);
+        HashMap<String, Object> respuesta = ColaboradorImp.obtenerColaboradorPorId(idConductor);
         boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
         if( !esError ){
             Colaborador colaboradorAPI = (Colaborador) respuesta.get(Constantes.KEY_OBJETO);
@@ -400,7 +400,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
         lbClienteTelefono.setText( cliente.getTelefono() );
     }
     public void obtenerInfoClienteId(int idCliente){
-        HashMap<String, Object> respuesta = EnvioImp.obtenerClientePorId(idCliente);
+        HashMap<String, Object> respuesta = ClienteImp.obtenerClientePorId(idCliente);
         boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
         if( !esError ){
             Cliente clienteAPI = (Cliente) respuesta.get(Constantes.KEY_OBJETO);

@@ -20,6 +20,7 @@ import java.util.List;
 import pojo.Colaborador;
 import pojo.RespuestaHTTP;
 import utilidad.Constantes;
+import utilidad.GsonUtil;
 
 /**
  *
@@ -303,5 +304,31 @@ public class ColaboradorImp {
         }
         return respuesta;
     }
-    
+
+    public static HashMap<String, Object> obtenerColaboradorPorId(int idColaborador){
+        HashMap<String, Object> respuesta = new LinkedHashMap();
+        String URL = Constantes.URL_WS + "colaborador/obtener/" + idColaborador;
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+        
+        if(respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK && respuestaAPI.getContenido() != null && !respuestaAPI.getContenido().trim().isEmpty()){
+            Colaborador colaborador = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Colaborador.class);
+            respuesta.put(Constantes.KEY_ERROR, false);
+            respuesta.put(Constantes.KEY_OBJETO, colaborador);
+        } else {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            switch( respuestaAPI.getCodigo() ) {
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.put(Constantes.KEY_MENSAJE, Constantes.MSJ_ERROR_URL);
+                    break;
+                
+                case Constantes.ERROR_PETICION:
+                    respuesta.put(Constantes.KEY_MENSAJE, Constantes.MSJ_ERROR_PETICION);
+                    break;
+                
+                default:
+                    respuesta.put(Constantes.KEY_MENSAJE, Constantes.MSJ_DEFAULT);
+            }
+        }
+        return respuesta;
+    }
 }

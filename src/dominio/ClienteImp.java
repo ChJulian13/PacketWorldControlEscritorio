@@ -146,4 +146,32 @@ public class ClienteImp {
         }
         return respuesta;
     }
+
+    public static HashMap<String, Object> obtenerClientePorId(int idCliente){
+        HashMap<String, Object> respuesta = new LinkedHashMap();
+        String URL = Constantes.URL_WS + "cliente/buscar/id/" + idCliente;
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+        
+        if(respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK && respuestaAPI.getContenido() != null && !respuestaAPI.getContenido().trim().isEmpty()){
+            //System.out.println("\n\nobtenerClientePorId" + respuestaAPI.getContenido() +"\n\n");
+            Cliente cliente = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Cliente.class);
+            respuesta.put(Constantes.KEY_ERROR, false);
+            respuesta.put(Constantes.KEY_OBJETO, cliente);
+        } else {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            switch( respuestaAPI.getCodigo() ) {
+                case Constantes.ERROR_MALFORMED_URL:
+                    respuesta.put(Constantes.KEY_MENSAJE, Constantes.MSJ_ERROR_URL);
+                    break;
+                
+                case Constantes.ERROR_PETICION:
+                    respuesta.put(Constantes.KEY_MENSAJE, Constantes.MSJ_ERROR_PETICION);
+                    break;
+                
+                default:
+                    respuesta.put(Constantes.KEY_MENSAJE, Constantes.MSJ_DEFAULT);
+            }
+        }
+        return respuesta;
+    }
 }
