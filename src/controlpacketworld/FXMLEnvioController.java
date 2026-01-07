@@ -18,9 +18,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pojo.Envio;
@@ -58,6 +62,7 @@ public class FXMLEnvioController implements Initializable, INotificador{
         configurarTabla();
         envios = FXCollections.observableArrayList();
         tvEnvios.setItems(envios);
+        habilitarCopiaCtrlC();
     }
     @Override
     public void notificarOperacionExitosa(String operacion, String nombre) {
@@ -182,4 +187,25 @@ public class FXMLEnvioController implements Initializable, INotificador{
         }
     }
     
+    private void habilitarCopiaCtrlC() {
+        // Permite seleccionar celdas individuales
+        tvEnvios.getSelectionModel().setCellSelectionEnabled(true);
+
+        tvEnvios.setOnKeyPressed(event -> {
+            if (event.isControlDown() && event.getCode() == KeyCode.C) {
+                if (tvEnvios.getSelectionModel().getSelectedCells().isEmpty()) {
+                    return;
+                }
+                TablePosition<?, ?> pos = tvEnvios.getSelectionModel().getSelectedCells().get(0);
+                Object valorCelda = tvEnvios.getColumns().get(pos.getColumn()).getCellData(pos.getRow());
+
+                Clipboard clipboard = Clipboard.getSystemClipboard();
+                ClipboardContent content = new ClipboardContent();
+                content.putString(valorCelda == null ? "" : valorCelda.toString());
+                clipboard.setContent(content);
+
+                event.consume(); // evita propagación innecesaria
+            }
+        });
+    }
 }
