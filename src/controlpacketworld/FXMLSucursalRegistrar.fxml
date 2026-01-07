@@ -41,7 +41,7 @@
             <TextField fx:id="tfCiudad" editable="false" layoutX="24.0" layoutY="173.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
             
             <Label layoutX="24.0" layoutY="208.0" prefHeight="17.0" prefWidth="54.0" text="Colonia" textFill="#757474" />
-            <ComboBox fx:id="cbColonia" layoutX="25.0" layoutY="229.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <ComboBox fx:id="cbColonia" layoutX="25.0" layoutY="229.0" prefHeight="35.0" prefWidth="331.0" promptText="Seleccione una opcion" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
             
             <Label layoutX="25.0" layoutY="264.0" text="Calle:" textFill="#757474" />
             <TextField fx:id="tfCalle" layoutX="25.0" layoutY="281.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
