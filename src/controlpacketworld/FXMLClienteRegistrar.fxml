@@ -24,7 +24,7 @@
             <TextField fx:id="tfApellidoMaterno" layoutX="24.0" layoutY="172.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
          </children>
       </Pane>
-      <Pane layoutX="434.0" layoutY="22.0" prefHeight="304.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
+      <Pane layoutX="434.0" layoutY="22.0" prefHeight="388.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">
          <children>
             <Label layoutX="24.0" layoutY="22.0" prefHeight="24.0" prefWidth="196.0" text="Datos de Dirección">
                <font>
@@ -33,12 +33,16 @@
             </Label>
             <Label layoutX="24.0" layoutY="55.0" text="Código Postal:" textFill="#757474" />
             <TextField fx:id="tfCodigoPostal" layoutX="24.0" layoutY="72.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
-            <Label layoutX="24.0" layoutY="166.0" text="Calle:" textFill="#757474" />
-            <TextField fx:id="tfCalle" layoutX="25.0" layoutY="187.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
-            <TextField fx:id="tfNumero" layoutX="24.0" layoutY="249.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
-            <Label layoutX="22.0" layoutY="220.0" text="Número:" textFill="#757474" />
-            <ComboBox fx:id="cbColonia" layoutX="25.0" layoutY="128.0" prefHeight="31.0" prefWidth="331.0" promptText="Seleccione una opcion" style="-fx-background-color: #FBFBFB; -fx-border-color: #CCCCCC; -fx-border-radius: 6px; -fx-background-radius: 6px;" />
-            <Label layoutX="24.0" layoutY="107.0" text="Colonia:" textFill="#757474" />
+            <Label layoutX="20.0" layoutY="266.0" text="Calle:" textFill="#757474" />
+            <TextField fx:id="tfCalle" layoutX="22.0" layoutY="287.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <TextField fx:id="tfNumero" layoutX="22.0" layoutY="341.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <Label layoutX="20.0" layoutY="320.0" text="Número:" textFill="#757474" />
+            <ComboBox fx:id="cbColonia" layoutX="22.0" layoutY="235.0" prefHeight="31.0" prefWidth="331.0" promptText="Seleccione una opcion" style="-fx-background-color: #FBFBFB; -fx-border-color: #CCCCCC; -fx-border-radius: 6px; -fx-background-radius: 6px;" />
+            <Label layoutX="22.0" layoutY="214.0" text="Colonia:" textFill="#757474" />
+            <Label layoutX="25.0" layoutY="105.0" prefHeight="21.0" prefWidth="47.0" text="Estado" textFill="#757474" />
+            <TextField fx:id="tfEstado" layoutX="22.0" layoutY="126.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
+            <Label layoutX="25.0" layoutY="159.0" prefHeight="21.0" prefWidth="47.0" text="ciudad" textFill="#757474" />
+            <TextField fx:id="tfCiudad" layoutX="24.0" layoutY="178.0" prefHeight="27.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-border-color: #e2e2e2; -fx-border-radius: 5px;" />
          </children>
       </Pane>
       <Pane layoutX="38.0" layoutY="259.0" prefHeight="169.0" prefWidth="380.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #e5e5e5; -fx-border-radius: 5px;">

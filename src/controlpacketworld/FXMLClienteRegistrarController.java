@@ -67,6 +67,10 @@ public class FXMLClienteRegistrarController implements Initializable {
     private boolean esEdicion = false;
     private Cliente clienteEdicion;
     private INotificador notificador;
+    @FXML
+    private TextField tfEstado;
+    @FXML
+    private TextField tfCiudad;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -90,6 +94,9 @@ public class FXMLClienteRegistrarController implements Initializable {
                 cargarColonias(tfCodigoPostal.getText());
             }
         });
+        
+        tfEstado.setEditable(false);
+        tfCiudad.setEditable(false);
     }
     
     public void inicializarValores(INotificador notificador, Cliente cliente) {
@@ -99,9 +106,7 @@ public class FXMLClienteRegistrarController implements Initializable {
 
         if (esEdicion) {
             btnRegistrar.setText("Actualizar");
-            cargarDatosEdicion();
-            
-            tfCodigoPostal.setDisable(true);
+            cargarDatosEdicion();    
         }
     }
 
@@ -122,6 +127,9 @@ public class FXMLClienteRegistrarController implements Initializable {
 
     private void cargarColonias(String codigoPostal) {
         colonias.clear();
+        tfCiudad.clear();
+        tfEstado.clear();
+        
         if (codigoPostal != null && !codigoPostal.isEmpty() && codigoPostal.length() == 5) {
             
             HashMap<String, Object> respuesta = DireccionImp.obtenerDireccion(codigoPostal);
@@ -135,6 +143,12 @@ public class FXMLClienteRegistrarController implements Initializable {
                     List<Direccion> listaReal = GsonUtil.GSON.fromJson(jsonLista, tipoLista);
                     
                     colonias.addAll(listaReal);
+                    
+                    if (!listaReal.isEmpty()) {
+                        Direccion datosUbicacion = listaReal.get(0);
+                        tfCiudad.setText(datosUbicacion.getCiudad());
+                        tfEstado.setText(datosUbicacion.getEstado());
+                    }
                 }
             }
         }
