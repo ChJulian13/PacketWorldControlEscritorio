@@ -88,56 +88,43 @@ public class ClienteImp {
         return respuesta;
     }
 
-    public static HashMap<String, Object> buscarCliente2(String cadena, String modoBusqueda) {
-        HashMap<String, Object> respuesta = new LinkedHashMap<>();
-        respuesta.put(Constantes.KEY_ERROR, true);
-        String URL = "";
-        
-        try {
-            switch (modoBusqueda) {
-                case "Correo":
-                    URL = Constantes.URL_WS + "cliente/buscar/correo/" + cadena;
-                    break;
-                case "Teléfono":
-                    URL = Constantes.URL_WS + "cliente/buscar/telefono/" + cadena;
-                    break;
-                default: // Por defecto busca por Nombre
-                    String cadenaEncoded = URLEncoder.encode(cadena, StandardCharsets.UTF_8.toString()).replace("+", "%20");
-                    URL = Constantes.URL_WS + "cliente/buscar/nombre/" + cadenaEncoded;
-            }
-            
-            RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
-            
-            if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
-                Type tipoLista = new TypeToken<List<Cliente>>(){}.getType();
-                List<Cliente> clientes = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), tipoLista);
-                respuesta.put(Constantes.KEY_ERROR, false);
-                respuesta.put(Constantes.KEY_LISTA, clientes);
-            } else {
-                respuesta.put(Constantes.KEY_MENSAJE, "No se encontraron resultados para la búsqueda.");
-            }
-        } catch (UnsupportedEncodingException e) {
-            respuesta.put(Constantes.KEY_MENSAJE, "Error al procesar la búsqueda: " + e.getMessage());
-        }
-        return respuesta;
-    }
-    
-    public static HashMap<String, Object> buscarCliente(String cadena, String modoBusqueda) throws UnsupportedEncodingException{
+    public static HashMap<String, Object> buscarCliente(String cadena, String modoBusqueda) {
         HashMap<String, Object> respuesta = new LinkedHashMap();
-        String URL;
+        
+        if (cadena == null || cadena.trim().isEmpty()) {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            respuesta.put(Constantes.KEY_MENSAJE, "El criterio de búsqueda no puede estar vacío.");
+            return respuesta;
+        }
+
+        if (modoBusqueda == null || modoBusqueda.trim().isEmpty()) {
+            respuesta.put(Constantes.KEY_ERROR, true);
+            respuesta.put(Constantes.KEY_MENSAJE, "El modo de búsqueda es obligatorio.");
+            return respuesta;
+        }
+        
+        String url;
         
         switch( modoBusqueda ) {
             case "Correo":
-                URL = Constantes.URL_WS + "cliente/buscar/correo/" + cadena;
+                url = Constantes.URL_WS + "cliente/buscar/correo/" + cadena;
                 break;
             case "Teléfono":
-                URL = Constantes.URL_WS + "cliente/buscar/telefono/" + cadena;
+                url = Constantes.URL_WS + "cliente/buscar/telefono/" + cadena;
                 break;
             default:
-                String cadenaEncoded = URLEncoder.encode(cadena, StandardCharsets.UTF_8.toString()) .replace("+", "%20");
-                URL = Constantes.URL_WS + "cliente/buscar/nombre/" + cadenaEncoded;
+                String cadenaEncoded = null;
+                try {
+                    cadenaEncoded = URLEncoder.encode(cadena, StandardCharsets.UTF_8.toString()) .replace("+", "%20");
+                } catch (UnsupportedEncodingException e) {
+                    respuesta.put(Constantes.KEY_ERROR, true);
+                    respuesta.put(Constantes.KEY_MENSAJE, "No fue posible codificar la información de búsqueda.");
+                    return respuesta;
+                }
+                url = Constantes.URL_WS + "cliente/buscar/nombre/" + cadenaEncoded;
         }
-        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+        
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(url);
         
         if( respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK ){
             Type tipoLista = new TypeToken<List<Cliente>>(){}.getType();

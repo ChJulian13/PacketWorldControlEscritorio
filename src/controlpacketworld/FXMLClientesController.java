@@ -31,6 +31,7 @@ import javafx.stage.Stage;
 import pojo.Cliente;
 import utilidad.Constantes;
 import utilidad.Utilidades;
+import utilidad.Validaciones;
 
 /**
  * FXML Controller class
@@ -89,8 +90,8 @@ public class FXMLClientesController implements Initializable, INotificador {
     }
     
     private void configurarBusqueda() {
-        ObservableList<String> criterios = FXCollections.observableArrayList("Nombre", "Correo", "Teléfono");
-        cbBuscar.setItems(criterios);
+        cbBuscar.getItems().addAll("Nombre", "Teléfono", "Correo");
+        cbBuscar.getSelectionModel().selectFirst();
         
         if (btnMostrarTodos != null) {
             btnMostrarTodos.setVisible(false);
@@ -159,10 +160,17 @@ public class FXMLClientesController implements Initializable, INotificador {
         String criterio = cbBuscar.getSelectionModel().getSelectedItem();
         String busqueda = tfBuscar.getText();
         
+        if ( !esBusquedaValida(criterio) ) return;
+        
         if (criterio != null && !busqueda.isEmpty()) {
-            HashMap<String, Object> respuesta = ClienteImp.buscarCliente2(busqueda, criterio);
+            HashMap<String, Object> respuesta = ClienteImp.buscarCliente(busqueda, criterio);
             if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
                 List<Cliente> resultados = (List<Cliente>) respuesta.get(Constantes.KEY_LISTA);
+                if ( resultados.isEmpty() ){
+                    listaClientes.clear(); 
+                    Utilidades.mostrarAlertaSimple("Sin resultados", "No se encontró ningún cliente que coincida con los criterios de búsqueda.", Alert.AlertType.INFORMATION);
+                    return;
+                }
                 listaClientes.clear();
                 listaClientes.addAll(resultados);
                 tvClientes.setItems(listaClientes);
@@ -182,11 +190,30 @@ public class FXMLClientesController implements Initializable, INotificador {
                     Alert.AlertType.WARNING);
         }
     }
+    private boolean esBusquedaValida(String buscarPor){
+        String cadenaBusqueda = tfBuscar.getText();
+        if (Validaciones.esVacio(cadenaBusqueda)) {
+            Utilidades.mostrarAlertaSimple("Buscar cliente", "Introduzca información del cliente para poder realizar la busqueda.", Alert.AlertType.INFORMATION);
+            return false;
+        }
+        if (buscarPor.contains("Nombre") && !Validaciones.esSoloTexto(cadenaBusqueda)) {
+            Utilidades.mostrarAlertaSimple("Buscar cliente", "Introduzca un nombre valido.", Alert.AlertType.INFORMATION);
+            return false;
+        }
+        if (buscarPor.equals("Correo") && !Validaciones.esCorreoValido(cadenaBusqueda)) {
+            Utilidades.mostrarAlertaSimple("Buscar cliente", "Introduzca un correo electrónico valido.", Alert.AlertType.INFORMATION);
+            return false;
+        }
+        if (buscarPor.equals("Teléfono") && !Validaciones.esNumericoConLongitud(cadenaBusqueda, 10)) {
+            Utilidades.mostrarAlertaSimple("Buscar cliente", "Introduzca número de teléfono valido.", Alert.AlertType.INFORMATION);
+            return false;
+        }
+        return true;
+    }
 
     @FXML
     private void clicMostrarTodos(ActionEvent event) {
         tfBuscar.clear();
-        cbBuscar.getSelectionModel().clearSelection();
         cargarDatosTabla();
         
         if (btnMostrarTodos != null) {

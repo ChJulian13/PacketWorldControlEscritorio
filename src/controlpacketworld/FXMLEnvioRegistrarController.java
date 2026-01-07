@@ -2,11 +2,11 @@
 package controlpacketworld;
 
 import controlpacketworld.interfaz.INotificador;
+import dominio.ClienteImp;
 import dominio.ColaboradorImp;
 import dominio.DireccionImp;
 import dominio.EnvioImp;
 import dto.Respuesta;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -359,13 +359,8 @@ public class FXMLEnvioRegistrarController implements Initializable {
         String buscarPor = cbBuscarClientePor.getSelectionModel().getSelectedItem();
         
         if ( !esBusquedaClienteValida(buscarPor) ) return;
-        
-        try {
-            respuesta = EnvioImp.buscarCliente(tfBuscarCliente.getText(), buscarPor);
-        } catch (UnsupportedEncodingException e) {
-            Utilidades.mostrarAlertaSimple("Busqueda cliente", "Introduzca información de busqueda valida", Alert.AlertType.WARNING);
-        }
 
+        respuesta = ClienteImp.buscarCliente(tfBuscarCliente.getText(), buscarPor);
         esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
         if( !esError ){
             List<Cliente> clienteAPI = (List<Cliente>) respuesta.get(Constantes.KEY_LISTA);
