@@ -26,6 +26,7 @@ import pojo.Sucursal;
 import utilidad.Constantes;
 import utilidad.GsonUtil;
 import utilidad.Utilidades;
+import utilidad.Validaciones;
 
 public class FXMLSucursalRegistrarController implements Initializable {
 
@@ -115,7 +116,6 @@ public class FXMLSucursalRegistrarController implements Initializable {
         tfCodigoPostal.setText(cp);
         tfCodigo.setDisable(true);
         
-        
         cargarColonias(cp);
         seleccionarColonia(sucursalEdicion.getIdColonia());
     }
@@ -169,7 +169,7 @@ public class FXMLSucursalRegistrarController implements Initializable {
 
     @FXML
     private void clicRegistrar(ActionEvent event) {
-        if (validarCampos()) {
+        if (sonCamposValidos()) {
             Sucursal sucursal = new Sucursal();
             sucursal.setNombre(tfNombre.getText());
             sucursal.setCodigo(tfCodigo.getText());
@@ -188,6 +188,35 @@ public class FXMLSucursalRegistrarController implements Initializable {
                 registrarSucursal(sucursal);
             }
         }
+    }
+
+    private boolean sonCamposValidos() {
+        if (Validaciones.esVacio(tfNombre.getText()) || 
+            Validaciones.esVacio(tfCodigo.getText()) || 
+            Validaciones.esVacio(tfCalle.getText()) || 
+            Validaciones.esVacio(tfNumero.getText()) || 
+            Validaciones.esVacio(tfCodigoPostal.getText())) {
+            
+            Utilidades.mostrarAlertaSimple("Campos vacíos", "Por favor llena todos los campos.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (!Validaciones.esNumericoConLongitud(tfCodigoPostal.getText(), 5)) {
+            Utilidades.mostrarAlertaSimple("C.P. inválido", "El código postal debe tener 5 dígitos.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (cbColonia.getSelectionModel().getSelectedItem() == null) {
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Debes ingresar un CP válido y seleccionar una colonia.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (cbEstatus.getValue() == null) {
+            Utilidades.mostrarAlertaSimple("Estatus requerido", "Debes seleccionar un estatus para la sucursal.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        return true;
     }
     
     private void registrarSucursal(Sucursal sucursal) {
@@ -209,18 +238,6 @@ public class FXMLSucursalRegistrarController implements Initializable {
         } else {
             Utilidades.mostrarAlertaSimple("Error", (String) respuesta.get(Constantes.KEY_MENSAJE), Alert.AlertType.ERROR);
         }
-    }
-
-    private boolean validarCampos() {
-        if (tfNombre.getText().isEmpty() || tfCodigo.getText().isEmpty() || 
-            tfCalle.getText().isEmpty() || tfNumero.getText().isEmpty() || 
-            tfCodigoPostal.getText().isEmpty() || cbColonia.getSelectionModel().getSelectedItem() == null ||
-            cbEstatus.getValue() == null) {
-            
-            Utilidades.mostrarAlertaSimple("Campos vacíos", "Por favor llena todos los campos.", Alert.AlertType.WARNING);
-            return false;
-        }
-        return true;
     }
 
     @FXML

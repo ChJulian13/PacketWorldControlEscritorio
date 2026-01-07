@@ -30,6 +30,7 @@ import pojo.Direccion;
 import utilidad.Constantes;
 import utilidad.GsonUtil;
 import utilidad.Utilidades;
+import utilidad.Validaciones;
 
 /**
  * FXML Controller class
@@ -154,9 +155,9 @@ public class FXMLClienteRegistrarController implements Initializable {
         cerrarVentana();
     }
     
-     @FXML
+    @FXML
     private void clicRegistrar(ActionEvent event) {
-        if (validarCampos()) {
+        if (sonCamposValidos()) {
             Cliente cliente = new Cliente();
             cliente.setNombre(tfNombre.getText());
             cliente.setApellidoPaterno(tfApellidoPaterno.getText());
@@ -183,6 +184,49 @@ public class FXMLClienteRegistrarController implements Initializable {
         }
     }
 
+    private boolean sonCamposValidos() {
+        if (Validaciones.esVacio(tfNombre.getText()) || 
+            Validaciones.esVacio(tfApellidoPaterno.getText()) ||
+            Validaciones.esVacio(tfTelefono.getText()) || 
+            Validaciones.esVacio(tfCorreo.getText()) ||
+            Validaciones.esVacio(tfCalle.getText()) || 
+            Validaciones.esVacio(tfNumero.getText()) ||
+            Validaciones.esVacio(tfCodigoPostal.getText())) {
+            
+            Utilidades.mostrarAlertaSimple("Campos vacíos", "Por favor llena todos los campos obligatorios.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (!Validaciones.esSoloTexto(tfNombre.getText()) || 
+            !Validaciones.esSoloTexto(tfApellidoPaterno.getText()) ||
+            (!tfApellidoMaterno.getText().isEmpty() && !Validaciones.esSoloTexto(tfApellidoMaterno.getText()))) {
+            Utilidades.mostrarAlertaSimple("Datos inválidos", "Los campos de nombre y apellidos solo deben contener letras.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (!Validaciones.esCorreoValido(tfCorreo.getText())) {
+            Utilidades.mostrarAlertaSimple("Correo inválido", "Por favor ingresa un formato de correo electrónico válido.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (!Validaciones.esNumericoConLongitud(tfTelefono.getText(), 10)) {
+            Utilidades.mostrarAlertaSimple("Teléfono inválido", "El teléfono debe tener exactamente 10 dígitos numéricos.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (!Validaciones.esNumericoConLongitud(tfCodigoPostal.getText(), 5)) {
+            Utilidades.mostrarAlertaSimple("C.P. inválido", "El código postal debe tener 5 dígitos.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        if (cbColonia.getSelectionModel().getSelectedItem() == null) {
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Debes seleccionar una colonia de la lista.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        return true;
+    }
+
     private void registrarCliente(Cliente cliente) {
         HashMap<String, Object> respuesta = ClienteImp.registrarCliente(cliente);
         procesarRespuesta(respuesta, cliente.getNombre());
@@ -206,28 +250,8 @@ public class FXMLClienteRegistrarController implements Initializable {
         }
     }
 
-    private boolean validarCampos() {
-        if (tfNombre.getText().isEmpty() || tfApellidoPaterno.getText().isEmpty() ||
-            tfTelefono.getText().isEmpty() || tfCorreo.getText().isEmpty() ||
-            tfCalle.getText().isEmpty() || tfNumero.getText().isEmpty() ||
-            tfCodigoPostal.getText().isEmpty()) {
-            
-            Utilidades.mostrarAlertaSimple("Campos vacíos", "Por favor llena todos los campos obligatorios.", Alert.AlertType.WARNING);
-            return false;
-        }
-        
-        if (cbColonia.getSelectionModel().getSelectedItem() == null) {
-            Utilidades.mostrarAlertaSimple("Selección requerida", "Por favor ingresa un CP válido y selecciona una colonia.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        return true;
-    }
-
     private void cerrarVentana() {
         Stage stage = (Stage) tfNombre.getScene().getWindow();
         stage.close();
     }
-
-    
 }
