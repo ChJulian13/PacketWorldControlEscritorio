@@ -222,6 +222,10 @@ public class FXMLPaquetesController implements Initializable, INotificador{
     private void clicEliminar(ActionEvent event) {
         if( tvPaquetes.getSelectionModel().getSelectedItem() != null ){
             if (esModoEdicion) {
+                if ( paquetes.size() == 1 ){
+                    Utilidades.mostrarAlertaSimple("Seleccion", "Un envió debe contener por lo menos un paquete.", Alert.AlertType.WARNING);
+                    return;
+                }
                 eliminarPaquete(tvPaquetes.getSelectionModel().getSelectedItem().getIdPaquete());
             } else {
                 paquetes.remove(tvPaquetes.getSelectionModel().getSelectedItem());
