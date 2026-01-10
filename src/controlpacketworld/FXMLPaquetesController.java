@@ -8,7 +8,6 @@ import dominio.PaqueteImp;
 import dto.EnvioCompletoDTO;
 import dto.RSDistanciaKM;
 import dto.Respuesta;
-import dto.RespuestaGenerica;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -152,9 +151,9 @@ public class FXMLPaquetesController implements Initializable, INotificador{
     
     private void calcularCostoEnvio(){
         //# System.out.println("\n[PaquetesController.calcularCostoEnvio()] Distancia: "+this.distanciaKM + "Numero paquetes: "+ paquetes.size()+"\n");
-        RespuestaGenerica<Double> respuestaCosto = PaqueteImp.CalcularCosto(this.distanciaKM, paquetes.size());
+        Respuesta respuestaCosto = EnvioImp.obtenerCosto(this.distanciaKM, paquetes.size());
         if ( !respuestaCosto.isError() && respuestaCosto.getValor()!= null){
-            this.costo = respuestaCosto.getValor();
+            this.costo = Double.parseDouble(respuestaCosto.getValor());
             //# System.out.println("\n[PaquetesController.calcularCostoEnvio()] Costo: " + respuestaCosto.getValor().toString() + "\n");
             actualizarCosto();
         } else {
@@ -337,7 +336,7 @@ public class FXMLPaquetesController implements Initializable, INotificador{
         
         Respuesta respuesta = EnvioImp.actualizarCosto(e);
         if ( !respuesta.isError() ) {
-            System.out.println("Costo de envío actualizado.");
+            //System.out.println("Costo de envío actualizado.");
         } else {
            Utilidades.mostrarAlertaSimple("Error", "Ocurrió un error al actualizar el costo del envío. " + respuesta.getMensaje(), Alert.AlertType.ERROR);
         }

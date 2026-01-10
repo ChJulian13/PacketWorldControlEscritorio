@@ -137,7 +137,9 @@ public class FXMLEnvioRegistrarController implements Initializable {
         tfDestinatarioApellidoMaterno.setText(envio.getDestinatarioApellidoMaterno());
         cargarDireccionEnvio(envio.getDestinatarioIdDireccion());
         cargarInformaciónSucursales();
-        seleccionarConductorEnvio(envio.getIdConductor());
+        if ( envio.getIdConductor() != null ){
+            seleccionarConductorEnvio(envio.getIdConductor());
+        }
         this.envio = envio;
         cargarInformacionEstatusEnvio();
         direccionInicial = new Direccion();
@@ -301,7 +303,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
     
     public void seleccionarConductorEnvio(Integer idConductor){
         HashMap<String, Object> respuesta = ColaboradorImp.obtenerColaboradorPorId(idConductor);
-        boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
+       boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
         if( !esError ){
             Colaborador colaboradorAPI = (Colaborador) respuesta.get(Constantes.KEY_OBJETO);
             if( colaboradorAPI != null ) {

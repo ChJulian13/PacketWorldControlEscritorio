@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import conexion.ConexionAPI;
 import dto.RSDistanciaKM;
 import dto.Respuesta;
-import dto.RespuestaGenerica;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -40,54 +39,6 @@ public class PaqueteImp {
                     respuesta.setMensaje(Constantes.MSJ_DEFAULT);
             }
         }
-       return respuesta;
-   }
-   
-   public static RespuestaGenerica<Double> CalcularCosto(double distanciaKM, int numeroPaquetes){
-        RespuestaGenerica<Double> respuesta = new RespuestaGenerica<>();
-        double costoKM;
-        double costoAdicional;
-        double costoEnvio;
-        if ( numeroPaquetes > 0 ){
-            // Calcular el costo por kilometro
-            if (distanciaKM <= 200) { 
-                costoKM = 4.00;
-            } else if (distanciaKM <= 500) {
-                costoKM = 3.00;
-            } else if (distanciaKM <= 1000) {
-                costoKM = 2.00;
-            } else if (distanciaKM <= 2000) {
-                costoKM = 1.00;
-            } else {
-                costoKM = 0.50;
-            }
-            // Calcular el costo adicional
-            switch( numeroPaquetes ){
-                case 1:
-                    costoAdicional = 0.00;
-                    break;
-                case 2:
-                    costoAdicional = 50.00;
-                    break;
-                case 3:
-                    costoAdicional = 80.00;
-                    break;
-                case 4:
-                    costoAdicional = 110.00;
-                    break;
-                default: // 5 paquetes o más
-                    costoAdicional = 150.00;
-            }
-            costoEnvio = ( distanciaKM * costoKM ) + costoAdicional;
-        } else {
-            costoEnvio = 0.0;
-        }
-
-        respuesta.setError(false);
-        BigDecimal costoRedondeado = BigDecimal .valueOf(costoEnvio) .setScale(2, RoundingMode.HALF_UP);
-        respuesta.setValor(costoRedondeado.doubleValue());
-        respuesta.setMensaje("Costo calculado correctamente.");
-
        return respuesta;
    }
    
