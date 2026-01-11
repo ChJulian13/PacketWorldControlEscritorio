@@ -136,8 +136,12 @@ public class FXMLEnvioRegistrarController implements Initializable {
         cbEstatus.setVisible(true);
         taComentario.setVisible(true);
         this.idSucursal = envio.getIdSucursalOrigen();
-        obtenerInfoClienteId(envio.getIdCliente());
-        cargarInformacionCliente();
+        if ( envio.getIdCliente() != null ) {
+            obtenerInfoClienteId(envio.getIdCliente());
+            cargarInformacionCliente();
+        } else {
+            Utilidades.mostrarAlertaSimple("Cliente", "La información del cliente ya no se encuentra disponible en la plataforma, el cliente fue eliminado", Alert.AlertType.INFORMATION);
+        }
         tfDestinatarioNombre.setText(envio.getDestinatarioNombre());
         tfDestinatarioApellidoPaterno.setText(envio.getDestinatarioApellidoPaterno());
         tfDestinatarioApellidoMaterno.setText(envio.getDestinatarioApellidoMaterno());
@@ -480,32 +484,38 @@ public class FXMLEnvioRegistrarController implements Initializable {
     public boolean esInformacionEnvioValida(){
         // ComboBox y Cliente
         if ( this.cliente == null) {
-            Utilidades.mostrarAlertaSimple("Cliente", "Debe de seleccionar un cliente para poder realizar el envío.", Alert.AlertType.INFORMATION);
+            Utilidades.mostrarAlertaSimple("Cliente", "Debe de seleccionar un cliente para poder realizar el envío.", Alert.AlertType.WARNING);
+            tfBuscarCliente.requestFocus();
             return false;
         }
         if ( !esModoEdicion && Validaciones.esVacio(tfCodigoPostal.getText())){
-            Utilidades.mostrarAlertaSimple("Código postal", "Debe de introducir el código postal.", Alert.AlertType.INFORMATION);
+            Utilidades.mostrarAlertaSimple("Código postal", "Debe de introducir el código postal.", Alert.AlertType.WARNING);
+            tfCodigoPostal.requestFocus();
             return false;
         }
         if ( cbColonia.getSelectionModel().getSelectedItem() == null ){
-            Utilidades.mostrarAlertaSimple("Colonia", "Tras introducir el código postal, debe de seleccionar una colonia.", Alert.AlertType.INFORMATION);
+            Utilidades.mostrarAlertaSimple("Colonia", "Tras introducir el código postal, debe de seleccionar una colonia.", Alert.AlertType.WARNING);
             return false;
         }
         if ( cbSucursal.getSelectionModel().getSelectedItem() == null ){
-            Utilidades.mostrarAlertaSimple("Sucursal", "Debe de seleccionar la sucursal.", Alert.AlertType.INFORMATION);
+            Utilidades.mostrarAlertaSimple("Sucursal", "Debe de seleccionar la sucursal.", Alert.AlertType.WARNING);
             return false;
         }
         if ( cbConductor.getSelectionModel().getSelectedItem() == null ){
-            Utilidades.mostrarAlertaSimple("Condictor", "Debe de seleccionar un conductor.", Alert.AlertType.INFORMATION);
+            Utilidades.mostrarAlertaSimple("Condictor", "Debe de seleccionar un conductor.", Alert.AlertType.WARNING);
             return false;
         }
         // Vacios
         if ( Validaciones.esVacio(tfCalle.getText()) || Validaciones.esVacio(tfNumero.getText()) ){
-            Utilidades.mostrarAlertaSimple("Dirección", "Complete la información de la dirección de envío", Alert.AlertType.INFORMATION);
+            Utilidades.mostrarAlertaSimple("Dirección", "Complete la información de la dirección de envío", Alert.AlertType.WARNING);
             return false;
         }
         if ( Validaciones.esVacio(tfDestinatarioNombre.getText()) || Validaciones.esVacio(tfDestinatarioApellidoPaterno.getText()) || Validaciones.esVacio(tfDestinatarioApellidoMaterno.getText()) ){
-            Utilidades.mostrarAlertaSimple("Dirección", "Introduzca el nombre completo del destinatario.", Alert.AlertType.INFORMATION);
+            Utilidades.mostrarAlertaSimple("Destinatario", "Introduzca el nombre completo del destinatario.", Alert.AlertType.WARNING);
+            return false;
+        }
+        if ( !Validaciones.esSoloTexto(tfDestinatarioNombre.getText()) || !Validaciones.esSoloTexto(tfDestinatarioApellidoPaterno.getText()) || !Validaciones.esSoloTexto(tfDestinatarioApellidoMaterno.getText())) {
+            Utilidades.mostrarAlertaSimple("Destinatario", "El nombre y apellidos del destinatirio no pueden contener números o símbolos.", Alert.AlertType.WARNING);
             return false;
         }
         return true;
