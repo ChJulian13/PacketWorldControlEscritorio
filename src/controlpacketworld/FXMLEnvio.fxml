@@ -14,10 +14,11 @@
          <columns>
             <TableColumn fx:id="colNoGuia" editable="false" prefWidth="152.0" text="No. guía" />
             <TableColumn fx:id="colEstatus" editable="false" prefWidth="122.0" text="Estado" />
-            <TableColumn fx:id="colSucursal" editable="false" prefWidth="245.0" text="Sucursal" />
-            <TableColumn fx:id="colDestinatarioDireccion" editable="false" prefWidth="352.0" text="Dirección entrega" />
-            <TableColumn fx:id="colConductor" editable="false" prefWidth="236.0" text="Conductor asignado" />
-            <TableColumn fx:id="colCosto" editable="false" prefWidth="100.0" text="Costo" />
+            <TableColumn fx:id="colCliente" prefWidth="163.0" text="Cliente" />
+            <TableColumn fx:id="colSucursal" editable="false" prefWidth="200.0" text="Sucursal origen" />
+            <TableColumn fx:id="colDestinatarioDireccion" editable="false" prefWidth="283.0" text="Dirección entrega" />
+            <TableColumn fx:id="colConductor" editable="false" prefWidth="191.0" text="Conductor asignado" />
+            <TableColumn fx:id="colCosto" editable="false" prefWidth="104.0" text="Costo" />
          </columns>
       </TableView>
       <Label layoutX="32.0" layoutY="14.0" prefHeight="39.0" prefWidth="74.0" text="Envíos">

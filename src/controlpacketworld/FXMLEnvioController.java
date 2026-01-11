@@ -51,6 +51,8 @@ public class FXMLEnvioController implements Initializable, INotificador{
     private TableColumn<?, ?> colConductor;
     @FXML
     private TableColumn<?, ?> colCosto;
+    @FXML
+    private TableColumn<?, ?> colCliente;
 
     private ObservableList<Envio> envios;
     
@@ -156,6 +158,7 @@ public class FXMLEnvioController implements Initializable, INotificador{
     public void configurarTabla() {
         // Atributos de pojo.Envio que se utilizará en cada columna de la tabla
         colNoGuia.setCellValueFactory(new PropertyValueFactory("noGuia"));
+        colCliente.setCellValueFactory(new PropertyValueFactory("cliente"));
         colEstatus.setCellValueFactory(new PropertyValueFactory("estatus"));
         colSucursal.setCellValueFactory(new PropertyValueFactory("sucursal"));
         colDestinatarioDireccion.setCellValueFactory(new PropertyValueFactory("destinatarioDireccion"));
