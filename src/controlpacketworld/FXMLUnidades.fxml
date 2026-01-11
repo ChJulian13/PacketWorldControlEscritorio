@@ -32,12 +32,12 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="1045.0" layoutY="87.0" mnemonicParsing="false" onAction="#clicEditar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
+      <Button fx:id="btnEditar" layoutX="1045.0" layoutY="87.0" mnemonicParsing="false" onAction="#clicEditar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="1154.0" layoutY="87.0" mnemonicParsing="false" onAction="#clicDarBaja" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Dar baja">
+      <Button fx:id="btnEliminar" layoutX="1154.0" layoutY="87.0" mnemonicParsing="false" onAction="#clicDarBaja" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Dar baja">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -47,11 +47,11 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <MenuButton layoutX="935.0" layoutY="88.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-border-color: #CCCCCC;" text="Gestionar">
+      <MenuButton fx:id="mbGestionar" layoutX="935.0" layoutY="88.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-border-color: #CCCCCC;" text="Gestionar">
         <items>
-          <MenuItem mnemonicParsing="false" onAction="#clicAsignar" text="Asignar" />
-            <MenuItem mnemonicParsing="false" onAction="#clicReasignar" text="Reasignar" />
-          <MenuItem mnemonicParsing="false" onAction="#clicDesasignar" text="Desasignar" />
+          <MenuItem fx:id="miAsignar" mnemonicParsing="false" onAction="#clicAsignar" text="Asignar" />
+            <MenuItem fx:id="miReasignar" mnemonicParsing="false" onAction="#clicReasignar" text="Reasignar" />
+          <MenuItem fx:id="miDesasignar" mnemonicParsing="false" onAction="#clicDesasignar" text="Desasignar" />
         </items>
       </MenuButton>
       <Button fx:id="btnMostrarTodos" layoutX="419.0" layoutY="86.0" mnemonicParsing="false" onAction="#clicMostrarTodos" prefHeight="31.0" prefWidth="125.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Mostrar todos">

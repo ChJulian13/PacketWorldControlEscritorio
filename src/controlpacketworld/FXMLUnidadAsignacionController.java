@@ -100,6 +100,10 @@ public class FXMLUnidadAsignacionController implements Initializable {
         
         if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
             List<Colaborador> lista = (List<Colaborador>) respuesta.get("colaboradores");
+            if (this.esReasignacion && this.unidadSeleccionada.getIdConductor() != null) {
+                int idActual = this.unidadSeleccionada.getIdConductor();
+                lista.removeIf(c -> c.getIdColaborador() == idActual);
+            }
             conductoresDisponibles = FXCollections.observableArrayList(lista);
             tvColaboradores.setItems(conductoresDisponibles);
         } else {

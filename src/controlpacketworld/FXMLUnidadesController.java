@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package controlpacketworld;
 
 import controlpacketworld.interfaz.INotificador;
@@ -22,6 +18,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -33,53 +31,81 @@ import pojo.Unidad;
 import pojo.UnidadBaja;
 import utilidad.Utilidades;
 
-/**
- * FXML Controller class
- *
- * @author julia
- */
-public class FXMLUnidadesController implements Initializable, INotificador{
+public class FXMLUnidadesController implements Initializable, INotificador {
 
-    @FXML
-    private TableView<Unidad> tvUnidades;
-    @FXML
-    private TableColumn colMarca;
-    @FXML
-    private TableColumn colModelo;
-    @FXML
-    private TableColumn colVin;
-    @FXML
-    private TableColumn colTipo;
-    @FXML
-    private TableColumn colNii;
-    @FXML
-    private TableColumn colAnio;
-    @FXML
-    private TableColumn colEstatus;
+    @FXML private TableView<Unidad> tvUnidades;
+    @FXML private TableColumn colMarca;
+    @FXML private TableColumn colModelo;
+    @FXML private TableColumn colVin;
+    @FXML private TableColumn colTipo;
+    @FXML private TableColumn colNii;
+    @FXML private TableColumn colAnio;
+    @FXML private TableColumn colEstatus;
+    @FXML private TableColumn colConductor;
     
+    @FXML private TextField tfBarraBusqueda;
+    @FXML private Button btnMostrarTodos;
+
+    @FXML private MenuItem miAsignar;
+    @FXML private MenuItem miReasignar;
+    @FXML private MenuItem miDesasignar;
+
     private ObservableList<Unidad> unidades;
-    
     private Colaborador colaboradorSesion;
     @FXML
-    private TextField tfBarraBusqueda;
+    private Button btnEditar;
     @FXML
-    private TableColumn colConductor;
+    private Button btnEliminar;
     @FXML
-    private Button btnMostrarTodos;
+    private MenuButton mbGestionar;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         configurarTabla();
+        configurarListenerSeleccion(); 
         cargarInformacionUnidades();
+        
         if(btnMostrarTodos != null) {
             btnMostrarTodos.setVisible(false);
         }
     } 
     
+    private void configurarListenerSeleccion() {
+        habilitarOpcionesMenu(false, false, false, false);
+
+        tvUnidades.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, nuevaUnidad) -> {
+            if (nuevaUnidad != null) {
+                
+                if ("Baja".equalsIgnoreCase(nuevaUnidad.getEstatus())) {
+                    mbGestionar.setDisable(true); 
+                    habilitarOpcionesMenu(false, false, false, false);
+                } else {
+                    mbGestionar.setDisable(false);
+                    
+                    boolean tieneConductor = nuevaUnidad.getIdConductor() != null && nuevaUnidad.getIdConductor() > 0;
+                    
+                    if (tieneConductor) {
+                        habilitarOpcionesMenu(true, false, true, true);
+                    } else {
+                        habilitarOpcionesMenu(true, true, false, false);
+                    }
+                }
+            } else {
+                mbGestionar.setDisable(true);
+                habilitarOpcionesMenu(false, false, false, false);
+            }
+        });
+    }
+
+    private void habilitarOpcionesMenu(boolean gestionar, boolean asignar, boolean reasignar, boolean desasignar) {
+        if (btnEditar != null) btnEditar.setDisable(!gestionar);
+        if (btnEliminar != null) btnEliminar.setDisable(!gestionar);
+
+        if (miAsignar != null) miAsignar.setDisable(!asignar);
+        if (miReasignar != null) miReasignar.setDisable(!reasignar);
+        if (miDesasignar != null) miDesasignar.setDisable(!desasignar);
+    }
+
     public void inicializarColaborador(Colaborador colaborador) {
         this.colaboradorSesion = colaborador;
     }
@@ -117,10 +143,10 @@ public class FXMLUnidadesController implements Initializable, INotificador{
     @FXML
     private void clicEditar(ActionEvent event) {
         Unidad unidad = tvUnidades.getSelectionModel().getSelectedItem();
-        if (unidad != null) {
+        if (unidad != null && !"Baja".equalsIgnoreCase(unidad.getEstatus())) {
             irFormulario(unidad);
         } else {
-            Utilidades.mostrarAlertaSimple("Selecciona un colaborador", "Para editar la información de un colaborador, debe seleccionarlo.", Alert.AlertType.WARNING);
+            Utilidades.mostrarAlertaSimple("Atención", "No se puede editar una unidad no seleccionada o dada de baja.", Alert.AlertType.WARNING);
         }
     }
 
@@ -129,6 +155,8 @@ public class FXMLUnidadesController implements Initializable, INotificador{
         Unidad unidadSeleccionada = tvUnidades.getSelectionModel().getSelectedItem();
         
         if (unidadSeleccionada != null) {
+            if ("Baja".equalsIgnoreCase(unidadSeleccionada.getEstatus())) return;
+
             javafx.scene.control.TextInputDialog dialogo = new javafx.scene.control.TextInputDialog();
             dialogo.setTitle("Dar de baja unidad");
             dialogo.setHeaderText("Baja de unidad: " + unidadSeleccionada.getMarca() + " " + unidadSeleccionada.getModelo());
@@ -203,7 +231,7 @@ public class FXMLUnidadesController implements Initializable, INotificador{
     @FXML
     private void clicBuscar(ActionEvent event) {
         String busqueda = tfBarraBusqueda.getText();
-    
+     
         if (busqueda != null && !busqueda.trim().isEmpty()) {
             buscarUnidades(busqueda);
             
@@ -226,26 +254,11 @@ public class FXMLUnidadesController implements Initializable, INotificador{
     @FXML
     private void clicAsignar(ActionEvent event) {
         Unidad unidadSeleccionada = tvUnidades.getSelectionModel().getSelectedItem();
-        
         if (unidadSeleccionada != null) {
-            if (unidadSeleccionada.getEstatus() != null && unidadSeleccionada.getEstatus().equalsIgnoreCase("baja")) {
-                Utilidades.mostrarAlertaSimple("Acción no permitida", 
-                        "No se puede asignar un conductor a una unidad que está dada de baja.", 
-                        Alert.AlertType.WARNING);
-                return; 
-            }
-
-            if (unidadSeleccionada.getIdConductor() != null && unidadSeleccionada.getIdConductor() > 0) {
-                Utilidades.mostrarAlertaSimple("Unidad ocupada", 
-                        "La unidad ya tiene un conductor asignado (" + unidadSeleccionada.getNombreConductor() + ").\n" +
-                        "Utilice la opción 'Reasignar' si desea cambiarlo.", 
-                        Alert.AlertType.WARNING);
-                return;
-            }
+            if ("Baja".equalsIgnoreCase(unidadSeleccionada.getEstatus())) return;
+            if (unidadSeleccionada.getIdConductor() != null && unidadSeleccionada.getIdConductor() > 0) return;
 
             irPantallaSeleccionConductor(unidadSeleccionada, false);
-        } else {
-            Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona una unidad para asignar conductor.", Alert.AlertType.WARNING);
         }
     }
 
@@ -268,11 +281,7 @@ public class FXMLUnidadesController implements Initializable, INotificador{
                         Utilidades.mostrarAlertaSimple("Error", respuesta.getMensaje(), Alert.AlertType.ERROR);
                     }
                 }
-            } else {
-                Utilidades.mostrarAlertaSimple("Aviso", "La unidad seleccionada no tiene conductor asignado.", Alert.AlertType.WARNING);
-            }
-        } else {
-            Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona una unidad para desasignar.", Alert.AlertType.WARNING);
+            } 
         }
     }
     
@@ -310,16 +319,10 @@ public class FXMLUnidadesController implements Initializable, INotificador{
         Unidad unidadSeleccionada = tvUnidades.getSelectionModel().getSelectedItem();
         
         if (unidadSeleccionada != null) {
-            if (unidadSeleccionada.getIdConductor() == null || unidadSeleccionada.getIdConductor() == 0) {
-                Utilidades.mostrarAlertaSimple("Unidad vacía", 
-                        "La unidad no tiene conductor actual. Utilice la opción 'Asignar'.", 
-                        Alert.AlertType.WARNING);
-                return;
-            }
+            if ("Baja".equalsIgnoreCase(unidadSeleccionada.getEstatus())) return;
+            if (unidadSeleccionada.getIdConductor() == null || unidadSeleccionada.getIdConductor() == 0) return;
             
             irPantallaSeleccionConductor(unidadSeleccionada, true);
-        } else {
-            Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona una unidad para reasignar.", Alert.AlertType.WARNING);
-        }
+        } 
     }
 }
