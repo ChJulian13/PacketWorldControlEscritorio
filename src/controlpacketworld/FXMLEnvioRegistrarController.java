@@ -6,6 +6,8 @@ import dominio.ClienteImp;
 import dominio.ColaboradorImp;
 import dominio.DireccionImp;
 import dominio.EnvioImp;
+import dominio.PaqueteImp;
+import dto.RSDistanciaKM;
 import dto.Respuesta;
 import java.net.URL;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ import pojo.Direccion;
 import pojo.Envio;
 import pojo.EnvioHistorialEstatus;
 import pojo.EstatusEnvio;
+import pojo.Paquete;
 import pojo.Sucursal;
 import utilidad.Constantes;
 import utilidad.Utilidades;
@@ -46,10 +49,11 @@ public class FXMLEnvioRegistrarController implements Initializable {
     private Cliente cliente;
     private boolean esModoEdicion;
     private Integer idSucursal;
+    private Sucursal sucursalActual;
     private Integer idColaboradorSesion;
     private Envio envio;
     private Direccion direccion;
-    private Direccion direccionInicial;
+    private Direccion direccionOriginal;
     private Integer idEstatusEnvioEdicion;
     private ObservableList<EstatusEnvio> catalogoEstatus;
     private ObservableList<Colaborador> conductores;
@@ -113,6 +117,8 @@ public class FXMLEnvioRegistrarController implements Initializable {
         configurarComboBoxColoniaSucursalConductor();
         cargarInformacionConductores();
         inicializarTextFieldConTextFormatter();
+        direcciones = FXCollections.observableArrayList();
+        cbColonia.setItems(direcciones);
     }
     
     public void cargarInformacion(Integer idSucursal, INotificador observador){
@@ -142,12 +148,12 @@ public class FXMLEnvioRegistrarController implements Initializable {
         }
         this.envio = envio;
         cargarInformacionEstatusEnvio();
-        direccionInicial = new Direccion();
-        direccionInicial.setIdDireccion(direccion.getIdDireccion());
-        direccionInicial.setCalle(direccion.getCalle());
-        direccionInicial.setNumero(direccion.getNumero());
-        direccionInicial.setIdColonia(direccion.getIdColonia());
-        direccionInicial.setIdDireccion(this.direccion.getIdDireccion());
+        direccionOriginal = new Direccion();
+        direccionOriginal.setIdDireccion(direccion.getIdDireccion());
+        direccionOriginal.setCalle(direccion.getCalle());
+        direccionOriginal.setNumero(direccion.getNumero());
+        direccionOriginal.setIdColonia(direccion.getIdColonia());
+        direccionOriginal.setCodigoPostal(direccion.getCodigoPostal());
     }
     
     public void configurarComboBoxColoniaSucursalConductor(){
@@ -198,36 +204,39 @@ public class FXMLEnvioRegistrarController implements Initializable {
     public void cargarInformaciónSucursales(){
         HashMap<String, Object> respuesta = EnvioImp.obtenerSucursales();
         boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
-        if( !esError ){
-            List<Sucursal> sucursalesAPI = (List<Sucursal>) respuesta.get(Constantes.KEY_LISTA);
-            if( sucursalesAPI.isEmpty() ){
-                Utilidades.mostrarAlertaSimple("Sucursales", "No se encontraron sucursales activas.", Alert.AlertType.INFORMATION);
-                return;
-            }
-            sucursales = FXCollections.observableArrayList();
-            Sucursal sucursalActual = buscarSucursalPorId(this.idSucursal, sucursalesAPI);
-            
-            // Si no se encuentra la sucursal actual (caso extraño)
-            if(sucursalActual == null){
-                Utilidades.mostrarAlertaSimple("Advertencia", 
-                    "La sucursal asociada no fue encontrada. Se mostrarán todas las sucursales disponibles.", 
-                    Alert.AlertType.WARNING);
+        
+        if ( esError ) {
+            Utilidades.mostrarAlertaSimple("Sucursales", "Error al obtener la información de las sucursales, intentelo más tarde.", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        List<Sucursal> sucursalesAPI = (List<Sucursal>) respuesta.get(Constantes.KEY_LISTA);
+        
+        if( sucursalesAPI.isEmpty() ){
+            Utilidades.mostrarAlertaSimple("Sucursales", "No se encontraron sucursales activas.", Alert.AlertType.INFORMATION);
+            return;
+        }
+        
+        sucursales = FXCollections.observableArrayList();
+        sucursalActual = buscarSucursalPorId(this.idSucursal, sucursalesAPI);
 
-                // Cargar todas las sucursales y seleccionar la primera
-                sucursales.setAll(sucursalesAPI);
-                cbSucursal.setItems(sucursales);
-                cbSucursal.setValue(sucursalesAPI.get(0)); // Selecciona la primera por defecto
-                return;
-            }
-            
-            // Si el modo es edición, se cargan todas las sucursales, caso contrario solo la sucursal actual
-            if (esModoEdicion) {
-                sucursales.setAll(sucursalesAPI);
-            } else {
-                sucursales.add(sucursalActual);
-            }
-            cbSucursal.setItems(sucursales);
+        // Cargar todas si es modo edicion o si la sucursal del envío no fue encontrada
+        if (esModoEdicion || sucursalActual == null) {
+            sucursales.setAll(sucursalesAPI);
+        } else {
+            // Si es registro de envio nuevo y encontramos la sucursal solo mostramos esa
+            sucursales.add(sucursalActual);
+        }
+
+        // Asignamos los items al ComboBox
+        cbSucursal.setItems(sucursales);
+
+        // Selección de ComboBox
+        if ( sucursalActual != null ) {
             cbSucursal.setValue(sucursalActual);
+        } else {
+            Utilidades.mostrarAlertaSimple("Sucursales", "La sucursal asociada al envío no fue encontrada, se mostrarán todas las sucursales disponibles.", Alert.AlertType.INFORMATION);
+            cbSucursal.getSelectionModel().selectFirst();
         }
     }
     public Sucursal buscarSucursalPorId(Integer id, List<Sucursal> sucursales) {
@@ -342,15 +351,19 @@ public class FXMLEnvioRegistrarController implements Initializable {
                 return;
             }
             
-            direcciones = FXCollections.observableArrayList();
+            //direcciones = FXCollections.observableArrayList();
+            direcciones.clear();
             direcciones.addAll(direccionesAPI);
-            cbColonia.setItems(direcciones);
+            //cbColonia.setItems(direcciones);
             
             // Estado, municipio y ciudad se repite, solo varia la colonia
             Direccion d = direcciones.get(0);
             tfEstado.setText(d.getEstado());
             tfMunicipio.setText(d.getMunicipio());
             tfCiudad.setText(d.getCiudad());
+            
+            cbColonia.getSelectionModel().clearSelection();
+            cbColonia.setValue(null);
         }
     }
 
@@ -416,7 +429,9 @@ public class FXMLEnvioRegistrarController implements Initializable {
     @FXML
     private void clicContinuar(ActionEvent event) {
         if( esInformacionEnvioValida() ){
-            // Objeto Direccion modificada
+            // Objeto Direccion
+            Integer cpDestino = Integer.valueOf(tfCodigoPostal.getText());
+            direccion.setCodigoPostal(cpDestino);
             direccion.setCalle(tfCalle.getText());
             direccion.setNumero(tfNumero.getText());
             direccion.setIdColonia(cbColonia.getSelectionModel().getSelectedItem().getIdColonia());
@@ -433,7 +448,7 @@ public class FXMLEnvioRegistrarController implements Initializable {
                 // Mandar a loader de paquetes
                 envio.setIdEstatusEnvio(1);
                 Integer cpSucursal = obtenerCodipoPostalIdDireccion(cbSucursal.getSelectionModel().getSelectedItem().getIdDireccion());
-                irPantallaPaquetes(envio, direccion, cpSucursal, Integer.valueOf(tfCodigoPostal.getText()));
+                irPantallaPaquetes(envio, direccion, cpSucursal, cpDestino);
             } else {
                 // Para saber si modifico estatus de envio
                 idEstatusEnvioEdicion = (cbEstatus.getSelectionModel().getSelectedItem().getIdEstatusEnvio());
@@ -524,23 +539,36 @@ public class FXMLEnvioRegistrarController implements Initializable {
 
     }
 
-    private boolean seEditoDireccion(){
-        if ( !Objects.equals(direccion.getIdColonia(), direccionInicial.getIdColonia()) ){
+    private boolean seEditoSucursalOCodigoPostal(){
+        // Si se modifico el codigo postal y la colonia
+        if (!Objects.equals(direccionOriginal.getCodigoPostal(), direccion.getCodigoPostal()) && !Objects.equals(direccionOriginal.getIdColonia(), direccion.getIdColonia())) {
             return true;
         }
-        if ( !direccion.getCalle().equals(direccionInicial.getCalle()) ){
-            return true;
-        }
-        if ( !direccion.getNumero().equals(direccionInicial.getNumero()) ){
+        // Si se modifico la sucursal
+        if ( !Objects.equals(sucursalActual.getIdSucursal(), cbSucursal.getSelectionModel().getSelectedItem().getIdSucursal()) ) {
             return true;
         }
         return false;
     }
+    private boolean seEditoDireccion(){
+        if ( !Objects.equals(direccion.getIdColonia(), direccionOriginal.getIdColonia()) ){
+            return true;
+        }
+        if ( !direccion.getCalle().equals(direccionOriginal.getCalle()) ){
+            return true;
+        }
+        if ( !direccion.getNumero().equals(direccionOriginal.getNumero()) ){
+            return true;
+        }
+        return false;
+    }
+
     private boolean editarEnvioDireccion(){
         if ( seEditoDireccion() ){
             Respuesta respuesta = DireccionImp.editar(direccion);
             return !respuesta.isError(); 
         }
+        
         //#System.out.println("[editarEnvioDireccion] No se modifico direccion");
         return true;
     }
@@ -574,6 +602,10 @@ public class FXMLEnvioRegistrarController implements Initializable {
         if ( !editarEnvioDireccion() ){
             Utilidades.mostrarAlertaSimple("Direccion", "Verifique que la información de la dirección sea correcta.", Alert.AlertType.WARNING);
             return;
+        }
+        if ( seEditoSucursalOCodigoPostal() ){
+            // Se actualiza el costo de this.envio
+            actualizarCostoEnvio();
         }
         
         Respuesta respuesta = EnvioImp.editar(envio);
@@ -612,5 +644,34 @@ public class FXMLEnvioRegistrarController implements Initializable {
         }
         return null;
     }
-
+    
+    private void actualizarCostoEnvio(){
+        Integer cpSucursal = obtenerCodipoPostalIdDireccion(cbSucursal.getSelectionModel().getSelectedItem().getIdDireccion());
+        Integer cpDestino = cbColonia.getSelectionModel().getSelectedItem().getCodigoPostal();
+        RSDistanciaKM distanciaAPI = PaqueteImp.obtenerDistanciaKM(cpSucursal, cpDestino);
+        if ( distanciaAPI != null && !distanciaAPI.isError()) {
+            double distanciaKM = distanciaAPI.getDistanciaKM();
+            int numeroPaquetesEnvio = obtenerNumeroPaquetesEnvio();
+            double costo = calcularCostoEnvio(distanciaKM, numeroPaquetesEnvio);
+            this.envio.setCosto(costo);
+        }
+    }
+    private int obtenerNumeroPaquetesEnvio(){
+        int numeroPaquetes = 0;
+        HashMap<String, Object> respuesta = PaqueteImp.obtenerPaquetesEnvio(envio.getIdEnvio());
+        boolean esError = (boolean) respuesta.get(Constantes.KEY_ERROR);
+        if( !esError ){
+            List<Paquete> paquetes = (List<Paquete>) respuesta.get(Constantes.KEY_LISTA);
+            numeroPaquetes = paquetes.size();
+        }
+        return numeroPaquetes;
+    }
+    private double calcularCostoEnvio(double distanciaKM, int numeroPaquetesEnvio){
+        double costo = 0.0;
+        Respuesta costoAPI = EnvioImp.obtenerCosto(distanciaKM, numeroPaquetesEnvio);
+        if ( !costoAPI.isError() ){
+            costo = Double.parseDouble( costoAPI.getValor() );
+        }
+        return costo;
+    }
 }
