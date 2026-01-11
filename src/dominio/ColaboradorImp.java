@@ -159,11 +159,23 @@ public class ColaboradorImp {
     }
     
     public static HashMap<String, Object> obtenerPorNombre(String nombre) {
+        return ejecutarBusqueda("nombre", nombre);
+    }
+    
+    public static HashMap<String, Object> obtenerPorRol(String rol) {
+        return ejecutarBusqueda("rol", rol);
+    }
+    
+    public static HashMap<String, Object> obtenerPorNoPersonal(String noPersonal) {
+        return ejecutarBusqueda("nopersonal", noPersonal);
+    }
+
+    private static HashMap<String, Object> ejecutarBusqueda(String criterio, String valor) {
         HashMap<String, Object> respuesta = new LinkedHashMap<>();
         try {
-            String nombreCodificado = URLEncoder.encode(nombre, StandardCharsets.UTF_8.name());
-            nombreCodificado = nombreCodificado.replace("+", "%20");
-            String URL = Constantes.URL_WS + "colaborador/buscar-nombre/" + nombreCodificado;
+            String valorCodificado = URLEncoder.encode(valor, StandardCharsets.UTF_8.name());
+            
+            String URL = Constantes.URL_WS + "colaborador/buscar?criterio=" + criterio + "&valor=" + valorCodificado;
 
             RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
 
@@ -172,74 +184,25 @@ public class ColaboradorImp {
                 Type tipoLista = new TypeToken<List<Colaborador>>(){}.getType();
                 List<Colaborador> colaboradores = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
 
-                respuesta.put("error", false);
-                respuesta.put("colaboradores", colaboradores);
+                if (colaboradores != null && !colaboradores.isEmpty()) {
+                    respuesta.put("error", false);
+                    respuesta.put("colaboradores", colaboradores);
+                } else {
+                    respuesta.put("error", true);
+                    respuesta.put("mensaje", "No se encontraron coincidencias.");
+                }
             } else {
                 respuesta.put("error", true);
-                respuesta.put("mensaje", "No se encontraron colaboradores con ese nombre.");
+                respuesta.put("mensaje", "No se encontraron coincidencias o hubo un error en la búsqueda.");
             }
         } catch (Exception e) {
             e.printStackTrace();
             respuesta.put("error", true);
-            respuesta.put("mensaje", "Error al procesar la búsqueda por nombre.");
+            respuesta.put("mensaje", "Error al procesar la búsqueda: " + e.getMessage());
         }
         return respuesta;
     }
-    
-    public static HashMap<String, Object> obtenerPorRol(String rol) {
-        HashMap<String, Object> respuesta = new LinkedHashMap<>();
-        try {
-            String rolCodificado = URLEncoder.encode(rol, StandardCharsets.UTF_8.name());
-            rolCodificado = rolCodificado.replace("+", "%20"); 
-            String URL = Constantes.URL_WS + "colaborador/buscar-rol/" + rolCodificado;
-
-            RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
-
-            if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
-                Gson gson = new Gson();
-                Type tipoLista = new TypeToken<List<Colaborador>>(){}.getType();
-                List<Colaborador> colaboradores = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
-                respuesta.put("error", false);
-                respuesta.put("colaboradores", colaboradores);
-            } else {
-                respuesta.put("error", true);
-                respuesta.put("mensaje", "No se encontraron coincidencias.");
-            }
-        } catch (Exception e) {
-            respuesta.put("error", true);
-            respuesta.put("mensaje", "Error al codificar la URL.");
-        }
-
-        return respuesta;
-    }
-    
-    public static HashMap<String, Object> obtenerPorNoPersonal(String noPersonal) {
-        HashMap<String, Object> respuesta = new LinkedHashMap<>();
-        String URL = Constantes.URL_WS + "colaborador/buscar-nopersonal/" + noPersonal;
-        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
-        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
-            Gson gson = new Gson();
-            Type tipoLista = new TypeToken<List<Colaborador>>(){}.getType();
-            List<Colaborador> colaboradores = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
-            respuesta.put("error", false);
-            respuesta.put("colaboradores",colaboradores);
-        } else {
-           respuesta.put("Error", true);
-            switch(respuestaAPI.getCodigo()){
-                    case Constantes.ERROR_MALFORMED_URL:
-                        respuesta.put("mensaje",(String.valueOf(Constantes.MSJ_ERROR_PETICION)));
-                        break;
-
-                    case Constantes.ERROR_PETICION:
-                        respuesta.put("mensaje",((String.valueOf(Constantes.MSJ_ERROR_PETICION))));
-                        break;
-                    default:
-                        respuesta.put("mensaje",("Lo sentimos, hay problemas para verificar sus credenciales en este momento, por favor intentelo más tarde."));
-                } 
-        }
-        return respuesta;
-    }
-    
+ 
     public static Respuesta subirFoto(int idColaborador, File fotoFile) {
         Respuesta respuesta = new Respuesta();
         String URL = Constantes.URL_WS + "colaborador/subir-fotografia/" + idColaborador;

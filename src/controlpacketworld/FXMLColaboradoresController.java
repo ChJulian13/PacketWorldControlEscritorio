@@ -244,10 +244,10 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
 
     @FXML
     private void clicBuscar(ActionEvent event) {
-        String criterio = cbBuscar.getValue();
+        String criterioSeleccionado = cbBuscar.getValue();
         String textoBusqueda = "";
 
-        if ("Rol".equals(criterio)) {
+        if ("Rol".equals(criterioSeleccionado)) {
             Rol rolSeleccionado = cbBusquedaRol.getValue();
             if (rolSeleccionado == null) {
                 Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona un rol de la lista.", Alert.AlertType.WARNING);
@@ -263,7 +263,8 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
         }
         
         HashMap<String, Object> respuesta = null;
-        switch (criterio) {
+        
+        switch (criterioSeleccionado) {
             case "Nombre":
                 respuesta = ColaboradorImp.obtenerPorNombre(textoBusqueda);
                 break;
@@ -273,6 +274,9 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
             case "No. Personal":
                 respuesta = ColaboradorImp.obtenerPorNoPersonal(textoBusqueda);
                 break;
+            default:
+                Utilidades.mostrarAlertaSimple("Error", "Criterio de búsqueda no válido", Alert.AlertType.ERROR);
+                return;
         }
 
         procesarRespuestaBusqueda(respuesta);
