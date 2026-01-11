@@ -234,9 +234,18 @@ public class FXMLUnidadesController implements Initializable, INotificador{
                         Alert.AlertType.WARNING);
                 return; 
             }
-            irPantallaSeleccionConductor(unidadSeleccionada);
+
+            if (unidadSeleccionada.getIdConductor() != null && unidadSeleccionada.getIdConductor() > 0) {
+                Utilidades.mostrarAlertaSimple("Unidad ocupada", 
+                        "La unidad ya tiene un conductor asignado (" + unidadSeleccionada.getNombreConductor() + ").\n" +
+                        "Utilice la opción 'Reasignar' si desea cambiarlo.", 
+                        Alert.AlertType.WARNING);
+                return;
+            }
+
+            irPantallaSeleccionConductor(unidadSeleccionada, false);
         } else {
-            Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona una unidad para asignar o cambiar su conductor.", Alert.AlertType.WARNING);
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona una unidad para asignar conductor.", Alert.AlertType.WARNING);
         }
     }
 
@@ -267,17 +276,17 @@ public class FXMLUnidadesController implements Initializable, INotificador{
         }
     }
     
-    private void irPantallaSeleccionConductor(Unidad unidad) {
+    private void irPantallaSeleccionConductor(Unidad unidad, boolean esReasignacion) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLUnidadAsignacion.fxml"));
             Parent root = loader.load();
             
             FXMLUnidadAsignacionController controller = loader.getController();
-            controller.inicializarDatos(unidad, this);
+            controller.inicializarDatos(unidad, this, esReasignacion);
             
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("Seleccionar Conductor");
+            stage.setTitle(esReasignacion ? "Reasignar Conductor" : "Asignar Conductor");
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
             
@@ -293,6 +302,24 @@ public class FXMLUnidadesController implements Initializable, INotificador{
         
         if(btnMostrarTodos != null) {
             btnMostrarTodos.setVisible(false);
+        }
+    }
+
+    @FXML
+    private void clicReasignar(ActionEvent event) {
+        Unidad unidadSeleccionada = tvUnidades.getSelectionModel().getSelectedItem();
+        
+        if (unidadSeleccionada != null) {
+            if (unidadSeleccionada.getIdConductor() == null || unidadSeleccionada.getIdConductor() == 0) {
+                Utilidades.mostrarAlertaSimple("Unidad vacía", 
+                        "La unidad no tiene conductor actual. Utilice la opción 'Asignar'.", 
+                        Alert.AlertType.WARNING);
+                return;
+            }
+            
+            irPantallaSeleccionConductor(unidadSeleccionada, true);
+        } else {
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Selecciona una unidad para reasignar.", Alert.AlertType.WARNING);
         }
     }
 }
