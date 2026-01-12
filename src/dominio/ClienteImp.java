@@ -43,8 +43,10 @@ public class ClienteImp {
             Respuesta respuestaServidor = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
             respuesta.put(Constantes.KEY_ERROR, respuestaServidor.isError());
             respuesta.put(Constantes.KEY_MENSAJE, respuestaServidor.getMensaje());
+            
         } else {
-            respuesta.put(Constantes.KEY_MENSAJE, "Error de conexión: " + respuestaAPI.getCodigo());
+            String mensajeError = respuestaAPI.getContenido(); 
+            respuesta.put(Constantes.KEY_MENSAJE, "Error: " + respuestaAPI.getCodigo() + " - " + mensajeError);
         }
         return respuesta;
     }

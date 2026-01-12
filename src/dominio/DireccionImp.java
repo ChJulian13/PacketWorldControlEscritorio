@@ -112,37 +112,28 @@ public class DireccionImp {
         return respuesta;
     }
     
+
     public static HashMap<String, Object> registrarDireccion(Direccion direccion) {
-        HashMap<String, Object> respuesta = new HashMap<>();
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
         respuesta.put(Constantes.KEY_ERROR, true);
-        
-        try {
-            Gson gson = new Gson();
-            String parametros = gson.toJson(direccion);
-            String url = Constantes.URL_WS + "direccion/crear-direccion";
-            
-            RespuestaHTTP respuestaPeticion = ConexionAPI.peticionBody(url, "POST", parametros, "application/json");
-            
-            if (respuestaPeticion.getCodigo() == HttpURLConnection.HTTP_OK) {
-                Type tipoMapa = new TypeToken<HashMap<String, Object>>() {}.getType();
-                HashMap<String, Object> respuestaApi = gson.fromJson(respuestaPeticion.getContenido(), tipoMapa);
-                
-                respuesta.put(Constantes.KEY_ERROR, respuestaApi.get("error"));
-                respuesta.put(Constantes.KEY_MENSAJE, respuestaApi.get("mensaje"));
-                
-                if (respuestaApi.containsKey("idDireccion")) {
-                    Number idNum = (Number) respuestaApi.get("idDireccion");
-                    respuesta.put("idDireccion", idNum.intValue());
-                }
-            } else {
-                respuesta.put(Constantes.KEY_MENSAJE, "Error en la solicitud: Código " + respuestaPeticion.getCodigo());
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            respuesta.put(Constantes.KEY_MENSAJE, "Error de conexión: " + e.getMessage());
+
+        String url = Constantes.URL_WS + "direccion/crear-direccion"; 
+        String json = GsonUtil.GSON.toJson(direccion);
+
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(url, "POST", json, "application/json");
+
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Respuesta respuestaServidor = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+
+            respuesta.put(Constantes.KEY_ERROR, respuestaServidor.isError());
+            respuesta.put(Constantes.KEY_MENSAJE, respuestaServidor.getMensaje());
+
+            respuesta.put("valor", respuestaServidor.getValor());
+
+        } else {
+            respuesta.put(Constantes.KEY_MENSAJE, "Error de conexión: " + respuestaAPI.getCodigo());
         }
-        
+
         return respuesta;
     }
     

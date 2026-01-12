@@ -255,36 +255,38 @@ public class FXMLClienteRegistrarController implements Initializable {
         return true;
     }
 
-    private void registrarCliente() {
+   private void registrarCliente() {
         Direccion direccion = obtenerDireccionDeInterfaz();
         
         HashMap<String, Object> respuestaDireccion = DireccionImp.registrarDireccion(direccion); 
         
         if (!(boolean) respuestaDireccion.get(Constantes.KEY_ERROR)) {
-            // Recuperamos el ID generado por la API
-            Integer idDireccion = (Integer) respuestaDireccion.get("idDireccion");
             
-            // 2. Preparar Cliente con el ID de dirección
+            String idString = (String) respuestaDireccion.get("valor"); 
+            
+            Integer idDireccion = Integer.parseInt(idString);
+            // -----------------------
+
             Cliente cliente = new Cliente();
             cliente.setNombre(tfNombre.getText());
             cliente.setApellidoPaterno(tfApellidoPaterno.getText());
             cliente.setApellidoMaterno(tfApellidoMaterno.getText());
             cliente.setTelefono(tfTelefono.getText());
             cliente.setCorreo(tfCorreo.getText());
-            cliente.setIdDireccion(idDireccion); // Vinculación clave
+            cliente.setIdDireccion(idDireccion); // Aquí ya NO será null
             
-            // 3. Registrar Cliente
             HashMap<String, Object> respuestaCliente = ClienteImp.registrarCliente(cliente);
             
             if (!(boolean) respuestaCliente.get(Constantes.KEY_ERROR)) {
+               
+            if (notificador != null) {
+                notificador.notificarOperacionExitosa("registrado", cliente.getNombre());
+            } else {
                 Utilidades.mostrarAlertaSimple("Registro exitoso", 
                         (String) respuestaCliente.get(Constantes.KEY_MENSAJE), 
                         Alert.AlertType.INFORMATION);
-                
-                if (notificador != null) {
-                    notificador.notificarOperacionExitosa("registrado", cliente.getNombre());
-                }
-                cerrarVentana();
+            }
+                        cerrarVentana();
             } else {
                 Utilidades.mostrarAlertaSimple("Error al registrar cliente", 
                         (String) respuestaCliente.get(Constantes.KEY_MENSAJE), 
@@ -296,7 +298,7 @@ public class FXMLClienteRegistrarController implements Initializable {
                     Alert.AlertType.ERROR);
         }
     }
-    
+   
     private Direccion obtenerDireccionDeInterfaz() {
         Direccion direccion = new Direccion();
         direccion.setCalle(tfCalle.getText());
