@@ -1,6 +1,7 @@
 
 package dominio;
 
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import conexion.ConexionAPI;
 import dto.Respuesta;
@@ -110,4 +111,30 @@ public class DireccionImp {
         }
         return respuesta;
     }
+    
+
+    public static HashMap<String, Object> registrarDireccion(Direccion direccion) {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put(Constantes.KEY_ERROR, true);
+
+        String url = Constantes.URL_WS + "direccion/crear-direccion"; 
+        String json = GsonUtil.GSON.toJson(direccion);
+
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionBody(url, "POST", json, "application/json");
+
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Respuesta respuestaServidor = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
+
+            respuesta.put(Constantes.KEY_ERROR, respuestaServidor.isError());
+            respuesta.put(Constantes.KEY_MENSAJE, respuestaServidor.getMensaje());
+
+            respuesta.put("valor", respuestaServidor.getValor());
+
+        } else {
+            respuesta.put(Constantes.KEY_MENSAJE, "Error de conexión: " + respuestaAPI.getCodigo());
+        }
+
+        return respuesta;
+    }
+    
 }

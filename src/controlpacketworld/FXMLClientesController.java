@@ -128,20 +128,23 @@ public class FXMLClientesController implements Initializable, INotificador {
         }
     }
     
-    @FXML
+   @FXML
     private void clicEliminar(ActionEvent event) {
         Cliente clienteSeleccionado = tvClientes.getSelectionModel().getSelectedItem();
+        
         if (clienteSeleccionado != null) {
             boolean confirmar = Utilidades.mostrarAlertaConfirmacion("Eliminar Cliente", 
                     "¿Estás seguro de que deseas eliminar al cliente " + clienteSeleccionado.getNombre() + "?");
             
             if (confirmar) {
                 HashMap<String, Object> respuesta = ClienteImp.eliminarCliente(clienteSeleccionado.getIdCliente());
+                
                 if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
                     Utilidades.mostrarAlertaSimple("Cliente eliminado", 
                             (String) respuesta.get(Constantes.KEY_MENSAJE), 
                             Alert.AlertType.INFORMATION);
-                    cargarDatosTabla(); // Recargamos la tabla para ver que se eliminó
+                    
+                    cargarDatosTabla(); 
                 } else {
                     Utilidades.mostrarAlertaSimple("Error al eliminar", 
                             (String) respuesta.get(Constantes.KEY_MENSAJE), 

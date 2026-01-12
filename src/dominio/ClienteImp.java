@@ -43,8 +43,10 @@ public class ClienteImp {
             Respuesta respuestaServidor = GsonUtil.GSON.fromJson(respuestaAPI.getContenido(), Respuesta.class);
             respuesta.put(Constantes.KEY_ERROR, respuestaServidor.isError());
             respuesta.put(Constantes.KEY_MENSAJE, respuestaServidor.getMensaje());
+            
         } else {
-            respuesta.put(Constantes.KEY_MENSAJE, "Error de conexión: " + respuestaAPI.getCodigo());
+            String mensajeError = respuestaAPI.getContenido(); 
+            respuesta.put(Constantes.KEY_MENSAJE, "Error: " + respuestaAPI.getCodigo() + " - " + mensajeError);
         }
         return respuesta;
     }
@@ -72,10 +74,8 @@ public class ClienteImp {
         HashMap<String, Object> respuesta = new LinkedHashMap<>();
         respuesta.put(Constantes.KEY_ERROR, true);
         
-        // Endpoint para eliminar
         String url = Constantes.URL_WS + "cliente/eliminar/" + idCliente;
         
-        // Usamos peticionSinBody con DELETE
         RespuestaHTTP respuestaAPI = ConexionAPI.peticionSinBody(url, "DELETE");
         
         if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {

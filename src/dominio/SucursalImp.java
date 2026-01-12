@@ -17,7 +17,7 @@ public class SucursalImp {
 
     public static List<Sucursal> obtenerSucursales() {
         List<Sucursal> lista = null;
-        String url = Constantes.URL_WS + "sucursal/obtener-todos";
+        String url = Constantes.URL_WS + "sucursal/obtener-activas";
         RespuestaHTTP respuesta = ConexionAPI.peticionGET(url);
         
         if (respuesta.getCodigo() == HttpURLConnection.HTTP_OK) {

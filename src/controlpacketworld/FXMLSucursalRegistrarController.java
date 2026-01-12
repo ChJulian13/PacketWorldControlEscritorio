@@ -88,6 +88,9 @@ public class FXMLSucursalRegistrarController implements Initializable {
                 cargarColonias(tfCodigoPostal.getText());
             }
         });
+        
+        tfEstado.setEditable(false);
+        tfCiudad.setEditable(false);
     }
     
     public void inicializarValores(INotificador notificador, Sucursal sucursal) {
@@ -174,8 +177,6 @@ public class FXMLSucursalRegistrarController implements Initializable {
             Sucursal sucursal = new Sucursal();
             sucursal.setNombre(tfNombre.getText());
             sucursal.setCodigo(tfCodigo.getText());
-            sucursal.setCalle(tfCalle.getText());
-            sucursal.setNumero(tfNumero.getText());
             sucursal.setEstatus(cbEstatus.getValue());
             
             Direccion colonia = cbColonia.getSelectionModel().getSelectedItem();
@@ -200,10 +201,79 @@ public class FXMLSucursalRegistrarController implements Initializable {
                             "No se pudo actualizar la dirección: " + respuestaDireccion.getMensaje(), 
                             Alert.AlertType.ERROR);
                 }
-                
             } else {
+                // --- LÓGICA DE REGISTRO CON VALIDACIONES DE API ---
                 registrarSucursal(sucursal);
             }
+        }
+    }
+
+    private Direccion obtenerDireccionDeInterfaz() {
+        Direccion direccion = new Direccion();
+        direccion.setCalle(tfCalle.getText());
+        direccion.setNumero(tfNumero.getText());
+        Direccion colonia = cbColonia.getSelectionModel().getSelectedItem();
+        if (colonia != null) {
+            direccion.setIdColonia(colonia.getIdColonia());
+        }
+        return direccion;
+    }
+
+    private void registrarSucursal(Sucursal sucursal) {
+        Direccion direccion = obtenerDireccionDeInterfaz();
+        HashMap<String, Object> respuestaDireccion = DireccionImp.registrarDireccion(direccion);
+        
+        if (!(boolean) respuestaDireccion.get(Constantes.KEY_ERROR)) {
+            String idString = (String) respuestaDireccion.get("valor");
+            
+            if (idString != null) {
+                try {
+                    Integer idDireccion = Integer.parseInt(idString);
+                    
+                    sucursal.setIdDireccion(idDireccion);
+                    
+                    HashMap<String, Object> respuestaSucursal = SucursalImp.registrarSucursal(sucursal);
+                    
+                    if (!(boolean) respuestaSucursal.get(Constantes.KEY_ERROR)) {
+                         procesarRespuesta(respuestaSucursal, "registrada");
+                    } else {
+                         Utilidades.mostrarAlertaSimple("Datos duplicados", 
+                                 (String) respuestaSucursal.get(Constantes.KEY_MENSAJE), 
+                                 Alert.AlertType.WARNING);
+                    }
+                    
+                } catch (NumberFormatException ex) {
+                    Utilidades.mostrarAlertaSimple("Error crítico", "La dirección se guardó pero el ID es inválido.", Alert.AlertType.ERROR);
+                }
+            } else {
+                 Utilidades.mostrarAlertaSimple("Error crítico", "La dirección se guardó pero no retornó un ID.", Alert.AlertType.ERROR);
+            }
+        } else {
+            Utilidades.mostrarAlertaSimple("Error al registrar dirección", 
+                    (String) respuestaDireccion.get(Constantes.KEY_MENSAJE), 
+                    Alert.AlertType.ERROR);
+        }
+    }
+
+    private void actualizarSucursal(Sucursal sucursal) {
+        HashMap<String, Object> respuesta = SucursalImp.editarSucursal(sucursal);
+        procesarRespuesta(respuesta, "actualizada");
+    }
+
+    private void procesarRespuesta(HashMap<String, Object> respuesta, String accion) {
+        if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
+            
+            if (notificador != null) {
+                notificador.notificarOperacionExitosa(accion, tfNombre.getText());
+            } else {
+                Utilidades.mostrarAlertaSimple("Operación exitosa", 
+                        (String) respuesta.get(Constantes.KEY_MENSAJE), 
+                        Alert.AlertType.INFORMATION);
+            }
+            
+            cerrarVentana();
+        } else {
+            Utilidades.mostrarAlertaSimple("Error", (String) respuesta.get(Constantes.KEY_MENSAJE), Alert.AlertType.ERROR);
         }
     }
 
@@ -234,27 +304,6 @@ public class FXMLSucursalRegistrarController implements Initializable {
         }
 
         return true;
-    }
-    
-    private void registrarSucursal(Sucursal sucursal) {
-        HashMap<String, Object> respuesta = SucursalImp.registrarSucursal(sucursal);
-        procesarRespuesta(respuesta, "registrado");
-    }
-
-    private void actualizarSucursal(Sucursal sucursal) {
-        HashMap<String, Object> respuesta = SucursalImp.editarSucursal(sucursal);
-        procesarRespuesta(respuesta, "actualizado");
-    }
-
-    private void procesarRespuesta(HashMap<String, Object> respuesta, String accion) {
-        if (!(boolean) respuesta.get(Constantes.KEY_ERROR)) {
-            if (notificador != null) {
-                notificador.notificarOperacionExitosa(accion, tfNombre.getText());
-            }
-            cerrarVentana();
-        } else {
-            Utilidades.mostrarAlertaSimple("Error", (String) respuesta.get(Constantes.KEY_MENSAJE), Alert.AlertType.ERROR);
-        }
     }
 
     @FXML
