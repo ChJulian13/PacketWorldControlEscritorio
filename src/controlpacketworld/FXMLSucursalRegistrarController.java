@@ -179,10 +179,6 @@ public class FXMLSucursalRegistrarController implements Initializable {
             sucursal.setCodigo(tfCodigo.getText());
             sucursal.setEstatus(cbEstatus.getValue());
             
-         
-            sucursal.setCalle(tfCalle.getText());
-            sucursal.setNumero(tfNumero.getText());
-            
             Direccion colonia = cbColonia.getSelectionModel().getSelectedItem();
             sucursal.setIdColonia(colonia.getIdColonia());
             
@@ -205,8 +201,8 @@ public class FXMLSucursalRegistrarController implements Initializable {
                             "No se pudo actualizar la dirección: " + respuestaDireccion.getMensaje(), 
                             Alert.AlertType.ERROR);
                 }
-                
             } else {
+                // --- LÓGICA DE REGISTRO CON VALIDACIONES DE API ---
                 registrarSucursal(sucursal);
             }
         }
@@ -225,7 +221,6 @@ public class FXMLSucursalRegistrarController implements Initializable {
 
     private void registrarSucursal(Sucursal sucursal) {
         Direccion direccion = obtenerDireccionDeInterfaz();
-        
         HashMap<String, Object> respuestaDireccion = DireccionImp.registrarDireccion(direccion);
         
         if (!(boolean) respuestaDireccion.get(Constantes.KEY_ERROR)) {
@@ -238,13 +233,20 @@ public class FXMLSucursalRegistrarController implements Initializable {
                     sucursal.setIdDireccion(idDireccion);
                     
                     HashMap<String, Object> respuestaSucursal = SucursalImp.registrarSucursal(sucursal);
-                    procesarRespuesta(respuestaSucursal, "registrada");
+                    
+                    if (!(boolean) respuestaSucursal.get(Constantes.KEY_ERROR)) {
+                         procesarRespuesta(respuestaSucursal, "registrada");
+                    } else {
+                         Utilidades.mostrarAlertaSimple("Datos duplicados", 
+                                 (String) respuestaSucursal.get(Constantes.KEY_MENSAJE), 
+                                 Alert.AlertType.WARNING);
+                    }
                     
                 } catch (NumberFormatException ex) {
-                    Utilidades.mostrarAlertaSimple("Error de ID", "La dirección se registró pero el ID devuelto no es válido.", Alert.AlertType.ERROR);
+                    Utilidades.mostrarAlertaSimple("Error crítico", "La dirección se guardó pero el ID es inválido.", Alert.AlertType.ERROR);
                 }
             } else {
-                 Utilidades.mostrarAlertaSimple("Error de ID", "La dirección se registró pero no devolvió un ID (valor nulo).", Alert.AlertType.ERROR);
+                 Utilidades.mostrarAlertaSimple("Error crítico", "La dirección se guardó pero no retornó un ID.", Alert.AlertType.ERROR);
             }
         } else {
             Utilidades.mostrarAlertaSimple("Error al registrar dirección", 
