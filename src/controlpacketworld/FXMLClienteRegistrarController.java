@@ -174,7 +174,6 @@ public class FXMLClienteRegistrarController implements Initializable {
     private void clicRegistrar(ActionEvent event) {
         if (sonCamposValidos()) {
             if (esEdicion) {
-                // Lógica para ACTUALIZAR
                 Cliente cliente = new Cliente();
                 cliente.setIdCliente(clienteEdicion.getIdCliente());
                 cliente.setIdDireccion(clienteEdicion.getIdDireccion()); 
@@ -194,11 +193,9 @@ public class FXMLClienteRegistrarController implements Initializable {
                     direccionEdicion.setIdColonia(coloniaSeleccionada.getIdColonia());
                 }
                 
-                // 1. Actualizar Dirección
                 Respuesta respuestaDireccion = DireccionImp.editar(direccionEdicion);
 
                 if (!respuestaDireccion.isError()) {
-                    // 2. Actualizar Cliente
                     actualizarCliente(cliente);
                 } else {
                     Utilidades.mostrarAlertaSimple("Error en Dirección", 
@@ -206,7 +203,6 @@ public class FXMLClienteRegistrarController implements Initializable {
                             Alert.AlertType.ERROR);
                 }
             } else {
-                // Lógica para REGISTRAR
                 registrarCliente();
             }
         }
@@ -261,36 +257,43 @@ public class FXMLClienteRegistrarController implements Initializable {
         HashMap<String, Object> respuestaDireccion = DireccionImp.registrarDireccion(direccion); 
         
         if (!(boolean) respuestaDireccion.get(Constantes.KEY_ERROR)) {
+            String idString = (String) respuestaDireccion.get("valor");
             
-            String idString = (String) respuestaDireccion.get("valor"); 
-            
-            Integer idDireccion = Integer.parseInt(idString);
-            // -----------------------
-
-            Cliente cliente = new Cliente();
-            cliente.setNombre(tfNombre.getText());
-            cliente.setApellidoPaterno(tfApellidoPaterno.getText());
-            cliente.setApellidoMaterno(tfApellidoMaterno.getText());
-            cliente.setTelefono(tfTelefono.getText());
-            cliente.setCorreo(tfCorreo.getText());
-            cliente.setIdDireccion(idDireccion); // Aquí ya NO será null
-            
-            HashMap<String, Object> respuestaCliente = ClienteImp.registrarCliente(cliente);
-            
-            if (!(boolean) respuestaCliente.get(Constantes.KEY_ERROR)) {
-               
-            if (notificador != null) {
-                notificador.notificarOperacionExitosa("registrado", cliente.getNombre());
-            } else {
-                Utilidades.mostrarAlertaSimple("Registro exitoso", 
-                        (String) respuestaCliente.get(Constantes.KEY_MENSAJE), 
-                        Alert.AlertType.INFORMATION);
-            }
+            if (idString != null) {
+                try {
+                    Integer idDireccion = Integer.parseInt(idString);
+                    
+                    Cliente cliente = new Cliente();
+                    cliente.setNombre(tfNombre.getText());
+                    cliente.setApellidoPaterno(tfApellidoPaterno.getText());
+                    cliente.setApellidoMaterno(tfApellidoMaterno.getText());
+                    cliente.setTelefono(tfTelefono.getText());
+                    cliente.setCorreo(tfCorreo.getText());
+                    cliente.setIdDireccion(idDireccion);
+                    
+                    HashMap<String, Object> respuestaCliente = ClienteImp.registrarCliente(cliente);
+                    
+                    if (!(boolean) respuestaCliente.get(Constantes.KEY_ERROR)) {
+                        // Éxito
+                        if (notificador != null) {
+                            notificador.notificarOperacionExitosa("registrado", cliente.getNombre());
+                        } else {
+                            Utilidades.mostrarAlertaSimple("Registro exitoso", 
+                                    (String) respuestaCliente.get(Constantes.KEY_MENSAJE), 
+                                    Alert.AlertType.INFORMATION);
+                        }
                         cerrarVentana();
+                    } else {
+                        Utilidades.mostrarAlertaSimple("Datos duplicados", 
+                                (String) respuestaCliente.get(Constantes.KEY_MENSAJE), 
+                                Alert.AlertType.WARNING);
+                    }
+                    
+                } catch (NumberFormatException ex) {
+                    Utilidades.mostrarAlertaSimple("Error crítico", "La dirección se guardó pero el ID es inválido.", Alert.AlertType.ERROR);
+                }
             } else {
-                Utilidades.mostrarAlertaSimple("Error al registrar cliente", 
-                        (String) respuestaCliente.get(Constantes.KEY_MENSAJE), 
-                        Alert.AlertType.ERROR);
+                 Utilidades.mostrarAlertaSimple("Error crítico", "La dirección se guardó pero no retornó un ID.", Alert.AlertType.ERROR);
             }
         } else {
             Utilidades.mostrarAlertaSimple("Error al registrar dirección", 
