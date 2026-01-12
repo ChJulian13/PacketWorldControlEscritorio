@@ -182,6 +182,18 @@ public class FXMLSucursalRegistrarController implements Initializable {
             Direccion colonia = cbColonia.getSelectionModel().getSelectedItem();
             sucursal.setIdColonia(colonia.getIdColonia());
             
+            sucursal.setCalle(tfCalle.getText());
+            sucursal.setNumero(tfNumero.getText());
+            
+            if (!esEdicion) {
+                if (existeDireccionEnBaseDeDatos()) {
+                    Utilidades.mostrarAlertaSimple("Dirección duplicada", 
+                        "Ya existe una sucursal registrada con esa Calle, Número y Colonia.", 
+                        Alert.AlertType.WARNING);
+                    return; 
+                }
+            }
+            
             if (esEdicion) {
                 sucursal.setIdSucursal(sucursalEdicion.getIdSucursal());
                 sucursal.setIdDireccion(sucursalEdicion.getIdDireccion());
@@ -202,10 +214,40 @@ public class FXMLSucursalRegistrarController implements Initializable {
                             Alert.AlertType.ERROR);
                 }
             } else {
-                // --- LÓGICA DE REGISTRO CON VALIDACIONES DE API ---
                 registrarSucursal(sucursal);
             }
         }
+    }
+    
+    private boolean existeDireccionEnBaseDeDatos() {
+        String calleInput = (tfCalle.getText() != null) ? tfCalle.getText().trim() : "";
+        String numeroInput = (tfNumero.getText() != null) ? tfNumero.getText().trim() : "";
+        
+        if(cbColonia.getSelectionModel().getSelectedItem() == null) {
+            return false; 
+        }
+        Integer idColoniaInput = cbColonia.getSelectionModel().getSelectedItem().getIdColonia();
+
+        List<Sucursal> listaSucursales = SucursalImp.obtenerSucursales();
+        
+        if (listaSucursales != null) {
+            for (Sucursal s : listaSucursales) {
+                String calleBD = (s.getCalle() != null) ? s.getCalle().trim() : "";
+                String numeroBD = (s.getNumero() != null) ? s.getNumero().trim() : "";
+                Integer idColoniaBD = s.getIdColonia();
+
+              
+            
+                boolean mismaCalle = calleInput.equalsIgnoreCase(calleBD);
+                boolean mismoNumero = numeroInput.equalsIgnoreCase(numeroBD);
+                boolean mismaColonia = idColoniaInput.equals(idColoniaBD);
+
+                if (mismaCalle && mismoNumero && mismaColonia) {
+                    return true; 
+                }
+            }
+        }
+        return false;
     }
 
     private Direccion obtenerDireccionDeInterfaz() {
