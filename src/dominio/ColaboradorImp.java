@@ -294,4 +294,25 @@ public class ColaboradorImp {
         }
         return respuesta;
     }
+    
+    public static HashMap<String, Object> obtenerConductoresPorSucursal(int idSucursal) {
+        HashMap<String, Object> respuesta = new LinkedHashMap<>();
+        
+        String URL = Constantes.URL_WS + "colaborador/obtener-conductores-sucursal/" + idSucursal;
+        
+        RespuestaHTTP respuestaAPI = ConexionAPI.peticionGET(URL);
+        
+        if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
+            Gson gson = new Gson();
+            Type tipoLista = new TypeToken<List<Colaborador>>(){}.getType();
+            List<Colaborador> colaboradores = gson.fromJson(respuestaAPI.getContenido(), tipoLista);
+            
+            respuesta.put("error", false);
+            respuesta.put("colaboradores", colaboradores);
+        } else {
+            respuesta.put("error", true);
+            respuesta.put("mensaje", "Error al cargar los conductores de la sucursal.");
+        }
+        return respuesta;
+    }
 }

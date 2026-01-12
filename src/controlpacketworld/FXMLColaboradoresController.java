@@ -86,7 +86,7 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
-        cargarInformacionColaboradores();
+        //cargarInformacionColaboradores();
         cargarRolesParaBusqueda();
         ObservableList<String> criterios = FXCollections.observableArrayList("Nombre", "Rol", "No. Personal");
         cbBuscar.setItems(criterios);
@@ -103,7 +103,12 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
         
         if (usuarioSesion != null && "Ejecutivo de tienda".equalsIgnoreCase(usuarioSesion.getRol())) { 
              btnEliminar.setDisable(true); 
+             
+             ObservableList<String> criteriosEjecutivo = FXCollections.observableArrayList("Nombre", "No. Personal");
+             cbBuscar.setItems(criteriosEjecutivo);
+             cbBuscar.getSelectionModel().selectFirst(); 
         }
+        cargarInformacionColaboradores();
     }
     
     private void configurarVisibilidadBusqueda(String criterio) {
@@ -159,7 +164,7 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
         });
     }
     
-    private void cargarInformacionColaboradores() {
+    /*private void cargarInformacionColaboradores() {
         HashMap<String, Object> respuesta = ColaboradorImp.obtenerTodos();
         boolean esError = (boolean) respuesta.get("error");
         if (!esError) {
@@ -169,6 +174,27 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
             tvColaboradores.setItems(colaboradores);
         } else {
             Utilidades.mostrarAlertaSimple("Error al cargar", "" + respuesta.get("mensaje"), Alert.AlertType.NONE);
+        }
+    }*/
+    private void cargarInformacionColaboradores() {
+        HashMap<String, Object> respuesta;
+        if (usuarioSesion != null && "Ejecutivo de tienda".equalsIgnoreCase(usuarioSesion.getRol())) {
+            int idSucursalEjecutivo = usuarioSesion.getIdSucursal();
+            respuesta = ColaboradorImp.obtenerConductoresPorSucursal(idSucursalEjecutivo);
+        } else {
+            respuesta = ColaboradorImp.obtenerTodos();
+        }
+
+        boolean esError = (boolean) respuesta.get("error");
+        if (!esError) {
+            List<Colaborador> colaboradoresAPI = (List<Colaborador>) respuesta.get("colaboradores");
+            colaboradores = FXCollections.observableArrayList();
+            if (colaboradoresAPI != null) {
+                colaboradores.addAll(colaboradoresAPI);
+            }
+            tvColaboradores.setItems(colaboradores);
+        } else {
+            Utilidades.mostrarAlertaSimple("Error al cargar", "" + respuesta.get("mensaje"), Alert.AlertType.ERROR);
         }
     }
         
@@ -285,12 +311,28 @@ public class FXMLColaboradoresController implements Initializable, INotificador 
 
     private void procesarRespuestaBusqueda(HashMap<String, Object> respuesta) {
         boolean esError = (boolean) respuesta.get("error");
-        
+
         if (!esError) {
-            List<Colaborador> lista = (List<Colaborador>) respuesta.get("colaboradores");
+            List<Colaborador> listaResultados = (List<Colaborador>) respuesta.get("colaboradores");
             colaboradores.clear();
-            if (lista != null && !lista.isEmpty()) {
-                colaboradores.addAll(lista);
+
+            if (listaResultados != null && !listaResultados.isEmpty()) {
+                if (usuarioSesion != null && "Ejecutivo de tienda".equalsIgnoreCase(usuarioSesion.getRol())) {
+                    for (Colaborador c : listaResultados) {
+                        boolean mismaSucursal = c.getIdSucursal() != null && c.getIdSucursal().intValue() == usuarioSesion.getIdSucursal();
+                        boolean esConductor = "Conductor".equalsIgnoreCase(c.getRol());
+
+                        if (mismaSucursal && esConductor) {
+                            colaboradores.add(c);
+                        }
+                    }
+                    
+                    if (colaboradores.isEmpty()) {
+                        Utilidades.mostrarAlertaSimple("Sin resultados", "No se encontraron conductores en tu sucursal que coincidan con la búsqueda.", Alert.AlertType.INFORMATION);
+                    }
+                } else {
+                    colaboradores.addAll(listaResultados);
+                }
             } else {
                 Utilidades.mostrarAlertaSimple("Sin coincidencias", "No se encontraron colaboradores.", Alert.AlertType.INFORMATION);
             }

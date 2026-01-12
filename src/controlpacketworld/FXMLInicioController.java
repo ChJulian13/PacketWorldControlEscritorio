@@ -16,11 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pojo.Colaborador;
@@ -37,6 +32,8 @@ public class FXMLInicioController implements Initializable {
     @FXML
     private Label lbNoPersonal;
     private Colaborador colaboradorSesion;
+    @FXML
+    private Label lbRol;
 
     /**
      * Initializes the controller class.
@@ -49,7 +46,8 @@ public class FXMLInicioController implements Initializable {
     public void cargarInformacion(Colaborador colaborador) {
         colaboradorSesion = colaborador;
         lbNombreCompleto.setText(colaborador.getNombre() + " " + colaborador.getApellidoPaterno() + " " + colaborador.getApellidoMaterno());
-        lbNoPersonal.setText("Num Personal: " + colaborador.getNoPersonal());
+        lbNoPersonal.setText("NP: " + colaborador.getNoPersonal());
+        lbRol.setText(colaborador.getRol());
                 
     }
 
@@ -62,12 +60,13 @@ public class FXMLInicioController implements Initializable {
             FXMLColaboradoresController controlador = loader.getController();
             controlador.inicializar(this.colaboradorSesion); 
 
-            Scene scAdminUsuarios = new Scene(vista);
-            Stage stAdmin = new Stage();
-            stAdmin.setScene(scAdminUsuarios);
-            stAdmin.setTitle("Colaboradores");
-            stAdmin.initModality(Modality.APPLICATION_MODAL);
-            stAdmin.showAndWait();
+            Scene sceneColaboradores = new Scene(vista);
+            Stage stageColaboradores = new Stage();
+            
+            stageColaboradores.setScene(sceneColaboradores);
+            stageColaboradores.setTitle("Gestión de Colaboradores");
+            stageColaboradores.initModality(Modality.APPLICATION_MODAL);
+            stageColaboradores.showAndWait();
         } catch (IOException ex) {
            ex.printStackTrace();
         }
@@ -81,12 +80,13 @@ public class FXMLInicioController implements Initializable {
             FXMLUnidadesController controlador = loader.getController();
             controlador.inicializarColaborador(this.colaboradorSesion);
 
-            Scene scAdminUsuarios = new Scene(vista);
-            Stage stAdmin = new Stage();
-            stAdmin.setScene(scAdminUsuarios);
-            stAdmin.setTitle("Unidades");
-            stAdmin.initModality(Modality.APPLICATION_MODAL);
-            stAdmin.showAndWait();
+            Scene sceneUnidades = new Scene(vista);
+            Stage stageUnidades = new Stage();
+            
+            stageUnidades.setScene(sceneUnidades);
+            stageUnidades.setTitle("Gestión de Unidades");
+            stageUnidades.initModality(Modality.APPLICATION_MODAL);
+            stageUnidades.showAndWait();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -96,14 +96,14 @@ public class FXMLInicioController implements Initializable {
     private void clicSucursales(ActionEvent event) {
         try {
             Parent vista = FXMLLoader.load(getClass().getResource("FXMLSucursales.fxml"));
-            Scene scAdminUsuarios = new Scene(vista);
             
-            //generar un nuevo stage
-            Stage stAdmin = new Stage();
-            stAdmin.setScene(scAdminUsuarios);
-            stAdmin.setTitle("Sucursales");
-            stAdmin.initModality(Modality.APPLICATION_MODAL);
-            stAdmin.showAndWait();
+            Scene sceneSucursales = new Scene(vista);
+            Stage stageSucursales = new Stage();
+            
+            stageSucursales.setScene(sceneSucursales);
+            stageSucursales.setTitle("Gestión de Sucursales");
+            stageSucursales.initModality(Modality.APPLICATION_MODAL);
+            stageSucursales.showAndWait();
         } catch (IOException ex) {
            ex.printStackTrace();
         }
@@ -113,14 +113,14 @@ public class FXMLInicioController implements Initializable {
     private void clicClientes(ActionEvent event) {
         try {
             Parent vista = FXMLLoader.load(getClass().getResource("FXMLClientes.fxml"));
-            Scene scAdminUsuarios = new Scene(vista);
             
-            //generar un nuevo stage
-            Stage stAdmin = new Stage();
-            stAdmin.setScene(scAdminUsuarios);
-            stAdmin.setTitle("Clientes");
-            stAdmin.initModality(Modality.APPLICATION_MODAL);
-            stAdmin.showAndWait();
+            Scene sceneClientes = new Scene(vista);
+            Stage stageClientes = new Stage();
+            
+            stageClientes.setScene(sceneClientes);
+            stageClientes.setTitle("Gestión de Clientes");
+            stageClientes.initModality(Modality.APPLICATION_MODAL);
+            stageClientes.showAndWait();
         } catch (IOException ex) {
            ex.printStackTrace();
         }
@@ -131,23 +131,16 @@ public class FXMLInicioController implements Initializable {
          try {
             Parent vista = FXMLLoader.load(getClass().getResource("FXMLInicioSesion.fxml"));
             
-            //Stage -> Scena -> Parent -> FXML
-            Scene escenaInicioSesion = new Scene(vista);
+            Scene sceneInicioSesion = new Scene(vista);
+            Stage stageInicioSesion = (Stage) ((Button) event.getSource()).getScene().getWindow();
             
-            //Stage stInicioSesion = (Stage)btnCerrarSesion.getScene().getWindow();
-            //Otra forma utilizando el objeto que generó el listener, hay que recordar que viene de una interfaz 
-            //Se tiene que castear porque proviene de objeto, la superpadre y java no sabe qué proviene de un boton
-           
-            Stage stInicioSesion = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            stageInicioSesion.setScene(sceneInicioSesion);
+            stageInicioSesion.setTitle("Inicio de Sesión"); 
+            stageInicioSesion.show();
             
-            stInicioSesion.setScene(escenaInicioSesion);
-            
-            stInicioSesion.show();
-            
-           
-        } catch (IOException ex) {
+         } catch (IOException ex) {
             ex.printStackTrace();
-        }
+         }
     }
 
     @FXML
@@ -157,12 +150,14 @@ public class FXMLInicioController implements Initializable {
             Parent vista = cargador.load();
             FXMLEnvioController controlador = cargador.getController();
             controlador.cargarInformacion(colaboradorSesion.getIdSucursal(), colaboradorSesion.getIdColaborador());
-            Scene scEnvio = new Scene(vista);
-            Stage stEnvio = new Stage();
-            stEnvio.setScene(scEnvio);
-            stEnvio.setTitle("Envios");
-            stEnvio.initModality(Modality.APPLICATION_MODAL);
-            stEnvio.showAndWait();
+            
+            Scene sceneEnvios = new Scene(vista);
+            Stage stageEnvios = new Stage();
+            
+            stageEnvios.setScene(sceneEnvios);
+            stageEnvios.setTitle("Gestión de Envíos");
+            stageEnvios.initModality(Modality.APPLICATION_MODAL);
+            stageEnvios.showAndWait();
         } catch (IOException ex) {
            ex.printStackTrace();
         }
@@ -172,9 +167,7 @@ public class FXMLInicioController implements Initializable {
     private void clicManualUsuario(ActionEvent event) {
         try {
             String url = "https://uvmx-my.sharepoint.com/:w:/g/personal/zs22016079_estudiantes_uv_mx/IQC68Wms34EySpoxdc4TG12mAdZjtjT6QPFHKHw7SsLar4U?e=6ETUXs"; 
-            
             java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
-            
         } catch (Exception e) {
             e.printStackTrace();
             Utilidades.mostrarAlertaSimple("Error", "No se pudo abrir el enlace.", Alert.AlertType.ERROR);
