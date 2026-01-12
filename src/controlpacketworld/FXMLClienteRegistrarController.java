@@ -173,37 +173,32 @@ public class FXMLClienteRegistrarController implements Initializable {
     @FXML
     private void clicRegistrar(ActionEvent event) {
         if (sonCamposValidos()) {
-            Cliente cliente = new Cliente();
-            cliente.setNombre(tfNombre.getText());
-            cliente.setApellidoPaterno(tfApellidoPaterno.getText());
-            cliente.setApellidoMaterno(tfApellidoMaterno.getText());
-            cliente.setTelefono(tfTelefono.getText());
-            cliente.setCorreo(tfCorreo.getText());
-            
-            cliente.setCalle(tfCalle.getText());
-            cliente.setNumero(tfNumero.getText());
-            cliente.setCodigoPostal(tfCodigoPostal.getText());
-            
-            Direccion coloniaSeleccionada = cbColonia.getSelectionModel().getSelectedItem();
-            if(coloniaSeleccionada != null){
-                cliente.setIdColonia(coloniaSeleccionada.getIdColonia());
-            }
-
             if (esEdicion) {
+                // Lógica para ACTUALIZAR
+                Cliente cliente = new Cliente();
                 cliente.setIdCliente(clienteEdicion.getIdCliente());
                 cliente.setIdDireccion(clienteEdicion.getIdDireccion()); 
+                cliente.setNombre(tfNombre.getText());
+                cliente.setApellidoPaterno(tfApellidoPaterno.getText());
+                cliente.setApellidoMaterno(tfApellidoMaterno.getText());
+                cliente.setTelefono(tfTelefono.getText());
+                cliente.setCorreo(tfCorreo.getText());
                 
                 Direccion direccionEdicion = new Direccion();
                 direccionEdicion.setIdDireccion(clienteEdicion.getIdDireccion());
                 direccionEdicion.setCalle(tfCalle.getText());
                 direccionEdicion.setNumero(tfNumero.getText());
+                
+                Direccion coloniaSeleccionada = cbColonia.getSelectionModel().getSelectedItem();
                 if (coloniaSeleccionada != null) {
                     direccionEdicion.setIdColonia(coloniaSeleccionada.getIdColonia());
                 }
                 
+                // 1. Actualizar Dirección
                 Respuesta respuestaDireccion = DireccionImp.editar(direccionEdicion);
 
                 if (!respuestaDireccion.isError()) {
+                    // 2. Actualizar Cliente
                     actualizarCliente(cliente);
                 } else {
                     Utilidades.mostrarAlertaSimple("Error en Dirección", 
@@ -211,7 +206,8 @@ public class FXMLClienteRegistrarController implements Initializable {
                             Alert.AlertType.ERROR);
                 }
             } else {
-                registrarCliente(cliente);
+                // Lógica para REGISTRAR
+                registrarCliente();
             }
         }
     }
@@ -259,9 +255,56 @@ public class FXMLClienteRegistrarController implements Initializable {
         return true;
     }
 
-    private void registrarCliente(Cliente cliente) {
-        HashMap<String, Object> respuesta = ClienteImp.registrarCliente(cliente);
-        procesarRespuesta(respuesta, cliente.getNombre());
+    private void registrarCliente() {
+        Direccion direccion = obtenerDireccionDeInterfaz();
+        
+        HashMap<String, Object> respuestaDireccion = DireccionImp.registrarDireccion(direccion); 
+        
+        if (!(boolean) respuestaDireccion.get(Constantes.KEY_ERROR)) {
+            // Recuperamos el ID generado por la API
+            Integer idDireccion = (Integer) respuestaDireccion.get("idDireccion");
+            
+            // 2. Preparar Cliente con el ID de dirección
+            Cliente cliente = new Cliente();
+            cliente.setNombre(tfNombre.getText());
+            cliente.setApellidoPaterno(tfApellidoPaterno.getText());
+            cliente.setApellidoMaterno(tfApellidoMaterno.getText());
+            cliente.setTelefono(tfTelefono.getText());
+            cliente.setCorreo(tfCorreo.getText());
+            cliente.setIdDireccion(idDireccion); // Vinculación clave
+            
+            // 3. Registrar Cliente
+            HashMap<String, Object> respuestaCliente = ClienteImp.registrarCliente(cliente);
+            
+            if (!(boolean) respuestaCliente.get(Constantes.KEY_ERROR)) {
+                Utilidades.mostrarAlertaSimple("Registro exitoso", 
+                        (String) respuestaCliente.get(Constantes.KEY_MENSAJE), 
+                        Alert.AlertType.INFORMATION);
+                
+                if (notificador != null) {
+                    notificador.notificarOperacionExitosa("registrado", cliente.getNombre());
+                }
+                cerrarVentana();
+            } else {
+                Utilidades.mostrarAlertaSimple("Error al registrar cliente", 
+                        (String) respuestaCliente.get(Constantes.KEY_MENSAJE), 
+                        Alert.AlertType.ERROR);
+            }
+        } else {
+            Utilidades.mostrarAlertaSimple("Error al registrar dirección", 
+                    (String) respuestaDireccion.get(Constantes.KEY_MENSAJE), 
+                    Alert.AlertType.ERROR);
+        }
+    }
+    
+    private Direccion obtenerDireccionDeInterfaz() {
+        Direccion direccion = new Direccion();
+        direccion.setCalle(tfCalle.getText());
+        direccion.setNumero(tfNumero.getText());
+        if (cbColonia.getSelectionModel().getSelectedItem() != null) {
+            direccion.setIdColonia(cbColonia.getSelectionModel().getSelectedItem().getIdColonia());
+        }
+        return direccion;
     }
 
     private void actualizarCliente(Cliente cliente) {

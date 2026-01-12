@@ -72,10 +72,8 @@ public class ClienteImp {
         HashMap<String, Object> respuesta = new LinkedHashMap<>();
         respuesta.put(Constantes.KEY_ERROR, true);
         
-        // Endpoint para eliminar
         String url = Constantes.URL_WS + "cliente/eliminar/" + idCliente;
         
-        // Usamos peticionSinBody con DELETE
         RespuestaHTTP respuestaAPI = ConexionAPI.peticionSinBody(url, "DELETE");
         
         if (respuestaAPI.getCodigo() == HttpURLConnection.HTTP_OK) {
