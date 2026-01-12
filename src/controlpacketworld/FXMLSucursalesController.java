@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,23 +30,23 @@ public class FXMLSucursalesController implements Initializable, INotificador {
     @FXML
     private TableView<Sucursal> tvSucursales;
     @FXML
-    private TableColumn<Sucursal, String> colCodigo;
+    private TableColumn colCodigo;
     @FXML
-    private TableColumn<Sucursal, String> colNombre;
+    private TableColumn colNombre;
     @FXML
-    private TableColumn<Sucursal, String> colEstatus;
+    private TableColumn colEstatus;
     @FXML
-    private TableColumn<Sucursal, String> colCalle;
+    private TableColumn colCalle;
     @FXML
-    private TableColumn<Sucursal, String> colNumero;
+    private TableColumn colNumero;
     @FXML
-    private TableColumn<Sucursal, String> colColonia;
+    private TableColumn colColonia;
     @FXML
-    private TableColumn<Sucursal, String> colCodigoPostal;
+    private TableColumn colCP;
     @FXML
-    private TableColumn<Sucursal, String> colCiudad;
+    private TableColumn colCiudad;
     @FXML
-    private TableColumn<Sucursal, String> colEstado;
+    private TableColumn colEstado;
     
     private ObservableList<Sucursal> listaSucursales;
 
@@ -58,38 +57,16 @@ public class FXMLSucursalesController implements Initializable, INotificador {
     }
 
     private void configurarTabla() {
-        colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colEstatus.setCellValueFactory(new PropertyValueFactory<>("estatus"));
-        colCalle.setCellValueFactory(new PropertyValueFactory<>("calle"));
-        colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
-        colColonia.setCellValueFactory(new PropertyValueFactory<>("nombreColonia"));
+        colCodigo.setCellValueFactory(new PropertyValueFactory("codigo"));
+        colNombre.setCellValueFactory(new PropertyValueFactory("nombre"));
+        colEstatus.setCellValueFactory(new PropertyValueFactory("estatus"));
         
-        colCodigoPostal.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(extraerDatoDireccion(cellData.getValue().getDireccionCompleta(), "CP")));
-            
-        colCiudad.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(extraerDatoDireccion(cellData.getValue().getDireccionCompleta(), "CIUDAD")));
-            
-        colEstado.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(extraerDatoDireccion(cellData.getValue().getDireccionCompleta(), "ESTADO")));
-    }
-    
-    private String extraerDatoDireccion(String direccionCompleta, String tipo) {
-        if (direccionCompleta == null || direccionCompleta.isEmpty()) return "";
-        try {
-            String[] partes = direccionCompleta.split(", ");
-            if (tipo.equals("CP")) {
-                for (String parte : partes) {
-                    if (parte.startsWith("C.P.")) return parte.replace("C.P.", "").trim();
-                }
-            } else if (tipo.equals("CIUDAD") && partes.length >= 2) {
-                return partes[partes.length - 2];
-            } else if (tipo.equals("ESTADO") && partes.length >= 1) {
-                return partes[partes.length - 1];
-            }
-        } catch (Exception e) { return ""; }
-        return "";
+        colCalle.setCellValueFactory(new PropertyValueFactory("calle"));
+        colNumero.setCellValueFactory(new PropertyValueFactory("numero"));
+        colColonia.setCellValueFactory(new PropertyValueFactory("nombreColonia"));
+        colCP.setCellValueFactory(new PropertyValueFactory("cp"));
+        colCiudad.setCellValueFactory(new PropertyValueFactory("ciudad"));
+        colEstado.setCellValueFactory(new PropertyValueFactory("estado"));
     }
 
     private void cargarDatosTabla() {

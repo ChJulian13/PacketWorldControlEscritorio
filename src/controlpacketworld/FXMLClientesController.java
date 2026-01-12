@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package controlpacketworld;
 
 import controlpacketworld.interfaz.INotificador;
@@ -33,33 +29,32 @@ import utilidad.Constantes;
 import utilidad.Utilidades;
 import utilidad.Validaciones;
 
-/**
- * FXML Controller class
- *
- * @author julia
- */
 public class FXMLClientesController implements Initializable, INotificador {
 
     @FXML
     private TableView<Cliente> tvClientes;
     @FXML
-    private TableColumn<Cliente, String> colNombre;
+    private TableColumn colNombre;
     @FXML
-    private TableColumn<Cliente, String> colApellidoPaterno;
+    private TableColumn colApellidoPaterno;
     @FXML
-    private TableColumn<Cliente, String> colApellidoMaterno;
+    private TableColumn colApellidoMaterno;
     @FXML
-    private TableColumn<Cliente, String> colCorreo;
+    private TableColumn colCorreo;
     @FXML
-    private TableColumn<Cliente, String> colTelefono;
+    private TableColumn colTelefono;
     @FXML
-    private TableColumn<Cliente, String> colCalle;
+    private TableColumn colCalle;
     @FXML
-    private TableColumn<Cliente, String> colNumero;
+    private TableColumn colNumero;
     @FXML
-    private TableColumn<Cliente, String> colColonia;
+    private TableColumn colColonia;
     @FXML
-    private TableColumn<Cliente, String> colCP;
+    private TableColumn colCP;
+    @FXML
+    private TableColumn colCiudad; 
+    @FXML
+    private TableColumn colEstado; 
     
     private ObservableList<Cliente> listaClientes;
     
@@ -78,15 +73,19 @@ public class FXMLClientesController implements Initializable, INotificador {
     }
 
     private void configurarTabla() {
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colApellidoPaterno.setCellValueFactory(new PropertyValueFactory<>("apellidoPaterno"));
-        colApellidoMaterno.setCellValueFactory(new PropertyValueFactory<>("apellidoMaterno"));
-        colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
-        colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
-        colCalle.setCellValueFactory(new PropertyValueFactory<>("calle"));
-        colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
-        colColonia.setCellValueFactory(new PropertyValueFactory<>("nombreColonia"));
-        colCP.setCellValueFactory(new PropertyValueFactory<>("codigoPostal"));
+        colNombre.setCellValueFactory(new PropertyValueFactory("nombre"));
+        colApellidoPaterno.setCellValueFactory(new PropertyValueFactory("apellidoPaterno"));
+        colApellidoMaterno.setCellValueFactory(new PropertyValueFactory("apellidoMaterno"));
+        colTelefono.setCellValueFactory(new PropertyValueFactory("telefono"));
+        colCorreo.setCellValueFactory(new PropertyValueFactory("correo"));
+        
+        colCalle.setCellValueFactory(new PropertyValueFactory("calle"));
+        colNumero.setCellValueFactory(new PropertyValueFactory("numero"));
+        colColonia.setCellValueFactory(new PropertyValueFactory("nombreColonia"));
+        
+        colCP.setCellValueFactory(new PropertyValueFactory("codigoPostal"));
+        colCiudad.setCellValueFactory(new PropertyValueFactory("ciudad"));
+        colEstado.setCellValueFactory(new PropertyValueFactory("estado"));
     }
     
     private void configurarBusqueda() {
@@ -143,7 +142,6 @@ public class FXMLClientesController implements Initializable, INotificador {
                     Utilidades.mostrarAlertaSimple("Cliente eliminado", 
                             (String) respuesta.get(Constantes.KEY_MENSAJE), 
                             Alert.AlertType.INFORMATION);
-                    
                     cargarDatosTabla(); 
                 } else {
                     Utilidades.mostrarAlertaSimple("Error al eliminar", 
@@ -193,6 +191,7 @@ public class FXMLClientesController implements Initializable, INotificador {
                     Alert.AlertType.WARNING);
         }
     }
+
     private boolean esBusquedaValida(String buscarPor){
         String cadenaBusqueda = tfBuscar.getText();
         if (Validaciones.esVacio(cadenaBusqueda)) {
@@ -218,7 +217,6 @@ public class FXMLClientesController implements Initializable, INotificador {
     private void clicMostrarTodos(ActionEvent event) {
         tfBuscar.clear();
         cargarDatosTabla();
-        
         if (btnMostrarTodos != null) {
             btnMostrarTodos.setVisible(false);
         }
@@ -258,7 +256,5 @@ public class FXMLClientesController implements Initializable, INotificador {
     }
 
     @Override
-    public void enviarObjeto(Object object) {
-        // Implementación opcional
-    }
+    public void enviarObjeto(Object object) {}
 }

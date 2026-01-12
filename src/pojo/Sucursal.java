@@ -118,6 +118,35 @@ public class Sucursal {
         this.nombreColonia = nombreColonia;
     }
     
+    public String getCp() {
+        return extraerDato("CP");
+    }
+
+    public String getCiudad() {
+        return extraerDato("CIUDAD");
+    }
+
+    public String getEstado() {
+        return extraerDato("ESTADO");
+    }
+
+    private String extraerDato(String tipo) {
+        if (direccionCompleta == null || direccionCompleta.isEmpty()) return "N/A";
+        try {
+            String[] partes = direccionCompleta.split(", ");
+            if ("CP".equals(tipo)) {
+                for (String parte : partes) {
+                    if (parte.trim().startsWith("C.P.")) return parte.replace("C.P.", "").trim();
+                }
+            } else if ("CIUDAD".equals(tipo) && partes.length >= 2) {
+                return partes[partes.length - 2].trim();
+            } else if ("ESTADO".equals(tipo) && partes.length >= 1) {
+                return partes[partes.length - 1].trim();
+            }
+        } catch (Exception e) { return ""; }
+        return "";
+    }
+    
     @Override
     public String toString() {
         return nombre;
