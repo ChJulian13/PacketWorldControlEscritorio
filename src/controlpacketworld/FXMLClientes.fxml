@@ -9,50 +9,62 @@
 
 <AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #F3F3F3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlpacketworld.FXMLClientesController">
    <children>
-      <Button layoutX="1143.0" layoutY="73.0" mnemonicParsing="false" onAction="#clicEliminar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Eliminar">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Button layoutX="1039.0" layoutY="72.0" mnemonicParsing="false" onAction="#clicEditar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Button layoutX="928.0" layoutY="73.0" mnemonicParsing="false" onAction="#clicRegistrar" prefHeight="29.0" prefWidth="101.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <TextField fx:id="tfBuscar" layoutX="176.0" layoutY="72.0" prefHeight="31.0" prefWidth="317.0" promptText="Buscar a un colaborador" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
-      <TableView fx:id="tvClientes" layoutX="42.0" layoutY="122.0" prefHeight="580.0" prefWidth="1200.0">
-         <columns>
-            <TableColumn fx:id="colNombre" prefWidth="75.0" text="Nombre" />
-            <TableColumn fx:id="colApellidoPaterno" prefWidth="154.0" text="Apellido Paterno" />
-            <TableColumn fx:id="colApellidoMaterno" prefWidth="151.0" text="Apellido Materno" />
-            <TableColumn fx:id="colCalle" minWidth="0.0" prefWidth="0.0" text="Calle" />
-            <TableColumn fx:id="colNumero" prefWidth="119.0" text="Número" />
-            <TableColumn fx:id="colColonia" prefWidth="122.0" text="Colonia" />
-            <TableColumn fx:id="colCP" prefWidth="173.0" text="Código Postal" />
-            <TableColumn fx:id="colCorreo" minWidth="0.0" prefWidth="216.0" text="Correo" />
-            <TableColumn fx:id="colTelefono" prefWidth="189.0" text="Teléfono" />
-         </columns>
-      </TableView>
-      <Label layoutX="42.0" layoutY="24.0" prefHeight="39.0" prefWidth="214.0" text="Clientes">
+      <Label layoutX="32.0" layoutY="24.0" prefHeight="39.0" prefWidth="214.0" text="Clientes">
          <font>
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
-      <ComboBox fx:id="cbBuscar" layoutX="42.0" layoutY="73.0" prefHeight="31.0" prefWidth="123.0" promptText="Buscar por:" style="-fx-background-color: #FBFBFB; -fx-border-color: #CCCCCC; -fx-border-radius: 6px; -fx-background-radius: 6px;" />
+      
+      <ComboBox fx:id="cbBuscar" layoutX="32.0" layoutY="73.0" prefHeight="31.0" prefWidth="133.0" promptText="Buscar por:" style="-fx-background-color: #FBFBFB; -fx-border-color: #CCCCCC; -fx-border-radius: 6px; -fx-background-radius: 6px;" />
+      
+      <TextField fx:id="tfBuscar" layoutX="176.0" layoutY="72.0" prefHeight="31.0" prefWidth="317.0" promptText="Buscar cliente" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: transparent transparent #0078D7 transparent; -fx-border-width: 1.5; -fx-background-color: #FFFFFF;" />
+      
       <Button layoutX="499.0" layoutY="72.0" mnemonicParsing="false" onAction="#clicBuscar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Buscar">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      
       <Button fx:id="btnMostrarTodos" layoutX="605.0" layoutY="72.0" mnemonicParsing="false" onAction="#clicMostrarTodos" prefHeight="29.0" prefWidth="123.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Mostrar Todos">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+
+      <Button layoutX="928.0" layoutY="73.0" mnemonicParsing="false" onAction="#clicRegistrar" prefHeight="29.0" prefWidth="101.0" style="-fx-background-color: #0067c0; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Registrar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      
+      <Button layoutX="1039.0" layoutY="72.0" mnemonicParsing="false" onAction="#clicEditar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #FBFBFB; -fx-text-fill: black; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12; -fx-border-color: #CCCCCC;" text="Editar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      
+      <Button layoutX="1143.0" layoutY="73.0" mnemonicParsing="false" onAction="#clicEliminar" prefHeight="25.0" prefWidth="94.0" style="-fx-background-color: #DC282B; -fx-text-fill: white; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-padding: 6 12 6 12;" text="Eliminar">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+
+      <TableView fx:id="tvClientes" layoutX="32.0" layoutY="130.0" prefHeight="554.0" prefWidth="1217.0">
+         <columns>
+            <TableColumn fx:id="colNombre" prefWidth="100.0" text="Nombre" />
+            <TableColumn fx:id="colApellidoPaterno" prefWidth="110.0" text="A. Paterno" />
+            <TableColumn fx:id="colApellidoMaterno" prefWidth="110.0" text="A. Materno" />
+            <TableColumn fx:id="colTelefono" prefWidth="90.0" text="Teléfono" />
+            <TableColumn fx:id="colCorreo" prefWidth="160.0" text="Correo" />
+            
+            <TableColumn fx:id="colCalle" prefWidth="130.0" text="Calle" />
+            <TableColumn fx:id="colNumero" prefWidth="60.0" text="Núm." />
+            <TableColumn fx:id="colColonia" prefWidth="120.0" text="Colonia" />
+            <TableColumn fx:id="colCP" prefWidth="70.0" text="C.P." />
+            
+            <TableColumn fx:id="colCiudad" prefWidth="130.0" text="Ciudad" />
+            <TableColumn fx:id="colEstado" prefWidth="130.0" text="Estado" />
+         </columns>
+      </TableView>
    </children>
 </AnchorPane>

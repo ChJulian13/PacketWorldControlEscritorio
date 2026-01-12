@@ -8,12 +8,10 @@ private Integer idCliente;
     private String telefono;
     private String correo;
     
-    // IDs de relación
     private Integer idDireccion;
     private Integer idColonia;
 
-    // Atributos "aplanados" para coincidir con la consulta SQL del Mapper
-    // y evitar el uso de resultMap.
+ 
     private String calle;
     private String numero;
     private String nombreColonia;
@@ -25,7 +23,6 @@ private Integer idCliente;
     public Cliente() {
     }
 
-    // Constructor completo
     public Cliente(Integer idCliente, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String correo, Integer idDireccion, Integer idColonia, String calle, String numero, String nombreColonia, String codigoPostal, String ciudad, String estado, String direccionCompleta) {
         this.idCliente = idCliente;
         this.nombre = nombre;
@@ -132,24 +129,13 @@ private Integer idCliente;
         this.nombreColonia = nombreColonia;
     }
 
-    public String getCodigoPostal() {
-        return codigoPostal;
-    }
 
     public void setCodigoPostal(String codigoPostal) {
         this.codigoPostal = codigoPostal;
     }
 
-    public String getCiudad() {
-        return ciudad;
-    }
-
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
-    }
-
-    public String getEstado() {
-        return estado;
     }
 
     public void setEstado(String estado) {
@@ -164,6 +150,37 @@ private Integer idCliente;
         this.direccionCompleta = direccionCompleta;
     }
     
+    public String getCodigoPostal() {
+        if (codigoPostal != null && !codigoPostal.isEmpty()) return codigoPostal;
+        return extraerDato("CP");
+    }
+
+    public String getCiudad() {
+        if (ciudad != null && !ciudad.isEmpty()) return ciudad;
+        return extraerDato("CIUDAD");
+    }
+
+    public String getEstado() {
+        if (estado != null && !estado.isEmpty()) return estado;
+        return extraerDato("ESTADO");
+    }
+
+    private String extraerDato(String tipo) {
+        if (direccionCompleta == null || direccionCompleta.isEmpty()) return "N/A";
+        try {
+            String[] partes = direccionCompleta.split(", ");
+            if ("CP".equals(tipo)) {
+                for (String parte : partes) {
+                    if (parte.trim().startsWith("C.P.")) return parte.replace("C.P.", "").trim();
+                }
+            } else if ("CIUDAD".equals(tipo) && partes.length >= 2) {
+                return partes[partes.length - 2].trim();
+            } else if ("ESTADO".equals(tipo) && partes.length >= 1) {
+                return partes[partes.length - 1].trim();
+            }
+        } catch (Exception e) { return ""; }
+        return "";
+    }
    
 }
 
